@@ -1,0 +1,3 @@
+C:/Users/evostrov/Desktop/Matam/ex0/part2/build/CMakeFiles/mtm_buggy.dir
+C:/Users/evostrov/Desktop/Matam/ex0/part2/build/CMakeFiles/edit_cache.dir
+C:/Users/evostrov/Desktop/Matam/ex0/part2/build/CMakeFiles/rebuild_cache.dir

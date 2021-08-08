@@ -2,6 +2,9 @@
 
 clear
 
+rm *private*
+rm *mtm_tot*
+
 gcc -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG part1.c -o mtm_tot
 
 ./mtm_tot < test1.in > test1_private.out
@@ -9,7 +12,8 @@ gcc -std=c99 -Wall -pedantic-errors -Werror -DNDEBUG part1.c -o mtm_tot
 ./mtm_tot < test3.in > test3_private.out
 ./mtm_tot < test4.in > test4_private.out
 
-diff test1.out test1_private.out
-diff test2.out test2_private.out
-diff test3.out test3_private.out
-diff test4.out test4_private.out
+valgrind --leak-check=yes ./mtm_tot < test1.in
+valgrind --leak-check=yes ./mtm_tot < test2.in
+valgrind --leak-check=yes ./mtm_tot < test3.in
+valgrind --leak-check=yes ./mtm_tot < test4.in
+
