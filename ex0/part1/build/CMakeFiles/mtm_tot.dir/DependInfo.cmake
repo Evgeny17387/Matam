@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/evostrov/Desktop/part1/part1.c" "CMakeFiles/mtm_tot.dir/part1.c.obj" "gcc" "CMakeFiles/mtm_tot.dir/part1.c.obj.d"
+  "C:/Users/evostrov/Desktop/Matam/ex0/part1/part1.c" "CMakeFiles/mtm_tot.dir/part1.c.obj" "gcc" "CMakeFiles/mtm_tot.dir/part1.c.obj.d"
   )
 
 # Targets to which this target links.

@@ -39,6 +39,7 @@ int main()
     inputs = scanf("%d", &size);
     if (inputs !=  CHECK_INPUT_NUMBERS)
     {
+        printf(MESSAGE_INVALID_SIZE);
         return ERROR_INVALID_ARGUMENT_ENTERED;
     }
     else if (size < CHECK_MINIMUM_INPUT_SIZE)

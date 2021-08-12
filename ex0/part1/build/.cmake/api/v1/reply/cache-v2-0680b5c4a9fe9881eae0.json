@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/evostrov/Desktop/part1/build"
+			"value" : "c:/Users/evostrov/Desktop/Matam/ex0/part1/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -167,10 +167,10 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
+					"value" : "C compiler"
 				}
 			],
-			"type" : "FILEPATH",
+			"type" : "STRING",
 			"value" : "C:/TDM-GCC-64/bin/x86_64-w64-mingw32-gcc.exe"
 		},
 		{
@@ -503,7 +503,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/evostrov/Desktop/part1"
+			"value" : "C:/Users/evostrov/Desktop/Matam/ex0/part1"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1183,7 +1183,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/evostrov/Desktop/part1/build"
+			"value" : "C:/Users/evostrov/Desktop/Matam/ex0/part1/build"
 		},
 		{
 			"name" : "hw0_SOURCE_DIR",
@@ -1195,7 +1195,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/evostrov/Desktop/part1"
+			"value" : "C:/Users/evostrov/Desktop/Matam/ex0/part1"
 		}
 	],
 	"kind" : "cache",

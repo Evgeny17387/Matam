@@ -53,10 +53,10 @@ RM = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\evostrov\Desktop\part1
+CMAKE_SOURCE_DIR = C:\Users\evostrov\Desktop\Matam\ex0\part1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\evostrov\Desktop\part1\build
+CMAKE_BINARY_DIR = C:\Users\evostrov\Desktop\Matam\ex0\part1\build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -80,14 +80,14 @@ clean: CMakeFiles/mtm_tot.dir/clean
 CMakeFiles/mtm_tot.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\mtm_tot.dir\build.make CMakeFiles/mtm_tot.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\mtm_tot.dir\build.make CMakeFiles/mtm_tot.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\evostrov\Desktop\part1\build\CMakeFiles --progress-num=1,2 "Built target mtm_tot"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\evostrov\Desktop\Matam\ex0\part1\build\CMakeFiles --progress-num=1,2 "Built target mtm_tot"
 .PHONY : CMakeFiles/mtm_tot.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/mtm_tot.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\evostrov\Desktop\part1\build\CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\evostrov\Desktop\Matam\ex0\part1\build\CMakeFiles 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/mtm_tot.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\evostrov\Desktop\part1\build\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\evostrov\Desktop\Matam\ex0\part1\build\CMakeFiles 0
 .PHONY : CMakeFiles/mtm_tot.dir/rule
 
 # Convenience name for target.

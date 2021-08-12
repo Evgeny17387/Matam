@@ -1,5 +1,5 @@
 CMakeFiles/mtm_tot.dir/part1.c.obj: \
- C:\Users\evostrov\Desktop\part1\part1.c \
+ C:\Users\evostrov\Desktop\Matam\ex0\part1\part1.c \
  C:/TDM-GCC-64/x86_64-w64-mingw32/include/stdio.h \
  C:/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt_stdio_config.h \
  C:/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt.h \
