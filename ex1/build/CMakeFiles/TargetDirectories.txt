@@ -1,3 +1,0 @@
-C:/Users/evostrov/Desktop/Matam/ex1/build/CMakeFiles/mtm_tot.dir
-C:/Users/evostrov/Desktop/Matam/ex1/build/CMakeFiles/edit_cache.dir
-C:/Users/evostrov/Desktop/Matam/ex1/build/CMakeFiles/rebuild_cache.dir
