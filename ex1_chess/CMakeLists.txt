@@ -7,8 +7,4 @@ set(MTM_FLAGS_RELEASE "${MTM_FLAGS_DEBUG} -DNDBUG")
 
 set(CMAKE_C_FLAGS ${MTM_FLAGS_DEBUG})
 
-link_directories(.)
-
-add_executable(chessSystemTestsExample chessSystem.c tests/chessSystemTestsExample.c)
-
-target_link_libraries(chessSystemTestsExample libmap.a)
+add_executable(chessSystemTestsExample tests/chessSystemTestsExample.c chessSystem.c mtm_map/map.c)
