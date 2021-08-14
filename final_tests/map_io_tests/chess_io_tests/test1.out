@@ -1,0 +1,4 @@
+Running testChessAddTournament ... [OK]
+Running testChessRemoveTournament ... [OK]
+Running testChessAddGame ... [OK]
+Running testChessPrintLevelsAndTournamentStatistics ... [OK]
