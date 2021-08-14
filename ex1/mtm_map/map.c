@@ -116,6 +116,7 @@ int mapGetSize(Map map)
 
     Node iterator = map->head;
 
+    // ToDo: add size member to map, keep updated using the rest of the functions
     while (NULL != iterator)
     {
         size++;
@@ -132,6 +133,7 @@ MapKeyElement mapGetFirst(Map map)
         return NULL;
     }
 
+    // ToDo: use member istead, once implemented
     if (EMPTY_MAP == mapGetSize(map))
     {
         return NULL;

@@ -169,7 +169,6 @@ bool testBadArguments()
 bool testPrivate() {
 
     Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
-    ASSERT_TEST(mapGetFirst(NULL) == NULL);
 
     int key = 1;
     char data = 1;
@@ -240,6 +239,32 @@ bool testPrivate() {
     key_pointer = (char*)mapGetNext(map);
     ASSERT_TEST(*key_pointer == 5);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 5);
+    free(key_pointer);
+
+    mapDestroy(map);
+
+    map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+
+    key = 2;
+    data = 2;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 1);
+    key_pointer = (char*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 2);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
+    free(key_pointer);
+
+    key = 1;
+    data = 1;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 2);
+    key_pointer = (char*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 1);
+    free(key_pointer);
+    key_pointer = (char*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 2);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
     free(key_pointer);
 
     mapDestroy(map);
