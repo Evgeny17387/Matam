@@ -1,0 +1,12 @@
+[
+{
+  "directory": "C:/Users/evostrov/Desktop/Matam/ex1/build",
+  "command": "C:\\TDM-GCC-64\\bin\\x86_64-w64-mingw32-gcc.exe   -std=c99 --pedantic-errors -Wall -Werror -g -o CMakeFiles\\mtm_tot.dir\\tests\\map_example_test.c.obj -c C:\\Users\\evostrov\\Desktop\\Matam\\ex1\\tests\\map_example_test.c",
+  "file": "C:/Users/evostrov/Desktop/Matam/ex1/tests/map_example_test.c"
+},
+{
+  "directory": "C:/Users/evostrov/Desktop/Matam/ex1/build",
+  "command": "C:\\TDM-GCC-64\\bin\\x86_64-w64-mingw32-gcc.exe   -std=c99 --pedantic-errors -Wall -Werror -g -o CMakeFiles\\mtm_tot.dir\\mtm_map\\map.c.obj -c C:\\Users\\evostrov\\Desktop\\Matam\\ex1\\mtm_map\\map.c",
+  "file": "C:/Users/evostrov/Desktop/Matam/ex1/mtm_map/map.c"
+}
+]
