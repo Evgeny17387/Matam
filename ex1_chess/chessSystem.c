@@ -6,9 +6,10 @@
 // ToDo: check if should be 0 or 1
 #define MIN_GAMES_PER_PLAYER 1
 
+// ToDo: add location member
 typedef struct tournament_t {
     int max_games_per_player;
-} *Tournament;
+} Tournament_t, *Tournament;
 
 struct chess_system_t {
     Map tournaments;
@@ -32,20 +33,21 @@ static MapKeyElement copyKeyInt(MapKeyElement n)
     return copy;
 }
 
-static MapDataElement copyDataChar(MapDataElement n)
+static MapDataElement copyDataTournament(MapDataElement n)
 {
+    // ToDo: update once Tournment struct is modified
     if (!n)
     {
         return NULL;
     }
 
-    char *copy = malloc(sizeof(*copy));
+    Tournament copy = malloc(sizeof(*copy));
     if (!copy)
     {
         return NULL;
     }
 
-    *copy = *(char *) n;
+    *copy = *(Tournament) n;
 
     return (MapDataElement) copy;
 }
@@ -55,8 +57,9 @@ static void freeInt(MapKeyElement n)
     free(n);
 }
 
-static void freeChar(MapDataElement n)
+static void freeTournament(MapDataElement n)
 {
+    // ToDo: update once Tournment struct is modified
     free(n);
 }
 
@@ -72,10 +75,10 @@ ChessSystem chessCreate()
         return NULL;
     }
 
-    chess_system->tournaments = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+    chess_system->tournaments = mapCreate(copyDataTournament, copyKeyInt, freeTournament, freeInt, compareInts);
     if (NULL == chess_system->tournaments)
     {
-        free(chess_system->tournaments);
+        mapDestroy(chess_system->tournaments);
         return NULL;
     }
 
@@ -84,6 +87,7 @@ ChessSystem chessCreate()
 
 void chessDestroy(ChessSystem chess)
 {
+    // ToDO: update once chess struct is modified
     mapDestroy(chess->tournaments);
     free(chess);
 }
@@ -102,6 +106,15 @@ ChessResult chessAddTournament(
     if (max_games_per_player < MIN_GAMES_PER_PLAYER)
     {
         return CHESS_INVALID_MAX_GAMES;
+    }
+
+    Tournament_t tournament;
+    tournament.max_games_per_player = max_games_per_player;
+
+    MapResult map_result = mapPut(chess->tournaments, &tournament_id, &tournament);
+    if (MAP_OUT_OF_MEMORY == map_result)
+    {
+        return CHESS_OUT_OF_MEMORY;
     }
 
     return CHESS_SUCCESS;
