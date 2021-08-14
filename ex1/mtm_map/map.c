@@ -6,6 +6,8 @@
 
 #define EMPTY_MAP 0
 
+#define KEY_COMPARE_EQUAL 0
+
 typedef struct node {
     struct node* next;
     MapKeyElement key;
@@ -23,6 +25,12 @@ struct Map_t {
 
     Node current_key_element;
 };
+
+// Interenal function
+// Assumes all arguments are checked
+// Returns pointer for Node in the map with key uquals to keyElement
+// If no element found, return NULL
+static Node findKeyElement(Map map, MapKeyElement keyElement);
 
 Map mapCreate(copyMapDataElements copyDataElement,
               copyMapKeyElements copyKeyElement,
@@ -63,6 +71,20 @@ void mapDestroy(Map map)
     if (NULL == map) {
         return;
     }
+
+    Node iterator = map->head;
+
+    while (NULL != iterator)
+    {
+        Node iterator_next = iterator->next;
+
+        map->freeKeyElement(iterator->key);
+        map->freeDataElement(iterator->data);
+
+        iterator = iterator_next;
+    }
+
+    map->head = NULL;
 
     free(map);
 }
@@ -122,7 +144,7 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement)
     // Search if element with given key already exists in the map
     while (NULL != *iterator)
     {
-        if (0 == map->compareKeyElements((*iterator)->key, keyElement))
+        if (KEY_COMPARE_EQUAL == map->compareKeyElements((*iterator)->key, keyElement))
         {
             MapDataElement data_copy = map->copyDataElement(dataElement);
             if (NULL == data_copy)
@@ -169,4 +191,38 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement)
     (*iterator) = node_new;
 
     return MAP_SUCCESS;
+}
+
+MapDataElement mapGet(Map map, MapKeyElement keyElement)
+{
+    if ((NULL == map) || (NULL == keyElement))
+    {
+        return NULL;
+    }
+
+    Node node = findKeyElement(map, keyElement);
+
+    if (NULL == node)
+    {
+        return NULL;
+    }
+
+    return node->data;
+}
+
+static Node findKeyElement(Map map, MapKeyElement keyElement)
+{
+    Node iterator = map->head;
+
+    while (NULL != iterator)
+    {
+        if (KEY_COMPARE_EQUAL == map->compareKeyElements(iterator->key, keyElement))
+        {
+            break;
+        }
+
+        iterator = iterator->next;
+    }
+    
+    return iterator;
 }

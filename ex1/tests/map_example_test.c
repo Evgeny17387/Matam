@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "../mtm_map/map.h"
 
-#define NUMBER_TESTS 3
+#define NUMBER_TESTS 4
 
 /** Function to be used for copying an int as a key to the map */
 static MapKeyElement copyKeyInt(MapKeyElement n) {
@@ -48,7 +48,11 @@ static int compareInts(MapKeyElement n1, MapKeyElement n2) {
 bool testMapCreateDestroy() {
     Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
     ASSERT_TEST(map != NULL);
+    ASSERT_TEST(map != NULL);
+    ASSERT_TEST(mapGetFirst(map) == NULL);
     mapDestroy(map);
+
+    // Private Test
 
     map = mapCreate(NULL, copyKeyInt, freeChar, freeInt, compareInts);
     ASSERT_TEST(map == NULL);
@@ -79,6 +83,8 @@ bool testMapGetFirst() {
     ASSERT_TEST(mapGetFirst(map) == NULL);
     mapDestroy(map);
 
+    // Private Test
+
     ASSERT_TEST(mapGetFirst(NULL) == NULL);
 
     return true;
@@ -92,35 +98,66 @@ bool testMapAddAndSize() {
         ASSERT_TEST(mapPut(map, &i, &j) == MAP_SUCCESS);
         ASSERT_TEST(mapGetSize(map) == i);
     }
+    mapDestroy(map);
 
+    // Private Test
+
+    int key;
+    char data;
+
+    ASSERT_TEST(mapPut(NULL, &key, &data) == MAP_NULL_ARGUMENT);
+    ASSERT_TEST(mapPut(map, NULL, &data) == MAP_NULL_ARGUMENT);
+    ASSERT_TEST(mapPut(map, &key, NULL) == MAP_NULL_ARGUMENT);
+
+    map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+    ASSERT_TEST(map != NULL);
+    ASSERT_TEST(mapGetFirst(map) == NULL);
+    key = 1;
+    data = 1;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 1);
+    data = 2;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 1);
+    key = 2;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 2);
     mapDestroy(map);
 
     return true;
 }
 
-// bool testMapGet() {
-//     Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt,
-//                         compareInts);
-//     for (int i = 1; i < 1000; ++i) {
-//         char j = (char) i;
-//         ++j;
-//         ASSERT_TEST(mapPut(map, &i, &j) == MAP_SUCCESS);
-//         ASSERT_TEST(mapGetSize(map) == i);
-//     }
+bool testMapGet() {
+    Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+    for (int i = 1; i < 1000; ++i) {
+        char j = (char) i;
+        ++j;
+        ASSERT_TEST(mapPut(map, &i, &j) == MAP_SUCCESS);
+        ASSERT_TEST(mapGetSize(map) == i);
+    }
 
-//     for (int i = 1; i < 1000; ++i) {
-//         char j = (char) i;
-//         ++j;
-//         char *getVal = (char *) mapGet(map, &i);
-//         ASSERT_TEST(*getVal == j);
-//     }
-//     int i = 0;
-//     ASSERT_TEST(mapGet(map, &i) == NULL);
-//     i = 1000;
-//     ASSERT_TEST(mapGet(map, &i) == NULL);
-//     mapDestroy(map);
-//     return true;
-// }
+    for (int i = 1; i < 1000; ++i) {
+        char j = (char) i;
+        ++j;
+        char *getVal = (char *) mapGet(map, &i);
+        ASSERT_TEST(*getVal == j);
+    }
+    int i = 0;
+    ASSERT_TEST(mapGet(map, &i) == NULL);
+    i = 1000;
+    ASSERT_TEST(mapGet(map, &i) == NULL);
+    mapDestroy(map);
+
+    // Private Test
+
+    map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+    int key = 1;
+    ASSERT_TEST(mapGet(NULL, &key) == NULL);
+    ASSERT_TEST(mapGet(map, NULL) == NULL);
+    ASSERT_TEST(mapGet(map, &key) == NULL);
+
+    return true;
+}
 
 // bool testIterator() {
 //     Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt,
@@ -158,8 +195,8 @@ bool testMapAddAndSize() {
 bool (*tests[]) (void) = {
         testMapCreateDestroy,
         testMapGetFirst,
-        testMapAddAndSize
-        // testMapGet,
+        testMapAddAndSize,
+        testMapGet
         // testIterator
 };
 
@@ -167,8 +204,8 @@ bool (*tests[]) (void) = {
 const char* testNames[] = {
         "testMapCreateDestroy",
         "testMapGetFirst",
-        "testMapAddAndSize"
-        // "testMapGet",
+        "testMapAddAndSize",
+        "testMapGet"
         // "testIterator"
 };
 
