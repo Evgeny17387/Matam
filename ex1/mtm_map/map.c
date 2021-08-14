@@ -7,6 +7,7 @@
 #define EMPTY_MAP 0
 
 #define KEY_COMPARE_EQUAL 0
+#define KEY_COMPARE_FIRST_GREATER(result) result > KEY_COMPARE_EQUAL ? true : false
 
 typedef struct node {
     struct node* next;
@@ -30,7 +31,22 @@ struct Map_t {
 // Assumes all arguments are checked
 // Returns pointer for Node in the map with key uquals to keyElement
 // If no element found, return NULL
-static Node findKeyElement(Map map, MapKeyElement keyElement);
+static Node findKeyElement(Map map, MapKeyElement keyElement)
+{
+    Node iterator = map->head;
+
+    while (NULL != iterator)
+    {
+        if (KEY_COMPARE_EQUAL == map->compareKeyElements(iterator->key, keyElement))
+        {
+            break;
+        }
+
+        iterator = iterator->next;
+    }
+    
+    return iterator;
+}
 
 Map mapCreate(copyMapDataElements copyDataElement,
               copyMapKeyElements copyKeyElement,
@@ -141,54 +157,100 @@ MapResult mapPut(Map map, MapKeyElement keyElement, MapDataElement dataElement)
 
     Node* iterator = &(map->head);
 
-    // Search if element with given key already exists in the map
-    while (NULL != *iterator)
+    bool is_to_stop_search = false;
+
+    bool is_to_add_new = false;
+
+    while (!is_to_stop_search)
     {
-        if (KEY_COMPARE_EQUAL == map->compareKeyElements((*iterator)->key, keyElement))
+        if (NULL == *iterator)
         {
-            MapDataElement data_copy = map->copyDataElement(dataElement);
-            if (NULL == data_copy)
-            {
-                return MAP_OUT_OF_MEMORY;
-            }
-
-            map->freeDataElement((*iterator)->data);
-
-            (*iterator)->data = data_copy;
-
-            return MAP_SUCCESS;
+            // ToDo: corner case, only for empty list, solve otherwise
+            is_to_stop_search = true;
+            is_to_add_new = true;
         }
+        else
+        {
+            int compare_result_current = map->compareKeyElements(keyElement, (*iterator)->key);
 
-        iterator = &((*iterator)->next);
-    }
+            if (KEY_COMPARE_EQUAL == compare_result_current)
+            {
+                is_to_stop_search = true;
+            }
+            else
+            {
+                bool is_last_element = NULL == (*iterator)->next;
 
-    // In case element with given key doesn't exist, add new key-element pair to map
-    Node node_new = malloc(sizeof(*node_new));
-    if (NULL == node_new)
-    {
-        return MAP_OUT_OF_MEMORY;
-    }
+                if (is_last_element)
+                {
+                    is_to_stop_search = true;
+                    is_to_add_new = true;
 
-    MapKeyElement key_copy = map->copyKeyElement(keyElement);
-    if (NULL == key_copy)
-    {
-        free(node_new);
-        return MAP_OUT_OF_MEMORY;
+                    if (compare_result_current > 0)
+                    {
+                       iterator = &((*iterator)->next);
+                    }
+                    else
+                    {
+                        // ToDo: corner case, only for list with one element, solve otherwise
+                        iterator = &(map->head);
+                    }
+                }
+                else
+                {
+                    int compare_result_next = map->compareKeyElements(keyElement, (*iterator)->next->key);
+
+                    // ToDo: does go over all logical posibilities, implement otherwise, ihsa !!!
+                    if ((compare_result_current > 0) && (compare_result_next < 0))
+                    {
+                        is_to_stop_search = true;
+                        is_to_add_new = true;
+
+                        iterator = &((*iterator)->next);
+                    }
+                    else
+                    {
+                        iterator = &((*iterator)->next);
+                    }
+                }
+            }
+        }
     }
 
     MapDataElement data_copy = map->copyDataElement(dataElement);
     if (NULL == data_copy)
     {
-        free(node_new);
-        map->freeKeyElement(key_copy);
         return MAP_OUT_OF_MEMORY;
     }
 
-    node_new->next = NULL;
-    node_new->key = key_copy;
-    node_new->data = data_copy;
+    if (is_to_add_new)
+    {
+        Node node_new = malloc(sizeof(*node_new));
+        if (NULL == node_new)
+        {
+            map->freeDataElement(data_copy);
+            return MAP_OUT_OF_MEMORY;
+        }
 
-    (*iterator) = node_new;
+        MapKeyElement key_copy = map->copyKeyElement(keyElement);
+        if (NULL == key_copy)
+        {
+            free(node_new);
+            map->freeDataElement(data_copy);
+            return MAP_OUT_OF_MEMORY;
+        }
+
+        node_new->next = *iterator;
+        node_new->key = key_copy;
+        node_new->data = data_copy;
+
+        *iterator = node_new;
+    }
+    else
+    {
+        map->freeDataElement((*iterator)->data);
+        (*iterator)->data = data_copy;
+    }
 
     return MAP_SUCCESS;
 }
@@ -210,19 +272,30 @@ MapDataElement mapGet(Map map, MapKeyElement keyElement)
     return node->data;
 }
 
-static Node findKeyElement(Map map, MapKeyElement keyElement)
+MapKeyElement mapGetNext(Map map)
 {
-    Node iterator = map->head;
-
-    while (NULL != iterator)
+    if (NULL == map)
     {
-        if (KEY_COMPARE_EQUAL == map->compareKeyElements(iterator->key, keyElement))
-        {
-            break;
-        }
-
-        iterator = iterator->next;
+        return NULL;
     }
-    
-    return iterator;
+
+    if (NULL == map->current_key_element)
+    {
+        return NULL;
+    }
+
+    map->current_key_element = map->current_key_element->next;
+    if (NULL == map->current_key_element)
+    {
+        return NULL;
+    }
+
+    MapKeyElement key_copy = map->copyKeyElement(map->current_key_element->key);
+    if (NULL == key_copy)
+    {
+        // ToDo: should we revert value of the current_key_element ?
+        return NULL;
+    }
+
+    return key_copy;
 }

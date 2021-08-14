@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "../mtm_map/map.h"
 
-#define NUMBER_TESTS 4
+#define NUMBER_TESTS 6
 
 /** Function to be used for copying an int as a key to the map */
 static MapKeyElement copyKeyInt(MapKeyElement n) {
@@ -48,45 +48,8 @@ static int compareInts(MapKeyElement n1, MapKeyElement n2) {
 bool testMapCreateDestroy() {
     Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
     ASSERT_TEST(map != NULL);
-    ASSERT_TEST(map != NULL);
     ASSERT_TEST(mapGetFirst(map) == NULL);
     mapDestroy(map);
-
-    // Private Test
-
-    map = mapCreate(NULL, copyKeyInt, freeChar, freeInt, compareInts);
-    ASSERT_TEST(map == NULL);
-    mapDestroy(map);
-
-    map = mapCreate(copyDataChar, NULL, freeChar, freeInt, compareInts);
-    ASSERT_TEST(map == NULL);
-    mapDestroy(map);
-
-    map = mapCreate(copyDataChar, copyKeyInt, NULL, freeInt, compareInts);
-    ASSERT_TEST(map == NULL);
-    mapDestroy(map);
-
-    map = mapCreate(copyDataChar, copyKeyInt, freeChar, NULL, compareInts);
-    ASSERT_TEST(map == NULL);
-    mapDestroy(map);
-
-    map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, NULL);
-    ASSERT_TEST(map == NULL);
-    mapDestroy(map);
-
-    return true;
-}
-
-bool testMapGetFirst() {
-    Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
-    ASSERT_TEST(map != NULL);
-    ASSERT_TEST(mapGetFirst(map) == NULL);
-    mapDestroy(map);
-
-    // Private Test
-
-    ASSERT_TEST(mapGetFirst(NULL) == NULL);
-
     return true;
 }
 
@@ -99,31 +62,6 @@ bool testMapAddAndSize() {
         ASSERT_TEST(mapGetSize(map) == i);
     }
     mapDestroy(map);
-
-    // Private Test
-
-    int key;
-    char data;
-
-    ASSERT_TEST(mapPut(NULL, &key, &data) == MAP_NULL_ARGUMENT);
-    ASSERT_TEST(mapPut(map, NULL, &data) == MAP_NULL_ARGUMENT);
-    ASSERT_TEST(mapPut(map, &key, NULL) == MAP_NULL_ARGUMENT);
-
-    map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
-    ASSERT_TEST(map != NULL);
-    ASSERT_TEST(mapGetFirst(map) == NULL);
-    key = 1;
-    data = 1;
-    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
-    ASSERT_TEST(mapGetSize(map) == 1);
-    data = 2;
-    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
-    ASSERT_TEST(mapGetSize(map) == 1);
-    key = 2;
-    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
-    ASSERT_TEST(mapGetSize(map) == 2);
-    mapDestroy(map);
-
     return true;
 }
 
@@ -147,66 +85,186 @@ bool testMapGet() {
     i = 1000;
     ASSERT_TEST(mapGet(map, &i) == NULL);
     mapDestroy(map);
+    return true;
+}
 
-    // Private Test
+bool testIterator() {
+    Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+    for (int i = 1; i < 400; ++i) {
+        char j = (char) i;
+        ++j;
+        ASSERT_TEST(mapPut(map, &i, &j) == MAP_SUCCESS);
+    }
+
+    for (int i = 800; i >= 400; --i) {
+        char j = (char) i;
+        ++j;
+        ASSERT_TEST(mapPut(map, &i, &j) == MAP_SUCCESS);
+    }
+
+    for (int i = 801; i < 1000; ++i) {
+        char j = (char) i;
+        ++j;
+        ASSERT_TEST(mapPut(map, &i, &j) == MAP_SUCCESS);
+    }
+
+    int i = 1;
+    MAP_FOREACH(int *, iter, map) {
+      ASSERT_TEST(*iter == i);
+      freeInt(iter);
+      i++;
+    }
+
+    mapDestroy(map);
+    return true;
+}
+
+bool testBadArguments()
+{
+    // mapCreate
+
+    Map map = mapCreate(NULL, copyKeyInt, freeChar, freeInt, compareInts);
+    ASSERT_TEST(map == NULL);
+
+    map = mapCreate(copyDataChar, NULL, freeChar, freeInt, compareInts);
+    ASSERT_TEST(map == NULL);
+
+    map = mapCreate(copyDataChar, copyKeyInt, NULL, freeInt, compareInts);
+    ASSERT_TEST(map == NULL);
+
+    map = mapCreate(copyDataChar, copyKeyInt, freeChar, NULL, compareInts);
+    ASSERT_TEST(map == NULL);
+
+    map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, NULL);
+    ASSERT_TEST(map == NULL);
+
+    // mapGetFirst
+
+    ASSERT_TEST(mapGetFirst(NULL) == NULL);
+
+    // mapGet
 
     map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
-    int key = 1;
+    ASSERT_TEST(map != NULL);
+
+    int key;
+
     ASSERT_TEST(mapGet(NULL, &key) == NULL);
     ASSERT_TEST(mapGet(map, NULL) == NULL);
     ASSERT_TEST(mapGet(map, &key) == NULL);
 
+    // mapPut
+
+    char data;
+
+    ASSERT_TEST(mapPut(NULL, &key, &data) == MAP_NULL_ARGUMENT);
+    ASSERT_TEST(mapPut(map, NULL, &data) == MAP_NULL_ARGUMENT);
+    ASSERT_TEST(mapPut(map, &key, NULL) == MAP_NULL_ARGUMENT);
+
+    mapDestroy(map);
+
     return true;
 }
 
-// bool testIterator() {
-//     Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt,
-//                         compareInts);
-//     for (int i = 1; i < 400; ++i) {
-//         char j = (char) i;
-//         ++j;
-//         ASSERT_TEST(mapPut(map, &i, &j) == MAP_SUCCESS);
-//     }
+bool testPrivate() {
 
-//     for (int i = 800; i >= 400; --i) {
-//         char j = (char) i;
-//         ++j;
-//         ASSERT_TEST(mapPut(map, &i, &j) == MAP_SUCCESS);
-//     }
+    Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+    ASSERT_TEST(mapGetFirst(NULL) == NULL);
 
-//     for (int i = 801; i < 1000; ++i) {
-//         char j = (char) i;
-//         ++j;
-//         ASSERT_TEST(mapPut(map, &i, &j) == MAP_SUCCESS);
-//     }
+    int key = 1;
+    char data = 1;
 
-//     int i = 1;
-//     MAP_FOREACH(int *, iter, map) {
-//       ASSERT_TEST(*iter == i);
-//       freeInt(iter);
-//       i++;
-//     }
+    char *key_pointer;
 
-//     mapDestroy(map);
-//     return true;
-// }
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 1);
+    key_pointer = (char *)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 1);
+    free(key_pointer);
+
+    data = 2;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 1);
+    key_pointer = (char *)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
+    free(key_pointer);
+
+    key = 4;
+    data = 4;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 2);
+    key_pointer = (char*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
+    free(key_pointer);
+    key_pointer = (char*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 4);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 4);
+    free(key_pointer);
+
+    key = 3;
+    data = 3;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 3);
+    key_pointer = (char*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
+    free(key_pointer);
+    key_pointer = (char*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 3);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 3);
+    free(key_pointer);
+    key_pointer = (char*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 4);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 4);
+    free(key_pointer);
+
+    key = 5;
+    data = 5;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 4);
+    key_pointer = (char*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
+    free(key_pointer);
+    key_pointer = (char*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 3);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 3);
+    free(key_pointer);
+    key_pointer = (char*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 4);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 4);
+    free(key_pointer);
+    key_pointer = (char*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 5);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 5);
+    free(key_pointer);
+
+    mapDestroy(map);
+
+    return true;
+}
 
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
         testMapCreateDestroy,
-        testMapGetFirst,
         testMapAddAndSize,
-        testMapGet
-        // testIterator
+        testMapGet,
+        testIterator,
+        testBadArguments,
+        testPrivate
 };
 
 /*The names of the test functions should be added here*/
 const char* testNames[] = {
         "testMapCreateDestroy",
-        "testMapGetFirst",
         "testMapAddAndSize",
-        "testMapGet"
-        // "testIterator"
+        "testMapGet",
+        "testIterator",
+        "testBadArguments",
+        "testPrivate"
 };
 
 int main(int argc, char *argv[]) {
