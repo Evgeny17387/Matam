@@ -10,4 +10,4 @@ set(CMAKE_C_FLAGS ${MTM_FLAGS_DEBUG})
 #link_directories(.)
 #target_link_libraries(mtm_tot libmap.a)
 
-add_executable(chessSystemTestsExample tests/chessSystemTestsExample.c)
+add_executable(chessSystemTestsExample chessSystem.c tests/chessSystemTestsExample.c)

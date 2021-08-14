@@ -3,15 +3,15 @@
 #include "../test_utilities.h"
 
 /*The number of tests*/
-#define NUMBER_TESTS 1
+#define NUMBER_TESTS 2
 
 bool testChessAddTournament() {
-    // ChessSystem chess = chessCreate();
-    // ASSERT_TEST(chessAddTournament(chess, 1, 4, "London") == CHESS_SUCCESS);
+    ChessSystem chess = chessCreate();
+    ASSERT_TEST(chessAddTournament(chess, 1, 4, "London") == CHESS_SUCCESS);
     // ASSERT_TEST(chessAddTournament(chess, 2, 5, "London") == CHESS_SUCCESS);
     // ASSERT_TEST(chessAddTournament(chess, 1, 10, "Paris") == CHESS_TOURNAMENT_ALREADY_EXISTS);
 
-    // chessDestroy(chess);
+    chessDestroy(chess);
     return true;
 }
 
@@ -60,20 +60,34 @@ bool testChessAddTournament() {
 //     return true;
 // }
 
+bool testBadArguments()
+{
+    ChessSystem chess_system = chessCreate();
+
+    ASSERT_TEST(chessAddTournament(NULL, 1, 4, "London") == CHESS_NULL_ARGUMENT);
+    ASSERT_TEST(chessAddTournament(chess_system, 1, 4, NULL) == CHESS_NULL_ARGUMENT);
+
+    chessDestroy(chess_system);
+
+    return true;
+}
+
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
-        testChessAddTournament
+        testChessAddTournament,
         // testChessRemoveTournament,
         // testChessAddGame,
         // testChessPrintLevelsAndTournamentStatistics
+        testBadArguments
 };
 
 /*The names of the test functions should be added here*/
 const char* testNames[] = {
-        "testChessAddTournament"
+        "testChessAddTournament",
         // "testChessRemoveTournament",
         // "testChessAddGame",
         // "testChessPrintLevelsAndTournamentStatistics"
+        "testBadArguments"
 };
 
 int main(int argc, char *argv[]) {
