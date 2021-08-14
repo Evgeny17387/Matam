@@ -166,15 +166,20 @@ bool testBadArguments()
     return true;
 }
 
-bool testPrivate() {
+bool testPrivate()
+{
 
-    Map map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+    Map map;
 
-    int key = 1;
-    char data = 1;
+    int key;
+    char data;
 
     char *key_pointer;
 
+    map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+
+    key = 1;
+    data = 1;
     ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
     ASSERT_TEST(mapGetSize(map) == 1);
     key_pointer = (char *)mapGetFirst(map);

@@ -96,6 +96,8 @@ void mapDestroy(Map map)
 
         map->freeKeyElement(iterator->key);
         map->freeDataElement(iterator->data);
+        
+        free(iterator);
 
         iterator = iterator_next;
     }
