@@ -133,7 +133,6 @@ ChessSystem chessCreate()
 
 void chessDestroy(ChessSystem chess)
 {
-    // ToDO: update once chess struct is modified
     mapDestroy(chess->tournaments);
     free(chess);
 }
@@ -228,7 +227,7 @@ bool isPlayersExceededMaxGames(Tournament tournament, Game game)
     return false;
 }
 
-void addGame(Tournament tournament, Game game)
+bool addGame(Tournament tournament, Game game)
 {
     Game* iterator = &(tournament->games);
 
@@ -238,8 +237,14 @@ void addGame(Tournament tournament, Game game)
     }
 
     *iterator = malloc(sizeof(**iterator));
-    // ToDo: add check for malloc
+    if (NULL == *iterator)
+    {
+        return false;
+    }
+
     **iterator = *game;
+
+    return true;
 }
 
 ChessResult chessAddGame(
@@ -297,7 +302,10 @@ ChessResult chessAddGame(
         return CHESS_EXCEEDED_GAMES;
     }
 
-    addGame(tournament, &game);
+    if (!addGame(tournament, &game))
+    {
+        return CHESS_OUT_OF_MEMORY;
+    }
 
     return CHESS_SUCCESS;
 }
