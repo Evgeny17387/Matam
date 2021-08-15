@@ -6,6 +6,9 @@
 // ToDo: check if should be 0 or 1
 #define MIN_GAMES_PER_PLAYER 1
 
+// ToDo: check if should be 0 or 1
+#define MIN_VALID_TOURNMENT_ID 1
+
 // ToDo: add location member
 typedef struct tournament_t {
     int max_games_per_player;
@@ -102,6 +105,18 @@ ChessResult chessAddTournament(
     {
         return CHESS_NULL_ARGUMENT;
     }
+
+    if (tournament_id < MIN_VALID_TOURNMENT_ID)
+    {
+        return CHESS_INVALID_ID;
+    }
+
+    if (NULL != mapGet(chess->tournaments, &tournament_id))
+    {
+        return CHESS_TOURNAMENT_ALREADY_EXISTS;
+    }
+
+    // ToDo: check for location
 
     if (max_games_per_player < MIN_GAMES_PER_PLAYER)
     {

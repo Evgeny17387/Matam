@@ -8,8 +8,8 @@
 bool testChessAddTournament() {
     ChessSystem chess = chessCreate();
     ASSERT_TEST(chessAddTournament(chess, 1, 4, "London") == CHESS_SUCCESS);
-    // ASSERT_TEST(chessAddTournament(chess, 2, 5, "London") == CHESS_SUCCESS);
-    // ASSERT_TEST(chessAddTournament(chess, 1, 10, "Paris") == CHESS_TOURNAMENT_ALREADY_EXISTS);
+    ASSERT_TEST(chessAddTournament(chess, 2, 5, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddTournament(chess, 1, 10, "Paris") == CHESS_TOURNAMENT_ALREADY_EXISTS);
 
     chessDestroy(chess);
     return true;
