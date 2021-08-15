@@ -64,12 +64,25 @@ bool testBadArguments()
 {
     ChessSystem chess_system = chessCreate();
 
-    ASSERT_TEST(chessAddTournament(NULL, 1, 4, "London") == CHESS_NULL_ARGUMENT);
-    ASSERT_TEST(chessAddTournament(chess_system, 1, 4, NULL) == CHESS_NULL_ARGUMENT);
-    ASSERT_TEST(chessAddTournament(chess_system, 0, 4, "London") == CHESS_INVALID_ID);
+    ASSERT_TEST(chessAddTournament(NULL, 1, 1, "London") == CHESS_NULL_ARGUMENT);
+    ASSERT_TEST(chessAddTournament(chess_system, 1, 1, NULL) == CHESS_NULL_ARGUMENT);
+    ASSERT_TEST(chessAddTournament(chess_system, 0, 1, "London") == CHESS_INVALID_ID);
     ASSERT_TEST(chessAddTournament(chess_system, 1, 0, "London") == CHESS_INVALID_MAX_GAMES);
-    ASSERT_TEST(chessAddTournament(chess_system, 1, 4, "London") == CHESS_SUCCESS);
-    ASSERT_TEST(chessAddTournament(chess_system, 1, 4, "London") == CHESS_TOURNAMENT_ALREADY_EXISTS);
+    ASSERT_TEST(chessAddTournament(chess_system, 1, 1, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddTournament(chess_system, 1, 1, "London") == CHESS_TOURNAMENT_ALREADY_EXISTS);
+
+    ASSERT_TEST(chessAddGame(NULL, 1, 1, 2, FIRST_PLAYER, 1) == CHESS_NULL_ARGUMENT);
+    ASSERT_TEST(chessAddGame(chess_system, 0, 1, 2, FIRST_PLAYER, 1) == CHESS_INVALID_ID);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 0, 2, FIRST_PLAYER, 1) == CHESS_INVALID_ID);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 0, FIRST_PLAYER, 1) == CHESS_INVALID_ID);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 1, FIRST_PLAYER, 1) == CHESS_INVALID_ID);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, 3, 1) == CHESS_INVALID_ID);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, -1) == CHESS_INVALID_PLAY_TIME);
+
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, 1) == CHESS_GAME_ALREADY_EXISTS);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 3, FIRST_PLAYER, 1) == CHESS_EXCEEDED_GAMES);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 2, 3, FIRST_PLAYER, 1) == CHESS_EXCEEDED_GAMES);
 
     chessDestroy(chess_system);
 
