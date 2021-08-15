@@ -3,7 +3,7 @@
 #include "../test_utilities.h"
 
 /*The number of tests*/
-#define NUMBER_TESTS 2
+#define NUMBER_TESTS 4
 
 bool testChessAddTournament() {
     ChessSystem chess = chessCreate();
@@ -27,15 +27,15 @@ bool testChessAddTournament() {
 //     return true;
 // }
 
-// bool testChessAddGame(){
-//     ChessSystem chess = chessCreate();
-//     ASSERT_TEST(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 2000) == CHESS_TOURNAMENT_NOT_EXIST);
-//     ASSERT_TEST(chessAddTournament(chess, 1, 4, "London") == CHESS_SUCCESS);
-//     ASSERT_TEST(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 2000) == CHESS_SUCCESS);
+bool testChessAddGame(){
+    ChessSystem chess = chessCreate();
+    ASSERT_TEST(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 2000) == CHESS_TOURNAMENT_NOT_EXIST);
+    ASSERT_TEST(chessAddTournament(chess, 1, 4, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 2000) == CHESS_SUCCESS);
 
-//     chessDestroy(chess);
-//     return true;
-// }
+    chessDestroy(chess);
+    return true;
+}
 
 // bool testChessPrintLevelsAndTournamentStatistics(){
 //     FILE* file_levels = fopen("./tests/player_levels_your_output.txt", "w");
@@ -76,22 +76,37 @@ bool testBadArguments()
     return true;
 }
 
+bool testPrivate()
+{
+    ChessSystem chess_system = chessCreate();
+
+    ASSERT_TEST(chessAddTournament(chess_system, 1, 1, "a") == CHESS_SUCCESS);
+
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
+
+    chessDestroy(chess_system);
+
+    return true;
+}
+
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
         testChessAddTournament,
         // testChessRemoveTournament,
-        // testChessAddGame,
+        testChessAddGame,
         // testChessPrintLevelsAndTournamentStatistics
-        testBadArguments
+        testBadArguments,
+        testPrivate
 };
 
 /*The names of the test functions should be added here*/
 const char* testNames[] = {
         "testChessAddTournament",
         // "testChessRemoveTournament",
-        // "testChessAddGame",
+        "testChessAddGame",
         // "testChessPrintLevelsAndTournamentStatistics"
-        "testBadArguments"
+        "testBadArguments",
+        "testPrivate"
 };
 
 int main(int argc, char *argv[]) {
