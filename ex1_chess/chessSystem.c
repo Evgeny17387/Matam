@@ -4,24 +4,24 @@
 #include <stdlib.h>
 
 // ToDo: check if should be 0 or 1
-#define MIN_VALID_GAMES_PER_PLAYER 1
-#define MIN_VALID_TOURNMENT_ID 1
-#define MIN_VALID_PLAYER_ID 1
-#define MIN_VALID_PLAY_TIME 0
+#define MIN_VALID_GAMES_PER_PLAYER  1
+#define MIN_VALID_TOURNMENT_ID      1
+#define MIN_VALID_PLAYER_ID         1
+#define MIN_VALID_PLAY_TIME         0
 
 typedef struct game_t {
-    struct game_t * next;
-    int first_player;
-    int second_player;
-    Winner winner;
-    int play_time;
+    struct game_t  *next;
+    int             first_player;
+    int             second_player;
+    Winner          winner;
+    int             play_time;
 } Game_t, *Game;
 
 // ToDo: add location member
 typedef struct tournament_t {
-    int max_games_per_player;
-    bool is_ended;
-    Game games;
+    int     max_games_per_player;
+    bool    is_ended;
+    Game    games;
 } Tournament_t, *Tournament;
 
 struct chess_system_t {
@@ -48,21 +48,42 @@ static MapKeyElement copyKeyInt(MapKeyElement n)
 
 static MapDataElement copyDataTournament(MapDataElement n)
 {
-    // ToDo: update once Tournment struct is modified
-    if (!n)
+    Tournament tournament_souce = (Tournament)n;
+
+    if (!tournament_souce)
     {
         return NULL;
     }
 
-    Tournament copy = malloc(sizeof(*copy));
-    if (!copy)
+    Tournament tournament_destination = malloc(sizeof(*tournament_destination));
+    if (!tournament_destination)
     {
         return NULL;
     }
 
-    *copy = *(Tournament) n;
+    tournament_destination->is_ended = tournament_souce->is_ended;
+    tournament_destination->max_games_per_player = tournament_souce->max_games_per_player;
+    tournament_destination->games = NULL;
 
-    return (MapDataElement) copy;
+    Game iterator_souce = tournament_souce->games;
+    Game* iterator_destination = &(tournament_destination->games);
+
+    while (NULL != iterator_souce)
+    {
+        *iterator_destination = malloc(sizeof(**iterator_destination));
+        // ToDo: check if malloc failed, if yes add logic for deleting all what has already been allocated
+
+        (*iterator_destination)->first_player = iterator_souce->first_player;
+        (*iterator_destination)->second_player = iterator_souce->second_player;
+        (*iterator_destination)->winner = iterator_souce->winner;
+        (*iterator_destination)->play_time = iterator_souce->play_time;
+        (*iterator_destination)->next = NULL;
+
+        iterator_souce = iterator_souce->next;
+        iterator_destination = &((*iterator_destination)->next);
+    }
+
+    return (MapDataElement) tournament_destination;
 }
 
 static void freeInt(MapKeyElement n)
@@ -72,7 +93,19 @@ static void freeInt(MapKeyElement n)
 
 static void freeTournament(MapDataElement n)
 {
-    // ToDo: update once Tournment struct is modified
+    Tournament tournament = (Tournament)n;
+
+    Game iterator = tournament->games;
+
+    while (NULL != iterator)
+    {
+        Game iterator_next = iterator->next;
+
+        free(iterator);
+
+        iterator = iterator_next;
+    }
+
     free(n);
 }
 
