@@ -3,7 +3,7 @@
 #include "../test_utilities.h"
 
 /*The number of tests*/
-#define NUMBER_TESTS 4
+#define NUMBER_TESTS 5
 
 bool testChessAddTournament() {
     ChessSystem chess = chessCreate();
@@ -15,17 +15,17 @@ bool testChessAddTournament() {
     return true;
 }
 
-// bool testChessRemoveTournament() {
-//     ChessSystem chess = chessCreate();
-//     ASSERT_TEST(chessAddTournament(chess, 1, 4, "London") == CHESS_SUCCESS);
-//     ASSERT_TEST(chessAddTournament(chess, 2, 4, "London") == CHESS_SUCCESS);
-//     ASSERT_TEST(chessRemoveTournament(chess, 1) == CHESS_SUCCESS);
-//     ASSERT_TEST(chessRemoveTournament(chess, 1) == CHESS_TOURNAMENT_NOT_EXIST);
-//     ASSERT_TEST(chessAddTournament(chess, 1, 4, "Paris") == CHESS_SUCCESS);
+bool testChessRemoveTournament() {
+    ChessSystem chess = chessCreate();
+    ASSERT_TEST(chessAddTournament(chess, 1, 4, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddTournament(chess, 2, 4, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessRemoveTournament(chess, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessRemoveTournament(chess, 1) == CHESS_TOURNAMENT_NOT_EXIST);
+    ASSERT_TEST(chessAddTournament(chess, 1, 4, "Paris") == CHESS_SUCCESS);
 
-//     chessDestroy(chess);
-//     return true;
-// }
+    chessDestroy(chess);
+    return true;
+}
 
 bool testChessAddGame(){
     ChessSystem chess = chessCreate();
@@ -84,6 +84,10 @@ bool testBadArguments()
     ASSERT_TEST(chessAddGame(chess_system, 1, 1, 3, FIRST_PLAYER, 1) == CHESS_EXCEEDED_GAMES);
     ASSERT_TEST(chessAddGame(chess_system, 1, 2, 3, FIRST_PLAYER, 1) == CHESS_EXCEEDED_GAMES);
 
+    ASSERT_TEST(chessRemoveTournament(NULL, 1) == CHESS_NULL_ARGUMENT);
+    ASSERT_TEST(chessRemoveTournament(chess_system, 0) == CHESS_INVALID_ID);
+    ASSERT_TEST(chessRemoveTournament(chess_system, 2) == CHESS_TOURNAMENT_NOT_EXIST);
+
     chessDestroy(chess_system);
 
     return true;
@@ -105,7 +109,7 @@ bool testPrivate()
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
         testChessAddTournament,
-        // testChessRemoveTournament,
+        testChessRemoveTournament,
         testChessAddGame,
         // testChessPrintLevelsAndTournamentStatistics
         testBadArguments,
@@ -115,7 +119,7 @@ bool (*tests[]) (void) = {
 /*The names of the test functions should be added here*/
 const char* testNames[] = {
         "testChessAddTournament",
-        // "testChessRemoveTournament",
+        "testChessRemoveTournament",
         "testChessAddGame",
         // "testChessPrintLevelsAndTournamentStatistics"
         "testBadArguments",

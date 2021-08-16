@@ -310,7 +310,7 @@ ChessResult chessAddGame(
     return CHESS_SUCCESS;
 }
 
-ChessResult chessRemoveTournament (ChessSystem chess, int tournament_id)
+ChessResult chessRemoveTournament(ChessSystem chess, int tournament_id)
 {
     if (NULL == chess)
     {
@@ -322,13 +322,10 @@ ChessResult chessRemoveTournament (ChessSystem chess, int tournament_id)
         return CHESS_INVALID_ID;
     }
 
-    Tournament tournament = mapGet(chess->tournaments, &tournament_id);
-    if (NULL == tournament)
+    if (MAP_ITEM_DOES_NOT_EXIST == mapRemove(chess->tournaments, &tournament_id))
     {
         return CHESS_TOURNAMENT_NOT_EXIST;
     }
-
-    mapGet
 
     // ToDo: update statistics
 
