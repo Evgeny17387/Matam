@@ -303,3 +303,31 @@ MapKeyElement mapGetNext(Map map)
 
     return key_copy;
 }
+
+MapResult mapRemove(Map map, MapKeyElement keyElement)
+{
+    if ((NULL == map) || (NULL == keyElement))
+    {
+        return MAP_NULL_ARGUMENT;
+    }
+
+    Node* iterator = &(map->head);
+
+    while (NULL != *iterator)
+    {
+        if (KEY_COMPARE_EQUAL == map->compareKeyElements((*iterator)->key, keyElement))
+        {
+            Node next_node = (*iterator)->next;
+
+            free (*iterator);
+
+            *iterator = next_node;
+
+            return MAP_SUCCESS;
+        }
+
+        iterator = &((*iterator)->next);
+    }
+
+    return MAP_ITEM_DOES_NOT_EXIST;
+}

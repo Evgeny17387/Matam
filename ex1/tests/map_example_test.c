@@ -161,12 +161,17 @@ bool testBadArguments()
     ASSERT_TEST(mapPut(map, NULL, &data) == MAP_NULL_ARGUMENT);
     ASSERT_TEST(mapPut(map, &key, NULL) == MAP_NULL_ARGUMENT);
 
+    // mapRemove
+
+    ASSERT_TEST(mapRemove(NULL, &key) == MAP_NULL_ARGUMENT);
+    ASSERT_TEST(mapRemove(map, NULL) == MAP_NULL_ARGUMENT);
+
     mapDestroy(map);
 
     return true;
 }
 
-bool testPrivate()
+bool testPrivateMapPut()
 {
 
     Map map;
@@ -174,7 +179,7 @@ bool testPrivate()
     int key;
     char data;
 
-    char *key_pointer;
+    int *key_pointer;
 
     map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
 
@@ -182,7 +187,7 @@ bool testPrivate()
     data = 1;
     ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
     ASSERT_TEST(mapGetSize(map) == 1);
-    key_pointer = (char *)mapGetFirst(map);
+    key_pointer = (int *)mapGetFirst(map);
     ASSERT_TEST(*key_pointer == 1);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 1);
     free(key_pointer);
@@ -190,7 +195,7 @@ bool testPrivate()
     data = 2;
     ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
     ASSERT_TEST(mapGetSize(map) == 1);
-    key_pointer = (char *)mapGetFirst(map);
+    key_pointer = (int *)mapGetFirst(map);
     ASSERT_TEST(*key_pointer == 1);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
     free(key_pointer);
@@ -199,11 +204,11 @@ bool testPrivate()
     data = 4;
     ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
     ASSERT_TEST(mapGetSize(map) == 2);
-    key_pointer = (char*)mapGetFirst(map);
+    key_pointer = (int*)mapGetFirst(map);
     ASSERT_TEST(*key_pointer == 1);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
     free(key_pointer);
-    key_pointer = (char*)mapGetNext(map);
+    key_pointer = (int*)mapGetNext(map);
     ASSERT_TEST(*key_pointer == 4);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 4);
     free(key_pointer);
@@ -212,15 +217,15 @@ bool testPrivate()
     data = 3;
     ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
     ASSERT_TEST(mapGetSize(map) == 3);
-    key_pointer = (char*)mapGetFirst(map);
+    key_pointer = (int*)mapGetFirst(map);
     ASSERT_TEST(*key_pointer == 1);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
     free(key_pointer);
-    key_pointer = (char*)mapGetNext(map);
+    key_pointer = (int*)mapGetNext(map);
     ASSERT_TEST(*key_pointer == 3);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 3);
     free(key_pointer);
-    key_pointer = (char*)mapGetNext(map);
+    key_pointer = (int*)mapGetNext(map);
     ASSERT_TEST(*key_pointer == 4);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 4);
     free(key_pointer);
@@ -229,19 +234,19 @@ bool testPrivate()
     data = 5;
     ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
     ASSERT_TEST(mapGetSize(map) == 4);
-    key_pointer = (char*)mapGetFirst(map);
+    key_pointer = (int*)mapGetFirst(map);
     ASSERT_TEST(*key_pointer == 1);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
     free(key_pointer);
-    key_pointer = (char*)mapGetNext(map);
+    key_pointer = (int*)mapGetNext(map);
     ASSERT_TEST(*key_pointer == 3);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 3);
     free(key_pointer);
-    key_pointer = (char*)mapGetNext(map);
+    key_pointer = (int*)mapGetNext(map);
     ASSERT_TEST(*key_pointer == 4);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 4);
     free(key_pointer);
-    key_pointer = (char*)mapGetNext(map);
+    key_pointer = (int*)mapGetNext(map);
     ASSERT_TEST(*key_pointer == 5);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 5);
     free(key_pointer);
@@ -254,7 +259,7 @@ bool testPrivate()
     data = 2;
     ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
     ASSERT_TEST(mapGetSize(map) == 1);
-    key_pointer = (char*)mapGetFirst(map);
+    key_pointer = (int*)mapGetFirst(map);
     ASSERT_TEST(*key_pointer == 2);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
     free(key_pointer);
@@ -263,11 +268,83 @@ bool testPrivate()
     data = 1;
     ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
     ASSERT_TEST(mapGetSize(map) == 2);
-    key_pointer = (char*)mapGetFirst(map);
+    key_pointer = (int*)mapGetFirst(map);
     ASSERT_TEST(*key_pointer == 1);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 1);
     free(key_pointer);
-    key_pointer = (char*)mapGetNext(map);
+    key_pointer = (int*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 2);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
+    free(key_pointer);
+
+    mapDestroy(map);
+
+    return true;
+}
+
+bool testPrivateMapRemove()
+{
+
+    Map map;
+
+    int key;
+    char data;
+
+    int *key_pointer;
+
+    map = mapCreate(copyDataChar, copyKeyInt, freeChar, freeInt, compareInts);
+
+    key = 1;
+    data = 1;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 1);
+    key_pointer = (int*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 1);
+    free(key_pointer);
+    ASSERT_TEST(mapRemove(map, &key) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 0);
+
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 1);
+    key_pointer = (int*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 1);
+    free(key_pointer);
+    key = 2;
+    data = 2;
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 2);
+    key_pointer = (int*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 1);
+    free(key_pointer);
+    key_pointer = (int*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 2);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
+    free(key_pointer);
+    key = 2;
+    ASSERT_TEST(mapRemove(map, &key) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 1);
+    key_pointer = (int*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 1);
+    free(key_pointer);
+
+    ASSERT_TEST(mapPut(map, &key, &data) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 2);
+    key_pointer = (int*)mapGetFirst(map);
+    ASSERT_TEST(*key_pointer == 1);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 1);
+    free(key_pointer);
+    key_pointer = (int*)mapGetNext(map);
+    ASSERT_TEST(*key_pointer == 2);
+    ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
+    free(key_pointer);
+    key = 1;
+    ASSERT_TEST(mapRemove(map, &key) == MAP_SUCCESS);
+    ASSERT_TEST(mapGetSize(map) == 1);
+    key_pointer = (int*)mapGetFirst(map);
     ASSERT_TEST(*key_pointer == 2);
     ASSERT_TEST(*(char*)mapGet(map, key_pointer) == 2);
     free(key_pointer);
@@ -284,7 +361,8 @@ bool (*tests[]) (void) = {
         testMapGet,
         testIterator,
         testBadArguments,
-        testPrivate
+        testPrivateMapPut,
+        testPrivateMapRemove
 };
 
 /*The names of the test functions should be added here*/
@@ -294,7 +372,8 @@ const char* testNames[] = {
         "testMapGet",
         "testIterator",
         "testBadArguments",
-        "testPrivate"
+        "testPrivateMapPut",
+        "testPrivateMapRemove"
 };
 
 int main(int argc, char *argv[]) {
