@@ -319,7 +319,9 @@ MapResult mapRemove(Map map, MapKeyElement keyElement)
         {
             Node next_node = (*iterator)->next;
 
-            free (*iterator);
+            map->freeKeyElement((*iterator)->key);
+            map->freeDataElement((*iterator)->data);
+            free(*iterator);
 
             *iterator = next_node;
 

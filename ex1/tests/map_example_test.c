@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "../mtm_map/map.h"
 
-#define NUMBER_TESTS 6
+#define NUMBER_TESTS 7
 
 /** Function to be used for copying an int as a key to the map */
 static MapKeyElement copyKeyInt(MapKeyElement n) {
