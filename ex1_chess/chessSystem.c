@@ -309,3 +309,28 @@ ChessResult chessAddGame(
 
     return CHESS_SUCCESS;
 }
+
+ChessResult chessRemoveTournament (ChessSystem chess, int tournament_id)
+{
+    if (NULL == chess)
+    {
+        return CHESS_NULL_ARGUMENT;
+    }
+
+    if (tournament_id < MIN_VALID_TOURNMENT_ID)
+    {
+        return CHESS_INVALID_ID;
+    }
+
+    Tournament tournament = mapGet(chess->tournaments, &tournament_id);
+    if (NULL == tournament)
+    {
+        return CHESS_TOURNAMENT_NOT_EXIST;
+    }
+
+    mapGet
+
+    // ToDo: update statistics
+
+    return CHESS_SUCCESS;
+}
