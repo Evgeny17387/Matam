@@ -374,7 +374,6 @@ ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
     }
 
     Player player = (Player)mapGet(chess->players, &player_id);
-
     if (NULL == player)
     {
         return CHESS_PLAYER_NOT_EXIST;
@@ -425,6 +424,7 @@ ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
         return CHESS_INVALID_ID;
     }
 
+    // ToDo: add casting for mapGet, maybe other APIs as well
     Tournament tournament = mapGet(chess->tournaments, &tournament_id);
     if (NULL == tournament)
     {
@@ -447,4 +447,58 @@ ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
     // ToDo: add tournment winner calculation
 
     return CHESS_SUCCESS;
+}
+
+double chessCalculateAveragePlayTime (ChessSystem chess, int player_id, ChessResult* chess_result)
+{
+    if (NULL == chess)
+    {
+        return CHESS_NULL_ARGUMENT;
+    }
+
+    if (player_id < MIN_VALID_PLAYER_ID)
+    {
+        return CHESS_INVALID_ID;
+    }
+
+    Player player = (Player)mapGet(chess->players, &player_id);
+    if (NULL == player)
+    {
+        return CHESS_PLAYER_NOT_EXIST;
+    }
+
+    *chess_result = CHESS_SUCCESS;
+
+    // ToDo: think of how to implement when this statistics is always being kept upadted
+
+    double average_play_time = 0;
+    int played_games = 0;
+
+    Tournament tournament = mapGetFirst(chess->tournaments);
+
+    while (NULL != tournament)
+    {
+        if (false == tournament->is_ended)
+        {
+            Game game = tournament->games;
+
+            while (NULL != game)
+            {
+                if ((game->first_player == player_id) || (game->second_player == player_id))
+                {
+                    played_games++;
+                    average_play_time += game->play_time;
+                }
+
+                game = game->next;
+            }
+        }
+
+        freeInt(tournament);
+        tournament = mapGetNext(chess->tournaments);
+    }
+
+    average_play_time = played_games != 0 ? average_play_time / played_games : average_play_time;
+
+    return average_play_time;
 }
