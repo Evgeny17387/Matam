@@ -88,21 +88,7 @@ void mapDestroy(Map map)
         return;
     }
 
-    Node iterator = map->head;
-
-    while (NULL != iterator)
-    {
-        Node iterator_next = iterator->next;
-
-        map->freeKeyElement(iterator->key);
-        map->freeDataElement(iterator->data);
-        
-        free(iterator);
-
-        iterator = iterator_next;
-    }
-
-    map->head = NULL;
+    mapClear(map);
 
     free(map);
 }
@@ -332,4 +318,103 @@ MapResult mapRemove(Map map, MapKeyElement keyElement)
     }
 
     return MAP_ITEM_DOES_NOT_EXIST;
+}
+
+MapResult mapClear(Map map)
+{
+    if (NULL == map)
+    {
+        return MAP_NULL_ARGUMENT;
+    }
+
+    Node iterator = map->head;
+
+    while (NULL != iterator)
+    {
+        Node iterator_next = iterator->next;
+
+        map->freeKeyElement(iterator->key);
+        map->freeDataElement(iterator->data);
+        
+        free(iterator);
+
+        iterator = iterator_next;
+    }
+
+    map->head = NULL;
+
+    return MAP_SUCCESS;
+}
+
+bool mapContains(Map map, MapKeyElement element)
+{
+    if ((NULL == map) || (NULL == element))
+    {
+        return false;
+    }
+
+    Node iterator = map->head;
+
+    while (NULL != iterator)
+    {
+        Node iterator_next = iterator->next;
+
+        if (KEY_COMPARE_EQUAL == map->compareKeyElements(iterator->key, element))
+        {
+            return true;
+        }
+
+        iterator = iterator_next;
+    }
+
+    return false;
+}
+
+Map mapCopy(Map map)
+{
+    if (NULL == map)
+    {
+        return NULL;
+    }
+
+    Map map_new = malloc(sizeof(*map_new));
+    if (NULL == map_new)
+    {
+        return NULL;
+    }
+
+    map_new->copyDataElement = map->copyDataElement;
+    map_new->copyKeyElement = map->copyKeyElement;
+    map_new->freeDataElement = map->freeDataElement;
+    map_new->freeKeyElement = map->freeKeyElement;
+    map_new->compareKeyElements = map->compareKeyElements;
+
+    map_new->head = NULL;
+
+    map_new->current_key_element = NULL;
+
+    Node iterator = map->head;
+    Node* iterator_previous = &(map_new->head);
+
+    while (NULL != iterator)
+    {
+        Node* iterator_new = malloc(sizeof(**iterator_new));
+        if (NULL == *iterator_new)
+        {
+            mapDestroy(map_new);
+            return NULL;
+        }
+        
+        *iterator_previous = *iterator_new;
+
+        (*iterator_new)->next = NULL;
+
+        (*iterator_new)->key = map->copyKeyElement(iterator->key);
+        (*iterator_new)->data = map->copyDataElement(iterator->data);
+
+        iterator = iterator->next;
+        iterator_previous = &((*iterator_new)->next);
+    }
+
+    return map_new;    
 }
