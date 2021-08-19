@@ -449,29 +449,31 @@ ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
     return CHESS_SUCCESS;
 }
 
-double chessCalculateAveragePlayTime (ChessSystem chess, int player_id, ChessResult* chess_result)
+double chessCalculateAveragePlayTime(ChessSystem chess, int player_id, ChessResult* chess_result)
 {
+    double average_play_time = 0;
+
     if (NULL == chess)
     {
-        return CHESS_NULL_ARGUMENT;
+        *chess_result = CHESS_NULL_ARGUMENT;
+        return average_play_time;
     }
 
     if (player_id < MIN_VALID_PLAYER_ID)
     {
-        return CHESS_INVALID_ID;
+        *chess_result = CHESS_INVALID_ID;
+        return average_play_time;
     }
 
     Player player = (Player)mapGet(chess->players, &player_id);
     if (NULL == player)
     {
-        return CHESS_PLAYER_NOT_EXIST;
+        *chess_result = CHESS_PLAYER_NOT_EXIST;
+        return average_play_time;
     }
-
-    *chess_result = CHESS_SUCCESS;
 
     // ToDo: think of how to implement when this statistics is always being kept upadted
 
-    double average_play_time = 0;
     int played_games = 0;
 
     Tournament tournament = mapGetFirst(chess->tournaments);
@@ -500,5 +502,16 @@ double chessCalculateAveragePlayTime (ChessSystem chess, int player_id, ChessRes
 
     average_play_time = played_games != 0 ? average_play_time / played_games : average_play_time;
 
+    *chess_result = CHESS_SUCCESS;
     return average_play_time;
+}
+
+ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
+{
+    if (NULL == chess)
+    {
+        return CHESS_NULL_ARGUMENT;
+    }
+
+    return CHESS_SUCCESS;
 }
