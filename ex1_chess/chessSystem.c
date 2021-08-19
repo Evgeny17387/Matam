@@ -24,8 +24,13 @@ typedef struct tournament_t {
     Game    games;
 } Tournament_t, *Tournament;
 
+typedef struct player_t {
+    int     id;
+} Player_t, *Player;
+
 struct chess_system_t {
     Map tournaments;
+    Map players;
 };
 
 static MapKeyElement copyKeyInt(MapKeyElement n)
@@ -113,6 +118,31 @@ static int compareInts(MapKeyElement n1, MapKeyElement n2) {
     return (*(int *) n1 - *(int *) n2);
 }
 
+static MapDataElement copyDataPlayer(MapDataElement n)
+{
+    Player player_source = (Player)n;
+
+    if (!player_source)
+    {
+        return NULL;
+    }
+
+    Player player_destination = malloc(sizeof(*player_destination));
+    if (!player_destination)
+    {
+        return NULL;
+    }
+
+    player_destination->id = player_source->id;
+
+    return (MapDataElement)player_destination;
+}
+
+static void freePlayer(MapDataElement n)
+{
+    free(n);
+}
+
 ChessSystem chessCreate()
 {
     ChessSystem chess_system = malloc(sizeof(*chess_system));
@@ -124,6 +154,12 @@ ChessSystem chessCreate()
     chess_system->tournaments = mapCreate(copyDataTournament, copyKeyInt, freeTournament, freeInt, compareInts);
     if (NULL == chess_system->tournaments)
     {
+        return NULL;
+    }
+
+    chess_system->players = mapCreate(copyDataPlayer, copyKeyInt, freePlayer, freeInt, compareInts);
+    if (NULL == chess_system->players)
+    {
         mapDestroy(chess_system->tournaments);
         return NULL;
     }
@@ -134,14 +170,11 @@ ChessSystem chessCreate()
 void chessDestroy(ChessSystem chess)
 {
     mapDestroy(chess->tournaments);
+    mapDestroy(chess->players);
     free(chess);
 }
 
-ChessResult chessAddTournament(
-    ChessSystem chess,
-    int tournament_id,
-    int max_games_per_player,
-    const char* tournament_location)
+ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_games_per_player, const char* tournament_location)
 {
     if ((NULL == chess) || (NULL == tournament_location))
     {
@@ -247,13 +280,7 @@ bool addGame(Tournament tournament, Game game)
     return true;
 }
 
-ChessResult chessAddGame(
-    ChessSystem chess,
-    int tournament_id,
-    int first_player,
-    int second_player,
-    Winner winner,
-    int play_time)
+ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player, int second_player, Winner winner, int play_time)
 {
     if (NULL == chess)
     {
@@ -334,5 +361,52 @@ ChessResult chessRemoveTournament(ChessSystem chess, int tournament_id)
 
 ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
 {
+    if (NULL == chess)
+    {
+        return CHESS_NULL_ARGUMENT;
+    }
+
+    if (player_id < MIN_VALID_PLAYER_ID)
+    {
+        return CHESS_INVALID_ID;
+    }
+
+    Player player = (Player)mapGet(chess->players, &player_id);
+
+    if (NULL == player)
+    {
+        return CHESS_PLAYER_NOT_EXIST;
+    }
+
+    Tournament tournament = mapGetFirst(chess->tournaments);
+
+    while (NULL != tournament)
+    {
+        if (false == tournament->is_ended)
+        {
+            Game game = tournament->games;
+
+            while (NULL != game)
+            {
+                if (game->first_player == player_id)
+                {
+                    game->winner = SECOND_PLAYER;
+                }
+                else if (game->second_player == player_id)
+                {
+                    game->winner = FIRST_PLAYER;
+                }
+
+                game = game->next;
+            }
+        }
+
+        freeInt(tournament);
+        tournament = mapGetNext(chess->tournaments);
+    }
+
+    // ToDo: maybe to add assert, tough it should always succeed
+    mapRemove(chess->players, &player_id);
+
     return CHESS_SUCCESS;
 }
