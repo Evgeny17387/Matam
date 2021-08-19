@@ -398,22 +398,22 @@ Map mapCopy(Map map)
 
     while (NULL != iterator)
     {
-        Node* iterator_new = malloc(sizeof(**iterator_new));
-        if (NULL == *iterator_new)
+        Node iterator_new = malloc(sizeof(*iterator_new));
+        if (NULL == iterator_new)
         {
             mapDestroy(map_new);
             return NULL;
         }
         
-        *iterator_previous = *iterator_new;
+        *iterator_previous = iterator_new;
 
-        (*iterator_new)->next = NULL;
+        iterator_new->next = NULL;
 
-        (*iterator_new)->key = map->copyKeyElement(iterator->key);
-        (*iterator_new)->data = map->copyDataElement(iterator->data);
+        iterator_new->key = map->copyKeyElement(iterator->key);
+        iterator_new->data = map->copyDataElement(iterator->data);
 
         iterator = iterator->next;
-        iterator_previous = &((*iterator_new)->next);
+        iterator_previous = &(iterator_new->next);
     }
 
     return map_new;    
