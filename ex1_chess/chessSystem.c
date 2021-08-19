@@ -9,6 +9,8 @@
 #define MIN_VALID_PLAYER_ID         1
 #define MIN_VALID_PLAY_TIME         0
 
+#define SIZE_EMPY                   0
+
 typedef struct game_t {
     struct game_t  *next;
     int             first_player;
@@ -407,6 +409,42 @@ ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
 
     // ToDo: maybe to add assert, tough it should always succeed
     mapRemove(chess->players, &player_id);
+
+    return CHESS_SUCCESS;
+}
+
+ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
+{
+    if (NULL == chess)
+    {
+        return CHESS_NULL_ARGUMENT;
+    }
+
+    if (tournament_id < MIN_VALID_TOURNMENT_ID)
+    {
+        return CHESS_INVALID_ID;
+    }
+
+    Tournament tournament = mapGet(chess->tournaments, &tournament_id);
+    if (NULL == tournament)
+    {
+        return CHESS_TOURNAMENT_NOT_EXIST;
+    }
+
+    if (tournament->is_ended)
+    {
+        return CHESS_TOURNAMENT_ENDED;
+    }
+
+    // ToDo: maybe add games counter
+    if (NULL == tournament->games)
+    {
+        return CHESS_NO_GAMES;
+    }
+
+    tournament->is_ended = true;
+
+    // ToDo: add tournment winner calculation
 
     return CHESS_SUCCESS;
 }
