@@ -293,6 +293,27 @@ bool addGame(Tournament tournament, Game game)
     return true;
 }
 
+static void addPlayer(Map players, int player_id, bool is_win, bool is_losse, bool is_draw)
+{
+    Player player = mapGet(players, &player_id);
+    if (NULL == player)
+    {
+        Player_t player;
+        player.wins = is_win ? 1 : 0;
+        player.losses = is_losse ? 1 : 0;
+        player.draws = is_draw ? 1 : 0;
+
+        // ToDo: add if fails
+        mapPut(players, &player_id, &player);
+    }
+    else
+    {
+        player->wins += is_win ? 1 : 0;
+        player->losses += is_losse ? 1 : 0;
+        player->draws += is_draw ? 1 : 0;
+    }
+}
+
 ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player, int second_player, Winner winner, int play_time)
 {
     if (NULL == chess)
@@ -346,6 +367,10 @@ ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player,
     {
         return CHESS_OUT_OF_MEMORY;
     }
+
+    // ToDo: add if fails for both
+    addPlayer(chess->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner);
+    addPlayer(chess->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner);
 
     return CHESS_SUCCESS;
 }
