@@ -11,7 +11,9 @@
 
 #define SIZE_EMPY                   0
 
-#define SAVE_FILE_SUCCESS           0
+#define PRINT_TO_FILE_SUCCESS       0
+
+#define NO_WINNER_DECLARED_YET      -1
 
 typedef struct game_t {
     struct game_t  *next;
@@ -26,6 +28,7 @@ typedef struct tournament_t {
     int     max_games_per_player;
     bool    is_ended;
     Game    games;
+    int     winnder_id;
 } Tournament_t, *Tournament;
 
 typedef struct player_t {
@@ -75,6 +78,7 @@ static MapDataElement copyDataTournament(MapDataElement n)
     tournament_destination->is_ended = tournament_souce->is_ended;
     tournament_destination->max_games_per_player = tournament_souce->max_games_per_player;
     tournament_destination->games = NULL;
+    tournament_destination->winnder_id = tournament_souce->winnder_id;
 
     Game iterator_souce = tournament_souce->games;
     Game* iterator_destination = &(tournament_destination->games);
@@ -210,6 +214,7 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     tournament.max_games_per_player = max_games_per_player;
     tournament.is_ended = false;
     tournament.games = NULL;
+    tournament.winnder_id = NO_WINNER_DECLARED_YET;
 
     MapResult map_result = mapPut(chess->tournaments, &tournament_id, &tournament);
     if (MAP_OUT_OF_MEMORY == map_result)
@@ -482,10 +487,12 @@ double chessCalculateAveragePlayTime(ChessSystem chess, int player_id, ChessResu
 
     int played_games = 0;
 
-    Tournament tournament = mapGetFirst(chess->tournaments);
+    int* tournament_id = mapGetFirst(chess->tournaments);
 
-    while (NULL != tournament)
+    while (NULL != tournament_id)
     {
+        Tournament tournament = mapGet(chess->tournaments, tournament_id);
+
         if (false == tournament->is_ended)
         {
             Game game = tournament->games;
@@ -502,8 +509,8 @@ double chessCalculateAveragePlayTime(ChessSystem chess, int player_id, ChessResu
             }
         }
 
-        freeInt(tournament);
-        tournament = mapGetNext(chess->tournaments);
+        freeInt(tournament_id);
+        tournament_id = mapGetNext(chess->tournaments);
     }
 
     average_play_time = played_games != 0 ? average_play_time / played_games : average_play_time;
@@ -530,15 +537,57 @@ ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
         // ToDo: make sure total number of player games can't be 0
         double level = (6 * player->wins - 10 * player->losses + 2 * player->draws) / (player->wins + player->losses + player->draws);
  
-        fprintf(file, "%d %f\n", *player_id, level);
+        if (PRINT_TO_FILE_SUCCESS != fprintf(file, "%d %f\n", *player_id, level))
+        {
+            return CHESS_SAVE_FAILURE;
+        }
 
         freeInt(player_id);
         player_id = mapGetNext(chess->players);
     }
 
-    if (SAVE_FILE_SUCCESS != fclose(file))
+    return CHESS_SUCCESS;
+}
+
+ChessResult chessSaveTournamentStatistics (ChessSystem chess, char* path_file)
+{
+    if (NULL == chess)
+    {
+        return CHESS_NULL_ARGUMENT;
+    }
+
+    FILE* file = fopen(path_file, "w");
+    if (NULL == file)
     {
         return CHESS_SAVE_FAILURE;
+    }
+
+    int* tournament_id = mapGetFirst(chess->tournaments);
+
+    bool is_at_least_one_tournment = false;
+
+    while (NULL != tournament_id)
+    {
+        Tournament tournament = mapGet(chess->tournaments, tournament_id);
+
+        if (tournament->is_ended)
+        {
+            is_at_least_one_tournment = true;
+
+            // ToDo: add all other parameters
+            if (PRINT_TO_FILE_SUCCESS != fprintf(file, "%d %d\n", *tournament_id, tournament->winnder_id))
+            {
+                return CHESS_SAVE_FAILURE;
+            }
+        }
+
+        freeInt(tournament_id);
+        tournament_id = mapGetNext(chess->tournaments);
+    }
+
+    if (!is_at_least_one_tournment)
+    {
+        return CHESS_NO_TOURNAMENTS_ENDED;
     }
 
     return CHESS_SUCCESS;
