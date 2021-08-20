@@ -536,11 +536,9 @@ ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
 
         // ToDo: make sure total number of player games can't be 0
         double level = (6 * player->wins - 10 * player->losses + 2 * player->draws) / (player->wins + player->losses + player->draws);
- 
-        if (PRINT_TO_FILE_SUCCESS != fprintf(file, "%d %f\n", *player_id, level))
-        {
-            return CHESS_SAVE_FAILURE;
-        }
+    
+        // ToDo: should we check if succeeded ?
+        fprintf(file, "%d %f\n", *player_id, level);
 
         freeInt(player_id);
         player_id = mapGetNext(chess->players);
@@ -575,15 +573,16 @@ ChessResult chessSaveTournamentStatistics (ChessSystem chess, char* path_file)
             is_at_least_one_tournment = true;
 
             // ToDo: add all other parameters
-            if (PRINT_TO_FILE_SUCCESS != fprintf(file, "%d %d\n", *tournament_id, tournament->winnder_id))
-            {
-                return CHESS_SAVE_FAILURE;
-            }
+
+            // ToDo: should we check if succeeded ?
+            fprintf(file, "%d %d\n", *tournament_id, tournament->winnder_id);
         }
 
         freeInt(tournament_id);
         tournament_id = mapGetNext(chess->tournaments);
     }
+
+    fclose(file);
 
     if (!is_at_least_one_tournment)
     {
