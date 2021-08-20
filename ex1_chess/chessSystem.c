@@ -17,22 +17,23 @@ typedef struct game_t {
     int             play_time;
 } Game_t, *Game;
 
+typedef struct player_t {
+    int wins;
+    int losses;
+    int draws;
+} Player_t, *Player;
+
 // ToDo: add location member
 typedef struct tournament_t {
     int     max_games_per_player;
     bool    is_ended;
     Game    games;
     int     number_of_games;
+    Map     players;
     int     winnder_id;
     int     longest_time_game;
     double  average_time_game;
 } Tournament_t, *Tournament;
-
-typedef struct player_t {
-    int wins;
-    int losses;
-    int draws;
-} Player_t, *Player;
 
 struct chess_system_t {
     Map tournaments;
@@ -74,6 +75,12 @@ static MapDataElement copyDataTournament(MapDataElement n)
 
     *tournament_destination = *tournament_souce;
     tournament_destination->games = NULL;
+    tournament_destination->players = mapCopy(tournament_souce->players);
+    if (NULL == tournament_destination->players)
+    {
+        free(tournament_destination);
+        return NULL;
+    }
     
     Game iterator_souce = tournament_souce->games;
     Game* iterator_destination = &(tournament_destination->games);
@@ -101,6 +108,8 @@ static void freeInt(MapKeyElement n)
 static void freeTournament(MapDataElement n)
 {
     Tournament tournament = (Tournament)n;
+
+    mapDestroy(tournament->players);
 
     Game iterator = tournament->games;
 
@@ -213,6 +222,16 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     MapResult map_result = mapPut(chess->tournaments, &tournament_id, &tournament);
     if (MAP_OUT_OF_MEMORY == map_result)
     {
+        return CHESS_OUT_OF_MEMORY;
+    }
+
+    // ToDo: decide if should be checked, no reason though...
+    Tournament tournament_new = mapGet(chess->tournaments, &tournament_id);
+
+    tournament_new->players = mapCreate(copyDataPlayer, copyKeyInt, freePlayer, freeInt, compareInts);
+    if (MAP_OUT_OF_MEMORY == tournament_new->players)
+    {
+        // ToDo: decide that to do in this case
         return CHESS_OUT_OF_MEMORY;
     }
 
@@ -365,6 +384,8 @@ ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player,
     // ToDo: add if fails for both
     addPlayer(chess->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner);
     addPlayer(chess->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner);
+    addPlayer(tournament->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner);
+    addPlayer(tournament->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner);
 
     if (game.play_time > tournament->longest_time_game)
     {
@@ -484,7 +505,14 @@ ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
 
     tournament->is_ended = true;
 
-    // ToDo: add tournment winner calculation
+    int* player_id = mapGetFirst(tournament->players);
+
+    while (NULL != player_id)
+    {
+        Player player = mapGet(tournament->players, player_id);
+
+        free(player_id);
+    }
 
     return CHESS_SUCCESS;
 }
@@ -576,7 +604,7 @@ ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
     return CHESS_SUCCESS;
 }
 
-ChessResult chessSaveTournamentStatistics (ChessSystem chess, char* path_file)
+ChessResult chessSaveTournamentStatistics(ChessSystem chess, char* path_file)
 {
     if (NULL == chess)
     {
@@ -601,9 +629,7 @@ ChessResult chessSaveTournamentStatistics (ChessSystem chess, char* path_file)
         {
             is_at_least_one_tournment = true;
 
-            // ToDo: add all other parameters
-
-            // ToDo: should we check if succeeded ?
+            // ToDo: should we check if fprintf succeeded ?
             fprintf(file, "%d\n", tournament->winnder_id);
             fprintf(file, "%d\n", tournament->longest_time_game);
             fprintf(file, "%.2f\n", tournament->average_time_game);
