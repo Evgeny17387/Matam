@@ -560,10 +560,10 @@ ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
         Player player = mapGet(chess->players, player_id);
 
         // ToDo: make sure total number of player games can't be 0
-        double level = (6 * player->wins - 10 * player->losses + 2 * player->draws) / (player->wins + player->losses + player->draws);
+        double level = (double)(6 * player->wins - 10 * player->losses + 2 * player->draws) / (player->wins + player->losses + player->draws);
     
         // ToDo: should we check if succeeded ?
-        fprintf(file, "%d %f\n", *player_id, level);
+        fprintf(file, "%d %.2f\n", *player_id, level);
 
         freeInt(player_id);
         player_id = mapGetNext(chess->players);
