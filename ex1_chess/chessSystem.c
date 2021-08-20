@@ -11,6 +11,8 @@
 
 #define SIZE_EMPY                   0
 
+#define SAVE_FILE_SUCCESS           0
+
 typedef struct game_t {
     struct game_t  *next;
     int             first_player;
@@ -27,7 +29,9 @@ typedef struct tournament_t {
 } Tournament_t, *Tournament;
 
 typedef struct player_t {
-    int     id;
+    int wins;
+    int losses;
+    int draws;
 } Player_t, *Player;
 
 struct chess_system_t {
@@ -135,7 +139,9 @@ static MapDataElement copyDataPlayer(MapDataElement n)
         return NULL;
     }
 
-    player_destination->id = player_source->id;
+    player_destination->wins = player_source->wins;
+    player_destination->losses = player_source->losses;
+    player_destination->draws = player_source->draws;
 
     return (MapDataElement)player_destination;
 }
@@ -511,6 +517,28 @@ ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
     if (NULL == chess)
     {
         return CHESS_NULL_ARGUMENT;
+    }
+
+    int* player_id = mapGetFirst(chess->players);
+
+    // ToDo: write players in a specific order
+
+    while (NULL != player_id)
+    {
+        Player player = mapGet(chess->players, player_id);
+
+        // ToDo: make sure total number of player games can't be 0
+        double level = (6 * player->wins - 10 * player->losses + 2 * player->draws) / (player->wins + player->losses + player->draws);
+ 
+        fprintf(file, "%d %f\n", *player_id, level);
+
+        freeInt(player_id);
+        player_id = mapGetNext(chess->players);
+    }
+
+    if (SAVE_FILE_SUCCESS != fclose(file))
+    {
+        return CHESS_SAVE_FAILURE;
     }
 
     return CHESS_SUCCESS;
