@@ -9,12 +9,6 @@
 #define MIN_VALID_PLAYER_ID         1
 #define MIN_VALID_PLAY_TIME         0
 
-#define SIZE_EMPY                   0
-
-#define PRINT_TO_FILE_SUCCESS       0
-
-#define NO_WINNER_DECLARED_YET      -1
-
 typedef struct game_t {
     struct game_t  *next;
     int             first_player;
@@ -28,7 +22,10 @@ typedef struct tournament_t {
     int     max_games_per_player;
     bool    is_ended;
     Game    games;
+    int     number_of_games;
     int     winnder_id;
+    int     longest_time_game;
+    double  average_time_game;
 } Tournament_t, *Tournament;
 
 typedef struct player_t {
@@ -75,11 +72,9 @@ static MapDataElement copyDataTournament(MapDataElement n)
         return NULL;
     }
 
-    tournament_destination->is_ended = tournament_souce->is_ended;
-    tournament_destination->max_games_per_player = tournament_souce->max_games_per_player;
+    *tournament_destination = *tournament_souce;
     tournament_destination->games = NULL;
-    tournament_destination->winnder_id = tournament_souce->winnder_id;
-
+    
     Game iterator_souce = tournament_souce->games;
     Game* iterator_destination = &(tournament_destination->games);
 
@@ -88,10 +83,7 @@ static MapDataElement copyDataTournament(MapDataElement n)
         *iterator_destination = malloc(sizeof(**iterator_destination));
         // ToDo: check if malloc failed, if yes add logic for deleting all what has already been allocated
 
-        (*iterator_destination)->first_player = iterator_souce->first_player;
-        (*iterator_destination)->second_player = iterator_souce->second_player;
-        (*iterator_destination)->winner = iterator_souce->winner;
-        (*iterator_destination)->play_time = iterator_souce->play_time;
+        **iterator_destination = *iterator_souce;
         (*iterator_destination)->next = NULL;
 
         iterator_souce = iterator_souce->next;
@@ -214,7 +206,9 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     tournament.max_games_per_player = max_games_per_player;
     tournament.is_ended = false;
     tournament.games = NULL;
-    tournament.winnder_id = NO_WINNER_DECLARED_YET;
+    tournament.number_of_games = 0;
+    tournament.winnder_id = 0;
+    tournament.longest_time_game = 0;
 
     MapResult map_result = mapPut(chess->tournaments, &tournament_id, &tournament);
     if (MAP_OUT_OF_MEMORY == map_result)
@@ -372,6 +366,14 @@ ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player,
     addPlayer(chess->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner);
     addPlayer(chess->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner);
 
+    if (game.play_time > tournament->longest_time_game)
+    {
+        tournament->longest_time_game = play_time;
+    }
+
+    tournament->average_time_game = (tournament->average_time_game * tournament->number_of_games + play_time) / (tournament->number_of_games + 1);
+    tournament->number_of_games++;
+
     return CHESS_SUCCESS;
 }
 
@@ -415,10 +417,12 @@ ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
         return CHESS_PLAYER_NOT_EXIST;
     }
 
-    Tournament tournament = mapGetFirst(chess->tournaments);
+    int* tournament_id = mapGetFirst(chess->tournaments);
 
-    while (NULL != tournament)
+    while (NULL != tournament_id)
     {
+        Tournament tournament = mapGet(chess->tournaments, tournament_id);
+
         if (false == tournament->is_ended)
         {
             Game game = tournament->games;
@@ -438,8 +442,8 @@ ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
             }
         }
 
-        freeInt(tournament);
-        tournament = mapGetNext(chess->tournaments);
+        freeInt(tournament_id);
+        tournament_id = mapGetNext(chess->tournaments);
     }
 
     // ToDo: maybe to add assert, tough it should always succeed
@@ -600,7 +604,12 @@ ChessResult chessSaveTournamentStatistics (ChessSystem chess, char* path_file)
             // ToDo: add all other parameters
 
             // ToDo: should we check if succeeded ?
-            fprintf(file, "%d %d\n", *tournament_id, tournament->winnder_id);
+            fprintf(file, "%d\n", tournament->winnder_id);
+            fprintf(file, "%d\n", tournament->longest_time_game);
+            fprintf(file, "%.2f\n", tournament->average_time_game);
+            fprintf(file, "\n"); // ToDo: add location
+            fprintf(file, "%d\n", tournament->number_of_games);
+            fprintf(file, "\n"); // ToDo: add number of players
         }
 
         freeInt(tournament_id);
