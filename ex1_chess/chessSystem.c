@@ -2,6 +2,7 @@
 #include "mtm_map/map.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 // ToDo: check if should be 0 or 1
 #define MIN_VALID_GAMES_PER_PLAYER  1
@@ -26,6 +27,7 @@ typedef struct player_t {
 // ToDo: add location member
 typedef struct tournament_t {
     int     max_games_per_player;
+    char*   location;
     bool    is_ended;
     Game    games;
     int     number_of_games;
@@ -75,6 +77,15 @@ static MapDataElement copyDataTournament(MapDataElement n)
 
     *tournament_destination = *tournament_souce;
     tournament_destination->games = NULL;
+
+    tournament_destination->location = malloc(strlen(tournament_souce->location) + 1);
+    if (NULL == tournament_destination->location)
+    {
+        return NULL;
+    }
+    // ToDo: check if should add return code for copy result
+    strcpy(tournament_destination->location, tournament_souce->location);
+
     tournament_destination->players = mapCopy(tournament_souce->players);
     if (NULL == tournament_destination->players)
     {
@@ -108,6 +119,8 @@ static void freeInt(MapKeyElement n)
 static void freeTournament(MapDataElement n)
 {
     Tournament tournament = (Tournament)n;
+
+    free(tournament->location);
 
     mapDestroy(tournament->players);
 
@@ -218,6 +231,15 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     tournament.number_of_games = 0;
     tournament.winnder_id = 0;
     tournament.longest_time_game = 0;
+
+    tournament.location = malloc(strlen(tournament_location) + 1);
+    if (NULL == tournament.location)
+    {
+        return CHESS_OUT_OF_MEMORY;
+    }
+    // ToDo: check if should add return code for copy result
+    strcpy(tournament.location, tournament_location);
+
     tournament.players = mapCreate(copyDataPlayer, copyKeyInt, freePlayer, freeInt, compareInts);
     if (NULL == tournament.players)
     {
@@ -230,6 +252,7 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
         return CHESS_OUT_OF_MEMORY;
     }
 
+    free(tournament.location);
     mapDestroy(tournament.players);
 
     return CHESS_SUCCESS;
@@ -641,7 +664,7 @@ ChessResult chessSaveTournamentStatistics(ChessSystem chess, char* path_file)
             fprintf(file, "%d\n", tournament->winnder_id);
             fprintf(file, "%d\n", tournament->longest_time_game);
             fprintf(file, "%.2f\n", tournament->average_time_game);
-            fprintf(file, "\n"); // ToDo: add location
+            fprintf(file, "%s\n", tournament->location);
             fprintf(file, "%d\n", tournament->number_of_games);
             fprintf(file, "%d\n", mapGetSize(tournament->players));
         }
