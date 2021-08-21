@@ -6,7 +6,12 @@
 #include <string.h>
 #include <stdio.h>
 
-#define NUMBER_TESTS 22
+#define NUMBER_TESTS 26
+
+#define ASSERT_TRUE ASSERT_TEST
+#define ASSERT_EQ(x, y) ASSERT_TEST((x) == (y))
+#define ASSERT_NE(x, y) ASSERT_TEST((x) != (y))
+#define ASSERT_FALSE(x) ASSERT_TEST(!(x))
 
 /** Function to be used for copying an int as a key to the map */
 static MapKeyElement copyKeyInt(MapKeyElement n) {
@@ -1009,6 +1014,484 @@ bool testMapForEach() {
     return true;
 }
 
+bool testMapCreateDestroy_nadav()
+{
+    ASSERT_EQ(mapCreate(NULL, NULL, NULL, NULL, NULL), NULL);
+    ASSERT_EQ(mapCreate(copyKeyInt, NULL, freeInt, NULL, NULL), NULL);
+    ASSERT_EQ(mapCreate(NULL, copyKeyInt, NULL, freeInt, NULL), NULL);
+    ASSERT_EQ(mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, NULL), NULL);
+    Map map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    mapDestroy(map);
+
+    mapDestroy(NULL);
+
+    ASSERT_EQ(mapCopy(NULL), NULL);
+
+    ASSERT_EQ(mapClear(NULL), MAP_NULL_ARGUMENT);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    int key = 1;
+    int data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_EQ(mapGetSize(map), 1);
+    ASSERT_TRUE(mapContains(map, &key));
+    ASSERT_EQ(mapClear(map), MAP_SUCCESS);
+    ASSERT_EQ(mapGetSize(map), 0);
+    ASSERT_FALSE(mapContains(map, &key));
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    ASSERT_EQ(mapGetSize(map), 10);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_TRUE(mapContains(map, &i));
+    }
+    ASSERT_EQ(mapClear(map), MAP_SUCCESS);
+    ASSERT_EQ(mapGetSize(map), 0);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_FALSE(mapContains(map, &i));
+    }
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    Map map2 = mapCopy(map);
+    ASSERT_NE(map2, NULL);
+    ASSERT_EQ(mapGetSize(map2), 10);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_TRUE(mapContains(map2, &i));
+    }
+    mapDestroy(map2);
+    mapDestroy(map);
+
+    return true;
+}
+
+bool testMapIteration_nadav()
+{
+    ASSERT_EQ(mapGetFirst(NULL), NULL);
+    ASSERT_EQ(mapGetNext(NULL), NULL);
+
+    Map map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    ASSERT_EQ(mapGetFirst(map), NULL);
+    ASSERT_EQ(mapGetNext(map), NULL);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    int key = 1;
+    int data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    int *first = (int *)mapGetFirst(map);
+    ASSERT_NE(first, NULL);
+    ASSERT_EQ(*first, key);
+    ASSERT_EQ(*(int*)mapGet(map, first), data);
+    ASSERT_EQ(mapGetNext(map), NULL);
+    free(first);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    int i = 0;
+    MAP_FOREACH(int *, iterator, map)
+    {
+        ASSERT_NE(iterator, NULL);
+        ASSERT_EQ(*(int *)iterator, i);
+        ASSERT_EQ(*(int *)mapGet(map, iterator), i);
+        i++;
+        free(iterator);
+    }
+    ASSERT_EQ(i, 10);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 9; i >= 0; i--)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    i = 0;
+    MAP_FOREACH(int *, iterator, map)
+    {
+        ASSERT_NE(iterator, NULL);
+        ASSERT_EQ(*(int *)iterator, i);
+        ASSERT_EQ(*(int *)mapGet(map, iterator), i);
+        i++;
+        free(iterator);
+    }
+    ASSERT_EQ(i, 10);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 0; i < 10; i += 2)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    for (int i = 1; i < 10; i += 2)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    i = 0;
+    MAP_FOREACH(int *, iterator, map)
+    {
+        ASSERT_NE(iterator, NULL);
+        ASSERT_EQ(*(int *)iterator, i);
+        ASSERT_EQ(*(int *)mapGet(map, iterator), i);
+        i++;
+        free(iterator);
+    }
+    ASSERT_EQ(i, 10);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    int missingKey = 5;
+    ASSERT_EQ(mapRemove(map, &missingKey), MAP_SUCCESS);
+    i = 0;
+    MAP_FOREACH(int *, iterator, map)
+    {
+        ASSERT_NE(iterator, NULL);
+        ASSERT_EQ(*(int *)iterator, i);
+        ASSERT_EQ(*(int *)mapGet(map, iterator), i);
+        i++;
+        if (i == 5)
+        {
+            i++;
+        }
+        free(iterator);
+    }
+    ASSERT_EQ(i, 10);
+    mapDestroy(map);
+
+    return true;
+}
+
+bool testMapModify_nadav()
+{
+    ASSERT_EQ(mapGetSize(NULL), -1);
+
+    ASSERT_FALSE(mapContains(NULL, NULL));
+    int i = 5;
+    ASSERT_FALSE(mapContains(NULL, &i));
+    Map map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_FALSE(mapContains(map, NULL));
+    mapDestroy(map);
+
+    ASSERT_EQ(mapPut(NULL, NULL, NULL), MAP_NULL_ARGUMENT);
+    i = 5;
+    ASSERT_EQ(mapPut(NULL, &i, NULL), MAP_NULL_ARGUMENT);
+    ASSERT_EQ(mapPut(NULL, NULL, &i), MAP_NULL_ARGUMENT);
+    ASSERT_EQ(mapPut(NULL, &i, &i), MAP_NULL_ARGUMENT);
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_EQ(mapPut(map, NULL, NULL), MAP_NULL_ARGUMENT);
+    ASSERT_EQ(mapPut(map, &i, NULL), MAP_NULL_ARGUMENT);
+    ASSERT_EQ(mapPut(map, NULL, &i), MAP_NULL_ARGUMENT);
+    mapDestroy(map);
+
+    ASSERT_EQ(mapGet(NULL, NULL), NULL);
+    i = 5;
+    ASSERT_EQ(mapGet(NULL, &i), NULL);
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_EQ(mapGet(map, NULL), NULL);
+    mapDestroy(map);
+
+    ASSERT_EQ(mapRemove(NULL, NULL), MAP_NULL_ARGUMENT);
+    i = 5;
+    ASSERT_EQ(mapRemove(NULL, &i), MAP_NULL_ARGUMENT);
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_EQ(mapRemove(map, NULL), MAP_NULL_ARGUMENT);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    int key = 1;
+    int data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_TRUE(mapContains(map, &key));
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    int key2 = 2;
+    data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_FALSE(mapContains(map, &key2));
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    ASSERT_FALSE(mapContains(map, &key));
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_TRUE(mapContains(map, &key));
+    ASSERT_EQ(mapGetSize(map), 1);
+    ASSERT_EQ(*(int *)mapGet(map, &key), data);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    data = 1;
+    int data2 = 2;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_TRUE(mapContains(map, &key));
+    ASSERT_EQ(mapPut(map, &key, &data2), MAP_SUCCESS);
+    ASSERT_TRUE(mapContains(map, &key));
+    ASSERT_EQ(*(int *)mapGet(map, &key), data2);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    ASSERT_EQ(mapGetSize(map), 10);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_TRUE(mapContains(map, &i));
+        ASSERT_EQ(*(int *)mapGet(map, &i), i);
+    }
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 9; i >= 0; i--)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    ASSERT_EQ(mapGetSize(map), 10);
+    for (int i = 9; i >= 0; i--)
+    {
+        ASSERT_TRUE(mapContains(map, &i));
+        ASSERT_EQ(*(int *)mapGet(map, &i), i);
+    }
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 0; i < 10; i += 2)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    for (int i = 1; i < 10; i += 2)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    ASSERT_EQ(mapGetSize(map), 10);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_TRUE(mapContains(map, &i));
+        ASSERT_EQ(*(int *)mapGet(map, &i), i);
+    }
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    MapDataElement element = mapGet(map, &key);
+    ASSERT_NE(element, NULL);
+    ASSERT_EQ(*(int *)element, data);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    key2 = 2;
+    data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_EQ(mapGet(map, &key2), NULL);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 1; i < 10; i++)
+    {
+        if (i != 5)
+        {
+            ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+        }
+    }
+    ASSERT_EQ(mapGetSize(map), 8);
+    int key1 = 0;
+    key2 = 5;
+    ASSERT_EQ(mapGet(map, &key1), NULL);
+    ASSERT_EQ(mapGet(map, &key2), NULL);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    ASSERT_EQ(mapGet(map, &key), NULL);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_TRUE(mapContains(map, &key));
+    ASSERT_EQ(mapGetSize(map), 1);
+    ASSERT_EQ(mapRemove(map, &key), MAP_SUCCESS);
+    ASSERT_FALSE(mapContains(map, &key));
+    ASSERT_EQ(mapGetSize(map), 0);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    key2 = 2;
+    data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_TRUE(mapContains(map, &key));
+    ASSERT_EQ(mapGetSize(map), 1);
+    ASSERT_EQ(mapRemove(map, &key2), MAP_ITEM_DOES_NOT_EXIST);
+    ASSERT_TRUE(mapContains(map, &key));
+    ASSERT_EQ(mapGetSize(map), 1);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 1; i < 10; i++)
+    {
+        if (i != 5)
+        {
+            ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+        }
+    }
+    ASSERT_EQ(mapGetSize(map), 8);
+    key1 = 0;
+    key2 = 5;
+    ASSERT_EQ(mapRemove(map, &key1), MAP_ITEM_DOES_NOT_EXIST);
+    ASSERT_EQ(mapRemove(map, &key2), MAP_ITEM_DOES_NOT_EXIST);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    for (int i = 0; i < 10; i++)
+    {
+        ASSERT_EQ(mapPut(map, &i, &i), MAP_SUCCESS);
+    }
+    key = 5;
+    ASSERT_TRUE(mapContains(map, &key));
+    ASSERT_EQ(mapGetSize(map), 10);
+    ASSERT_EQ(mapRemove(map, &key), MAP_SUCCESS);
+    ASSERT_FALSE(mapContains(map, &key));
+    ASSERT_EQ(mapGetSize(map), 9);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    ASSERT_EQ(mapGetSize(map), 0);
+    ASSERT_EQ(mapRemove(map, &key), MAP_ITEM_DOES_NOT_EXIST);
+    ASSERT_EQ(mapGetSize(map), 0);
+    mapDestroy(map);
+
+    return true;
+}
+
+bool testMapSenity_nadav()
+{
+    Map map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    ASSERT_EQ(mapGetSize(map), 0);
+    int key = 1;
+    int data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_EQ(mapGetSize(map), 1);
+    ASSERT_NE(mapGet(map, &key), NULL);
+    ASSERT_EQ(*(int *)mapGet(map, &key), data);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    Map map2 = mapCopy(map);
+    ASSERT_NE(map2, NULL);
+    ASSERT_EQ(mapGetSize(map2), 1);
+    ASSERT_TRUE(mapContains(map2, &key));
+    ASSERT_NE(mapGet(map2, &key), NULL);
+    ASSERT_EQ(*(int *)mapGet(map2, &key), data);
+    mapDestroy(map2);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_TRUE(mapContains(map, &key));
+    ASSERT_EQ(mapRemove(map, &key), MAP_SUCCESS);
+    ASSERT_FALSE(mapContains(map, &key));
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    data = 1;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    int* first = (int *)mapGetFirst(map);
+    ASSERT_NE(first, NULL);
+    ASSERT_EQ(*first, key);
+    free(first);
+    mapDestroy(map);
+
+    map = mapCreate(copyKeyInt, copyKeyInt, freeInt, freeInt, compareInts);
+    ASSERT_NE(map, NULL);
+    key = 1;
+    data = 1;
+    int key2 = 2;
+    int data2 = 2;
+    ASSERT_EQ(mapPut(map, &key, &data), MAP_SUCCESS);
+    ASSERT_EQ(mapPut(map, &key2, &data2), MAP_SUCCESS);
+    first = (int *)mapGetFirst(map);
+    ASSERT_NE(first, NULL);
+    int *next = (int *)mapGetNext(map);
+    ASSERT_NE(next, NULL);
+    ASSERT_EQ(*next, data2);
+    free(next);
+    free(first);
+    mapDestroy(map);
+
+    return true;
+}
+
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
         testMapCreateDestroy,
@@ -1032,7 +1515,11 @@ bool (*tests[]) (void) = {
         testMapCreate,
         testMapContains,
         testMapRemove,
-        testMapForEach
+        testMapForEach,
+        testMapCreateDestroy_nadav,
+        testMapIteration_nadav,
+        testMapModify_nadav,
+        testMapSenity_nadav
 };
 
 /*The names of the test functions should be added here*/
@@ -1058,7 +1545,11 @@ const char* testNames[] = {
         "testMapCreate",
         "testMapContains",
         "testMapRemove",
-        "testMapForEach"
+        "testMapForEach",
+        "testMapCreateDestroy_nadav",
+        "testMapIteration_nadav",
+        "testMapModify_nadav",
+        "testMapSenity_nadav"
 };
 
 int main(int argc, char *argv[]) {
