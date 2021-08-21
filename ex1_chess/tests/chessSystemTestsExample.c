@@ -79,6 +79,19 @@ bool testChessPrintLevelsAndTournamentStatistics(){
     ASSERT_TEST(chessSaveTournamentStatistics(chess, "./tests/tournament_statistics_your_output.txt") == CHESS_SUCCESS);
     chessDestroy(chess);
     fclose(file_levels);
+
+    FILE* f1 = fopen("./tests/player_levels_your_output.txt", "r");
+    FILE* f2 = fopen("./tests/myExpectedTestLevel.txt", "r");
+    ASSERT_TEST(compareFile(f1, f2) == 0);
+    fclose(f1);
+    fclose(f2);
+
+    f1 = fopen("./tests/tournament_statistics_your_output.txt", "r");
+    f2 = fopen("./tests/myExpectedTestStats.txt", "r");
+    ASSERT_TEST(compareFile(f1, f2) == 0);
+    fclose(f1);
+    fclose(f2);
+
     return true;
 }
 
