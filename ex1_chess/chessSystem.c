@@ -218,6 +218,7 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     tournament.number_of_games = 0;
     tournament.winnder_id = 0;
     tournament.longest_time_game = 0;
+    tournament.players = mapCreate(copyDataPlayer, copyKeyInt, freePlayer, freeInt, compareInts);
 
     MapResult map_result = mapPut(chess->tournaments, &tournament_id, &tournament);
     if (MAP_OUT_OF_MEMORY == map_result)
@@ -229,7 +230,7 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     Tournament tournament_new = mapGet(chess->tournaments, &tournament_id);
 
     tournament_new->players = mapCreate(copyDataPlayer, copyKeyInt, freePlayer, freeInt, compareInts);
-    if (MAP_OUT_OF_MEMORY == tournament_new->players)
+    if (NULL == tournament_new->players)
     {
         // ToDo: decide that to do in this case
         return CHESS_OUT_OF_MEMORY;
@@ -509,9 +510,10 @@ ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
 
     while (NULL != player_id)
     {
-        Player player = mapGet(tournament->players, player_id);
+        // Player player = mapGet(tournament->players, player_id);
 
         free(player_id);
+        player_id = mapGetNext(tournament->players);
     }
 
     return CHESS_SUCCESS;
@@ -635,7 +637,7 @@ ChessResult chessSaveTournamentStatistics(ChessSystem chess, char* path_file)
             fprintf(file, "%.2f\n", tournament->average_time_game);
             fprintf(file, "\n"); // ToDo: add location
             fprintf(file, "%d\n", tournament->number_of_games);
-            fprintf(file, "\n"); // ToDo: add number of players
+            fprintf(file, "%d\n", mapGetSize(tournament->players));
         }
 
         freeInt(tournament_id);
