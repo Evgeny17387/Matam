@@ -499,16 +499,21 @@ ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
                 if (game->first_player == player_id)
                 {
                     game->winner = SECOND_PLAYER;
+                    game->first_player = -1;
                 }
                 else if (game->second_player == player_id)
                 {
                     game->winner = FIRST_PLAYER;
+                    game->second_player = -1;
                 }
 
                 game = game->next;
             }
         }
 
+        // ToDo: decide if should be checked, altough it shoudn't fail
+        mapRemove(tournament->players, &player_id);
+        
         freeInt(tournament_id);
         tournament_id = mapGetNext(chess->tournaments);
     }
@@ -517,6 +522,58 @@ ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
     mapRemove(chess->players, &player_id);
 
     return CHESS_SUCCESS;
+}
+
+void selectTournmentWinner(Tournament tournament)
+{
+    int* player_id = mapGetFirst(tournament->players);
+
+    int max_points = 0;
+    int min_losses = 0;
+    int max_wins = 0;
+
+    while (NULL != player_id)
+    {
+        Player player = mapGet(tournament->players, player_id);
+
+        int player_points = 2 * player->wins + player->draws;
+
+        if (player_points > max_points)
+        {
+            max_points = player_points;
+
+            min_losses = player->losses;
+            max_wins = player->wins;
+            tournament->winnder_id = *player_id;
+        }
+        else if (player_points == max_points)
+        {
+            if (player->losses < min_losses)
+            {
+                min_losses = player->losses;
+                max_wins = player->wins;
+                tournament->winnder_id = *player_id;
+            }
+            else if (player->losses == min_losses)
+            {
+                if (player->wins > max_wins)
+                {
+                    max_wins = player->wins;
+                    tournament->winnder_id = *player_id;
+                }
+                else if (player->wins == max_wins)
+                {
+                    if (*player_id < tournament->winnder_id)
+                    {
+                        tournament->winnder_id = *player_id;
+                    }
+                }
+            }
+        }
+
+        free(player_id);
+        player_id = mapGetNext(tournament->players);
+    }
 }
 
 ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
@@ -543,7 +600,6 @@ ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
         return CHESS_TOURNAMENT_ENDED;
     }
 
-    // ToDo: maybe add games counter
     if (NULL == tournament->games)
     {
         return CHESS_NO_GAMES;
@@ -551,25 +607,7 @@ ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
 
     tournament->is_ended = true;
 
-    int* player_id = mapGetFirst(tournament->players);
-
-    int max_points = 0;
-
-    while (NULL != player_id)
-    {
-        Player player = mapGet(tournament->players, player_id);
-
-        int player_points = 2 * player->wins + player->draws;
-
-        if (player_points > max_points)
-        {
-            max_points = player_points;
-            tournament->winnder_id = *player_id;
-        }
-
-        free(player_id);
-        player_id = mapGetNext(tournament->players);
-    }
+    selectTournmentWinner(tournament);
 
     return CHESS_SUCCESS;
 }

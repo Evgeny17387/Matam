@@ -181,7 +181,7 @@ bool testChessAddTournamentAndEndTournament_maaroof() {
     ASSERT_TEST(chessEndTournament(sys1, 1) == CHESS_SUCCESS);
     ASSERT_TEST(chessEndTournament(sys1, 2) == CHESS_SUCCESS);
     ASSERT_TEST(chessEndTournament(sys1, 3) == CHESS_SUCCESS);
-    // ASSERT_TEST(chessEndTournament(sys1, 3) == CHESS_SUCCESS); // Shouldn't pass since this tournment was already been ended
+    // ASSERT_TEST(chessEndTournament(sys1, 3) == CHESS_SUCCESS); // ToDo: Shouldn't pass since this tournment was already been ended
     ASSERT_TEST(chessEndTournament(sys1, 4) == CHESS_TOURNAMENT_NOT_EXIST);
     ASSERT_TEST(chessEndTournament(sys1, -1) == CHESS_INVALID_ID);
 
@@ -279,7 +279,7 @@ bool testRemoveTournament_maaroof()
     ASSERT_TEST(chessSaveTournamentStatistics(sys1, "your_output/test_tournament_remove_your_output.txt") == CHESS_SUCCESS);
     FILE* f1 = fopen("your_output/test_tournament_remove_your_output.txt", "r");
     FILE* f2 = fopen("expected_output/test_tournament_remove_expected_output.txt", "r");
-    ASSERT_TEST(compareFile(f1, f2) == 0);
+    ASSERT_TEST(compareFile(f1, f2) == 0); // ToDo: originaly there was a bug in maroof file, it was 2, but it should be 1
     fclose(f1);
     fclose(f2);
 
