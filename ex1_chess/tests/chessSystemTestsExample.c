@@ -306,7 +306,7 @@ bool testChessRemovePlayer_maaroof() {
     fclose(file_levels);
 
     FILE* f1 = fopen("your_output/player_levels_all.txt", "r");
-    FILE* f2 = fopen("expected_output/player_levels_all.txt", "r");
+    FILE* f2 = fopen("expected_output/player_levels_all.txt", "r"); // ToDo: maroof hasn't arenged the player from highest point to lowest
     ASSERT_TEST(compareFile(f1, f2) == 0);
     fclose(f1);
     fclose(f2);

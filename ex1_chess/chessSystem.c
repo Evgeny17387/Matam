@@ -10,6 +10,8 @@
 #define MIN_VALID_PLAYER_ID         1
 #define MIN_VALID_PLAY_TIME         0
 
+#define PLAYER_HAS_BEEN_REMOVED     -1
+
 typedef struct game_t {
     struct game_t  *next;
     int             first_player;
@@ -284,7 +286,7 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     return CHESS_SUCCESS;
 }
 
-bool isGameExists(Tournament tournament, Game game)
+static bool isGameExists(Tournament tournament, Game game)
 {
     Game iterator = tournament->games;
 
@@ -302,7 +304,7 @@ bool isGameExists(Tournament tournament, Game game)
     return false;
 }
 
-bool isPlayersExceededMaxGames(Tournament tournament, Game game)
+static bool isPlayersExceededMaxGames(Tournament tournament, Game game)
 {
     Game iterator = tournament->games;
 
@@ -332,7 +334,7 @@ bool isPlayersExceededMaxGames(Tournament tournament, Game game)
     return false;
 }
 
-bool addGame(Tournament tournament, Game game)
+static bool addGame(Tournament tournament, Game game)
 {
     Game* iterator = &(tournament->games);
 
@@ -524,7 +526,7 @@ ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
     return CHESS_SUCCESS;
 }
 
-void selectTournmentWinner(Tournament tournament)
+static void selectTournmentWinner(Tournament tournament)
 {
     int* player_id = mapGetFirst(tournament->players);
 
