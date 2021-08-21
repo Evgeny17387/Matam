@@ -219,12 +219,18 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     tournament.winnder_id = 0;
     tournament.longest_time_game = 0;
     tournament.players = mapCreate(copyDataPlayer, copyKeyInt, freePlayer, freeInt, compareInts);
+    if (NULL == tournament.players)
+    {
+        return CHESS_OUT_OF_MEMORY;
+    }
 
     MapResult map_result = mapPut(chess->tournaments, &tournament_id, &tournament);
     if (MAP_OUT_OF_MEMORY == map_result)
     {
         return CHESS_OUT_OF_MEMORY;
     }
+
+    mapDestroy(tournament.players);
 
     // ToDo: decide if should be checked, no reason though...
     Tournament tournament_new = mapGet(chess->tournaments, &tournament_id);
@@ -508,9 +514,19 @@ ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
 
     int* player_id = mapGetFirst(tournament->players);
 
+    int max_points = 0;
+
     while (NULL != player_id)
     {
-        // Player player = mapGet(tournament->players, player_id);
+        Player player = mapGet(tournament->players, player_id);
+
+        int player_points = 2 * player->wins + player->draws;
+
+        if (player_points > max_points)
+        {
+            max_points = player_points;
+            tournament->winnder_id = *player_id;
+        }
 
         free(player_id);
         player_id = mapGetNext(tournament->players);
