@@ -3,7 +3,7 @@
 #include "../test_utilities.h"
 
 /*The number of tests*/
-#define NUMBER_TESTS 17
+#define NUMBER_TESTS 18
 
 #define ASSERT_TRUE ASSERT_TEST
 #define ASSERT_EQ(x, y) ASSERT_TEST((x) == (y))
@@ -786,6 +786,39 @@ bool testChessPlayers_nadav()
     return true;
 }
 
+bool testChessSanity_nadav()
+{
+    ChessSystem chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 80), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemoveTournament(chess, 1), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ChessResult result;
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 1, &result), 60);
+    ASSERT_EQ(result, CHESS_SUCCESS);
+    chessDestroy(chess);
+    
+    return true;
+}
+
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
         testChessAddTournament,
@@ -804,7 +837,8 @@ bool (*tests[]) (void) = {
         testSavePlayerLevelsAndTournamentStatistics_maaroof,
         testAndStatsLevels,
         testChessCreateDestroy_nadav,
-        testChessPlayers_nadav
+        testChessPlayers_nadav,
+        testChessSanity_nadav
 };
 
 /*The names of the test functions should be added here*/
@@ -825,7 +859,8 @@ const char* testNames[] = {
         "testSavePlayerLevelsAndTournamentStatistics_maaroof",
         "testAndStatsLevels",
         "testChessCreateDestroy_nadav",
-        "testChessPlayers_nadav"
+        "testChessPlayers_nadav",
+        "testChessSanity_nadav"
 };
 
 int main(int argc, char *argv[]) {
