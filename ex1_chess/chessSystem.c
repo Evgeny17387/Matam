@@ -195,6 +195,11 @@ ChessSystem chessCreate()
 
 void chessDestroy(ChessSystem chess)
 {
+    if (NULL == chess)
+    {
+        return;
+    }
+
     mapDestroy(chess->tournaments);
     mapDestroy(chess->players);
     free(chess);
