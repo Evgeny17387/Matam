@@ -653,6 +653,11 @@ double chessCalculateAveragePlayTime(ChessSystem chess, int player_id, ChessResu
 {
     double average_play_time = INVALID_AVERAGE_TIME;
 
+    if (NULL == chess_result)
+    {
+        return average_play_time;
+    }
+
     if (NULL == chess)
     {
         *chess_result = CHESS_NULL_ARGUMENT;
@@ -683,20 +688,17 @@ double chessCalculateAveragePlayTime(ChessSystem chess, int player_id, ChessResu
     {
         Tournament tournament = mapGet(chess->tournaments, tournament_id);
 
-        if (false == tournament->is_ended)
+        Game game = tournament->games;
+
+        while (NULL != game)
         {
-            Game game = tournament->games;
-
-            while (NULL != game)
+            if ((game->first_player == player_id) || (game->second_player == player_id))
             {
-                if ((game->first_player == player_id) || (game->second_player == player_id))
-                {
-                    played_games++;
-                    average_play_time += game->play_time;
-                }
-
-                game = game->next;
+                played_games++;
+                average_play_time += game->play_time;
             }
+
+            game = game->next;
         }
 
         freeInt(tournament_id);
