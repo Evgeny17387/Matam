@@ -14,6 +14,8 @@
 
 #define INVALID_AVERAGE_TIME        -1
 
+#define FILE_WRITE_FAILED           0
+
 typedef struct game_t {
     struct game_t  *next;
     int             first_player;
@@ -785,7 +787,12 @@ ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
     for (int i = 0; i < players_number; i++)
     {
         // ToDo: should we check if succeeded ?
-        fprintf(file, "%d %.2f\n", players_points[i].id, players_points[i].level);
+        int result = fprintf(file, "%d %.2f\n", players_points[i].id, players_points[i].level);
+        if (FILE_WRITE_FAILED == result)
+        {
+            free(players_points);
+            return CHESS_SAVE_FAILURE;
+        }
     }
 
     free(players_points);
@@ -795,7 +802,7 @@ ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
 
 ChessResult chessSaveTournamentStatistics(ChessSystem chess, char* path_file)
 {
-    if (NULL == chess)
+    if ((NULL == chess) || (NULL == path_file))
     {
         return CHESS_NULL_ARGUMENT;
     }
