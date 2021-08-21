@@ -200,6 +200,24 @@ void chessDestroy(ChessSystem chess)
     free(chess);
 }
 
+static bool checkLocation(const char* tournament_location)
+{
+    if ((tournament_location[0] < 'A') || (tournament_location[0] > 'Z'))
+    {
+        return false;
+    }
+
+    for (int i = 1; i < strlen(tournament_location); i++)
+    {
+        if (!(((tournament_location[i] >= 'a') && (tournament_location[i] <= 'z')) || (' ' == tournament_location[i])))
+        {
+            return false;
+        }        
+    }
+
+    return true;    
+}
+
 ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_games_per_player, const char* tournament_location)
 {
     if ((NULL == chess) || (NULL == tournament_location))
@@ -217,7 +235,10 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
         return CHESS_TOURNAMENT_ALREADY_EXISTS;
     }
 
-    // ToDo: check for location
+    if (!checkLocation(tournament_location))
+    {
+        return CHESS_INVALID_LOCATION;
+    }
 
     if (max_games_per_player < MIN_VALID_GAMES_PER_PLAYER)
     {
