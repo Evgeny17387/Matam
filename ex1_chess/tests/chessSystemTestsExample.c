@@ -3,7 +3,7 @@
 #include "../test_utilities.h"
 
 /*The number of tests*/
-#define NUMBER_TESTS 19
+#define NUMBER_TESTS 20
 
 #define ASSERT_TRUE ASSERT_TEST
 #define ASSERT_EQ(x, y) ASSERT_TEST((x) == (y))
@@ -146,8 +146,6 @@ bool testPrivate()
     return true;
 }
 
-
-//maaroof the ashkiller tests:
 bool testChessDestroy_maaroof() {
     chessDestroy(NULL);
 
@@ -1067,6 +1065,21 @@ bool testChessModification_nadav()
     return true;
 }
 
+bool testChessStatistics_nadav()
+{
+    ChessSystem chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    FILE* file = fopen("./nadav/your_outs/testChessStatistics_nadav.txt", "w");
+    ASSERT_NE(file, NULL);
+    ASSERT_EQ(chessSavePlayersLevels(NULL, NULL), CHESS_NULL_ARGUMENT);
+    ASSERT_EQ(chessSavePlayersLevels(NULL, file), CHESS_NULL_ARGUMENT);
+    ASSERT_EQ(chessSavePlayersLevels(chess, NULL), CHESS_NULL_ARGUMENT);
+    fclose(file);
+    chessDestroy(chess);
+
+    return true;
+}
+
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
         testChessAddTournament,
@@ -1087,7 +1100,8 @@ bool (*tests[]) (void) = {
         testChessCreateDestroy_nadav,
         testChessPlayers_nadav,
         testChessSanity_nadav,
-        testChessModification_nadav
+        testChessModification_nadav,
+        testChessStatistics_nadav
 };
 
 /*The names of the test functions should be added here*/
@@ -1110,7 +1124,8 @@ const char* testNames[] = {
         "testChessCreateDestroy_nadav",
         "testChessPlayers_nadav",
         "testChessSanity_nadav",
-        "testChessModification_nadav"
+        "testChessModification_nadav",
+        "testChessStatistics_nadav"
 };
 
 int main(int argc, char *argv[]) {

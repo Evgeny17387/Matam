@@ -748,7 +748,7 @@ static void sortPlayersLevel(PlayerPoints players_points, int n)
 
 ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
 {
-    if (NULL == chess)
+    if ((NULL == chess) || (NULL == file))
     {
         return CHESS_NULL_ARGUMENT;
     }
