@@ -12,6 +12,8 @@
 
 #define PLAYER_HAS_BEEN_REMOVED     -1
 
+#define INVALID_AVERAGE_TIME        -1
+
 typedef struct game_t {
     struct game_t  *next;
     int             first_player;
@@ -649,7 +651,7 @@ ChessResult chessEndTournament(ChessSystem chess, int tournament_id)
 
 double chessCalculateAveragePlayTime(ChessSystem chess, int player_id, ChessResult* chess_result)
 {
-    double average_play_time = 0;
+    double average_play_time = INVALID_AVERAGE_TIME;
 
     if (NULL == chess)
     {
@@ -673,6 +675,7 @@ double chessCalculateAveragePlayTime(ChessSystem chess, int player_id, ChessResu
     // ToDo: think of how to implement when this statistics is always being kept upadted
 
     int played_games = 0;
+    average_play_time = 0;
 
     int* tournament_id = mapGetFirst(chess->tournaments);
 

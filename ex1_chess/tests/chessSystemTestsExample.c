@@ -3,7 +3,7 @@
 #include "../test_utilities.h"
 
 /*The number of tests*/
-#define NUMBER_TESTS 16
+#define NUMBER_TESTS 17
 
 #define ASSERT_TRUE ASSERT_TEST
 #define ASSERT_EQ(x, y) ASSERT_TEST((x) == (y))
@@ -666,6 +666,126 @@ bool testChessCreateDestroy_nadav()
     return true;
 }
 
+bool testChessPlayers_nadav()
+{
+    ChessSystem chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessRemovePlayer(NULL, 1), CHESS_NULL_ARGUMENT);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessRemovePlayer(chess, 0), CHESS_INVALID_ID);
+    ASSERT_EQ(chessRemovePlayer(chess, -1), CHESS_INVALID_ID);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessRemovePlayer(chess, 1), CHESS_PLAYER_NOT_EXIST);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 1), CHESS_PLAYER_NOT_EXIST);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, SECOND_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 2), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(NULL, 1), CHESS_NULL_ARGUMENT);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(NULL, 0), CHESS_NULL_ARGUMENT);
+    ASSERT_EQ(chessRemovePlayer(chess, 0), CHESS_INVALID_ID);
+    ASSERT_EQ(chessRemovePlayer(chess, 3), CHESS_PLAYER_NOT_EXIST);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ChessResult result;
+    ASSERT_EQ(chessCalculateAveragePlayTime(NULL, 1, &result), -1);
+    ASSERT_EQ(result, CHESS_NULL_ARGUMENT);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 1, NULL), -1);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 0, &result), -1);
+    ASSERT_EQ(result, CHESS_INVALID_ID);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, -1, &result), -1);
+    ASSERT_EQ(result, CHESS_INVALID_ID);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 1, &result), -1);
+    ASSERT_EQ(result, CHESS_PLAYER_NOT_EXIST);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 1, &result), 60);
+    ASSERT_EQ(result, CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 90), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 110), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, FIRST_PLAYER, 130), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 30), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 1, &result), 110);
+    ASSERT_EQ(result, CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 90), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 110), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, FIRST_PLAYER, 130), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 30), CHESS_SUCCESS);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 1, &result), 110);
+    ASSERT_EQ(result, CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 2, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 109), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 120), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 1, 3, FIRST_PLAYER, 150), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 2, 5, FIRST_PLAYER, 100), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, FIRST_PLAYER, 130), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 1, 5, FIRST_PLAYER, 10), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 30), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 1, &result), 103.8);
+    ASSERT_EQ(result, CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    return true;
+}
+
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
         testChessAddTournament,
@@ -683,7 +803,8 @@ bool (*tests[]) (void) = {
         testAvgGameTime_maaroof,
         testSavePlayerLevelsAndTournamentStatistics_maaroof,
         testAndStatsLevels,
-        testChessCreateDestroy_nadav
+        testChessCreateDestroy_nadav,
+        testChessPlayers_nadav
 };
 
 /*The names of the test functions should be added here*/
@@ -703,7 +824,8 @@ const char* testNames[] = {
         "testAvgGameTime_maaroof",
         "testSavePlayerLevelsAndTournamentStatistics_maaroof",
         "testAndStatsLevels",
-        "testChessCreateDestroy_nadav"
+        "testChessCreateDestroy_nadav",
+        "testChessPlayers_nadav"
 };
 
 int main(int argc, char *argv[]) {
