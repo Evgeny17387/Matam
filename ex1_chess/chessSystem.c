@@ -259,6 +259,7 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     tournament.number_of_games = 0;
     tournament.winnder_id = 0;
     tournament.longest_time_game = 0;
+    tournament.average_time_game = 0;
 
     tournament.location = malloc(strlen(tournament_location) + 1);
     if (NULL == tournament.location)
@@ -815,7 +816,7 @@ ChessResult chessSaveTournamentStatistics(ChessSystem chess, char* path_file)
             // ToDo: should we check if fprintf succeeded ?
             fprintf(file, "%d\n", tournament->winnder_id);
             fprintf(file, "%d\n", tournament->longest_time_game);
-            fprintf(file, "%.2f\n", tournament->average_time_game);
+            fprintf(file, "%.20f\n", tournament->average_time_game);
             fprintf(file, "%s\n", tournament->location);
             fprintf(file, "%d\n", tournament->number_of_games);
             fprintf(file, "%d\n", mapGetSize(tournament->players));
