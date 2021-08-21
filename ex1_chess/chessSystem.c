@@ -468,6 +468,28 @@ ChessResult chessRemoveTournament(ChessSystem chess, int tournament_id)
     return CHESS_SUCCESS;
 }
 
+static bool updatePlayerStatistics(Map players, int player_id, bool is_last_time_player_lost, bool is_last_time_was_draw)
+{
+    Player player = mapGet(players, &player_id);
+    if (NULL != player)
+    {
+        if (is_last_time_player_lost)
+        {
+            player->losses--;
+            player->wins++;
+        }
+        else if (is_last_time_was_draw)
+        {
+            player->draws--;
+            player->wins++;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
 ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
 {
     if (NULL == chess)
@@ -500,12 +522,22 @@ ChessResult chessRemovePlayer(ChessSystem chess, int player_id)
             {
                 if (game->first_player == player_id)
                 {
-                    game->winner = SECOND_PLAYER;
+                    updatePlayerStatistics(chess->players, game->second_player, FIRST_PLAYER == game->winner, DRAW == game->winner);
+                    if (updatePlayerStatistics(tournament->players, game->second_player, FIRST_PLAYER == game->winner, DRAW == game->winner))
+                    {
+                        game->winner = SECOND_PLAYER;
+                    }
+
                     game->first_player = -1;
                 }
                 else if (game->second_player == player_id)
                 {
-                    game->winner = FIRST_PLAYER;
+                    updatePlayerStatistics(chess->players, game->first_player, SECOND_PLAYER == game->winner, DRAW == game->winner);
+                    if (updatePlayerStatistics(tournament->players, game->first_player, SECOND_PLAYER == game->winner, DRAW == game->winner))
+                    {
+                        game->winner = SECOND_PLAYER;
+                    }
+
                     game->second_player = -1;
                 }
 
