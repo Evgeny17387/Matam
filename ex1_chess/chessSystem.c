@@ -232,16 +232,6 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
 
     mapDestroy(tournament.players);
 
-    // ToDo: decide if should be checked, no reason though...
-    Tournament tournament_new = mapGet(chess->tournaments, &tournament_id);
-
-    tournament_new->players = mapCreate(copyDataPlayer, copyKeyInt, freePlayer, freeInt, compareInts);
-    if (NULL == tournament_new->players)
-    {
-        // ToDo: decide that to do in this case
-        return CHESS_OUT_OF_MEMORY;
-    }
-
     return CHESS_SUCCESS;
 }
 
