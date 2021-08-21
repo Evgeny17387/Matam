@@ -816,7 +816,7 @@ ChessResult chessSaveTournamentStatistics(ChessSystem chess, char* path_file)
             // ToDo: should we check if fprintf succeeded ?
             fprintf(file, "%d\n", tournament->winnder_id);
             fprintf(file, "%d\n", tournament->longest_time_game);
-            fprintf(file, "%.20f\n", tournament->average_time_game);
+            fprintf(file, "%.2f\n", tournament->average_time_game);
             fprintf(file, "%s\n", tournament->location);
             fprintf(file, "%d\n", tournament->number_of_games);
             fprintf(file, "%d\n", mapGetSize(tournament->players));

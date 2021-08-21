@@ -3,7 +3,12 @@
 #include "../test_utilities.h"
 
 /*The number of tests*/
-#define NUMBER_TESTS 15
+#define NUMBER_TESTS 16
+
+#define ASSERT_TRUE ASSERT_TEST
+#define ASSERT_EQ(x, y) ASSERT_TEST((x) == (y))
+#define ASSERT_NE(x, y) ASSERT_TEST((x) != (y))
+#define ASSERT_FALSE(x) ASSERT_TEST(!(x))
 
 int compareFile(FILE* fPtr1, FILE* fPtr2)
 {
@@ -60,7 +65,7 @@ bool testChessAddGame(){
 }
 
 bool testChessPrintLevelsAndTournamentStatistics(){
-    FILE* file_levels = fopen("./tests/player_levels_your_output.txt", "w");
+    FILE* file_levels = fopen("../tests/player_levels_your_output.txt", "w");
     if(!file_levels){
         printf("test failed to open file, make sure you have the folder tests in the same folder with chessSystem"
                "excutable file and you have write permissions for the file /tests/player_levels_your_output.txt");
@@ -76,18 +81,18 @@ bool testChessPrintLevelsAndTournamentStatistics(){
     ASSERT_TEST(chessAddGame(chess, 1, 3, 4, DRAW, 400) == CHESS_SUCCESS);
     ASSERT_TEST(chessEndTournament(chess, 1) == CHESS_SUCCESS);
     ASSERT_TEST(chessSavePlayersLevels(chess, file_levels) == CHESS_SUCCESS);
-    ASSERT_TEST(chessSaveTournamentStatistics(chess, "./tests/tournament_statistics_your_output.txt") == CHESS_SUCCESS);
+    ASSERT_TEST(chessSaveTournamentStatistics(chess, "../tests/tournament_statistics_your_output.txt") == CHESS_SUCCESS);
     chessDestroy(chess);
     fclose(file_levels);
 
-    FILE* f1 = fopen("./tests/player_levels_your_output.txt", "r");
-    FILE* f2 = fopen("./tests/myExpectedTestLevel.txt", "r");
+    FILE* f1 = fopen("../tests/player_levels_your_output.txt", "r");
+    FILE* f2 = fopen("../tests/player_levels_expected_output.txt", "r");
     ASSERT_TEST(compareFile(f1, f2) == 0);
     fclose(f1);
     fclose(f2);
 
-    f1 = fopen("./tests/tournament_statistics_your_output.txt", "r");
-    f2 = fopen("./tests/myExpectedTestStats.txt", "r");
+    f1 = fopen("../tests/tournament_statistics_your_output.txt", "r");
+    f2 = fopen("../tests/tournament_statistics_expected_output.txt", "r");
     ASSERT_TEST(compareFile(f1, f2) == 0);
     fclose(f1);
     fclose(f2);
@@ -650,6 +655,17 @@ bool testAndStatsLevels()
     return true;    
 }
 
+bool testChessCreateDestroy_nadav()
+{
+    chessDestroy(NULL);
+
+    ChessSystem chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    chessDestroy(chess);
+
+    return true;
+}
+
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
         testChessAddTournament,
@@ -666,7 +682,8 @@ bool (*tests[]) (void) = {
         testChessRemovePlayer_2_maaroof,
         testAvgGameTime_maaroof,
         testSavePlayerLevelsAndTournamentStatistics_maaroof,
-        testAndStatsLevels
+        testAndStatsLevels,
+        testChessCreateDestroy_nadav
 };
 
 /*The names of the test functions should be added here*/
@@ -685,7 +702,8 @@ const char* testNames[] = {
         "testChessRemovePlayer_2_maaroof",
         "testAvgGameTime_maaroof",
         "testSavePlayerLevelsAndTournamentStatistics_maaroof",
-        "testAndStatsLevels"
+        "testAndStatsLevels",
+        "testChessCreateDestroy_nadav"
 };
 
 int main(int argc, char *argv[]) {
