@@ -3,7 +3,7 @@
 #include "../test_utilities.h"
 
 /*The number of tests*/
-#define NUMBER_TESTS 18
+#define NUMBER_TESTS 19
 
 #define ASSERT_TRUE ASSERT_TEST
 #define ASSERT_EQ(x, y) ASSERT_TEST((x) == (y))
@@ -819,6 +819,254 @@ bool testChessSanity_nadav()
     return true;
 }
 
+bool testChessModification_nadav()
+{
+    ChessSystem chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(NULL, 1, 1, "A"), CHESS_NULL_ARGUMENT);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, NULL), CHESS_NULL_ARGUMENT);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 0, 1, "A"), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddTournament(chess, -1, 1, "A"), CHESS_INVALID_ID);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_EQ(chessAddTournament(chess, 1, 0, "A"), CHESS_INVALID_MAX_GAMES);
+    ASSERT_EQ(chessAddTournament(chess, 1, -1, "A"), CHESS_INVALID_MAX_GAMES);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "A"), CHESS_SUCCESS);
+    ASSERT_NE(chess, NULL);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, ""), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "abc"), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "AbC"), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "abC"), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "Abc"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 2, 1, "Abc def"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 3, 1, "Abc Def"), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 3, 1, "Abc!"), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 3, 1, "A!bc"), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 3, 1, "Abc !"), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 3, 1, "Abc !de"), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 3, 1, "Abc ! de"), CHESS_INVALID_LOCATION);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "Abc"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "Abc"), CHESS_TOURNAMENT_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Abc"), CHESS_TOURNAMENT_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "Abcd"), CHESS_TOURNAMENT_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Abcd"), CHESS_TOURNAMENT_ALREADY_EXISTS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "Abc"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "Abc"), CHESS_TOURNAMENT_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Abc"), CHESS_TOURNAMENT_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "Abcd"), CHESS_TOURNAMENT_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Abcd"), CHESS_TOURNAMENT_ALREADY_EXISTS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 10, 1, "Abc"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(NULL, 0, 0, NULL), CHESS_NULL_ARGUMENT);
+    ASSERT_EQ(chessAddTournament(chess, 0, 0, "abC"), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddTournament(chess, 10, 0, "abC"), CHESS_TOURNAMENT_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddTournament(chess, 1, 0, "abC"), CHESS_INVALID_LOCATION);
+    ASSERT_EQ(chessAddTournament(chess, 1, 0, "Abc"), CHESS_INVALID_MAX_GAMES);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "Abc"), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessEndTournament(NULL, 1), CHESS_NULL_ARGUMENT);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_TOURNAMENT_NOT_EXIST);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessEndTournament(chess, 0), CHESS_INVALID_ID);
+    ASSERT_EQ(chessEndTournament(chess, -1), CHESS_INVALID_ID);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_TOURNAMENT_ENDED);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_NO_GAMES);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 3, 4, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 10, 1, "Abc"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 10, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 10), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 11, 1, "Abc"), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(NULL, 0), CHESS_NULL_ARGUMENT);
+    ASSERT_EQ(chessEndTournament(chess, 0), CHESS_INVALID_ID);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_TOURNAMENT_NOT_EXIST);
+    ASSERT_EQ(chessEndTournament(chess, 10), CHESS_TOURNAMENT_ENDED);
+    ASSERT_EQ(chessEndTournament(chess, 11), CHESS_NO_GAMES);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessRemoveTournament(NULL, 1), CHESS_NULL_ARGUMENT);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessRemoveTournament(chess, 0), CHESS_INVALID_ID);
+    ASSERT_EQ(chessRemoveTournament(chess, -1), CHESS_INVALID_ID);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessRemoveTournament(chess, 1), CHESS_TOURNAMENT_NOT_EXIST);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemoveTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemoveTournament(chess, 1), CHESS_TOURNAMENT_NOT_EXIST);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemoveTournament(chess, 1), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemoveTournament(chess, 1), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemoveTournament(NULL, 0), CHESS_NULL_ARGUMENT);
+    ASSERT_EQ(chessRemoveTournament(chess, 0), CHESS_INVALID_ID);
+    ASSERT_EQ(chessRemoveTournament(chess, 2), CHESS_TOURNAMENT_NOT_EXIST);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 0, 1, 2, FIRST_PLAYER, 60), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddGame(chess, -1, 1, 2, FIRST_PLAYER, 60), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddGame(chess, 1, -1, 2, FIRST_PLAYER, 60), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddGame(chess, 1, 0, 2, FIRST_PLAYER, 60), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 0, FIRST_PLAYER, 60), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, -2, FIRST_PLAYER, 60), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddGame(chess, 1, 0, 0, FIRST_PLAYER, 60), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddGame(chess, 1, -1, -2, FIRST_PLAYER, 60), CHESS_INVALID_ID);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 1, 2, FIRST_PLAYER, 60), CHESS_TOURNAMENT_NOT_EXIST);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 60), CHESS_TOURNAMENT_ENDED);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_GAME_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, SECOND_PLAYER, 60), CHESS_GAME_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 120), CHESS_GAME_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 1, FIRST_PLAYER, 60), CHESS_GAME_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 1, DRAW, 120), CHESS_GAME_ALREADY_EXISTS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, -1), CHESS_INVALID_PLAY_TIME);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, -5), CHESS_INVALID_PLAY_TIME);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 0), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 2, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, FIRST_PLAYER, 60), CHESS_EXCEEDED_GAMES);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 1, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 2, 2, "London"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 2), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(NULL, 0, -1, -1, FIRST_PLAYER, -1), CHESS_NULL_ARGUMENT);
+    ASSERT_EQ(chessAddGame(chess, 0, -1, -1, FIRST_PLAYER, -1), CHESS_INVALID_ID);
+    ASSERT_EQ(chessAddGame(chess, 3, 1, 2, FIRST_PLAYER, -1), CHESS_TOURNAMENT_NOT_EXIST);
+    ASSERT_EQ(chessAddGame(chess, 2, 1, 2, FIRST_PLAYER, -1), CHESS_TOURNAMENT_ENDED);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, -1), CHESS_GAME_ALREADY_EXISTS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, -1), CHESS_INVALID_PLAY_TIME);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, FIRST_PLAYER, 60), CHESS_EXCEEDED_GAMES);
+    chessDestroy(chess);
+
+    return true;
+}
+
 /*The functions for the tests should be added here*/
 bool (*tests[]) (void) = {
         testChessAddTournament,
@@ -838,7 +1086,8 @@ bool (*tests[]) (void) = {
         testAndStatsLevels,
         testChessCreateDestroy_nadav,
         testChessPlayers_nadav,
-        testChessSanity_nadav
+        testChessSanity_nadav,
+        testChessModification_nadav
 };
 
 /*The names of the test functions should be added here*/
@@ -860,7 +1109,8 @@ const char* testNames[] = {
         "testAndStatsLevels",
         "testChessCreateDestroy_nadav",
         "testChessPlayers_nadav",
-        "testChessSanity_nadav"
+        "testChessSanity_nadav",
+        "testChessModification_nadav"
 };
 
 int main(int argc, char *argv[]) {
