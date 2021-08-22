@@ -23,6 +23,20 @@ struct tournament_t {
     double  average_time_game;
 };
 
+static void tournamentUpdatePlayerStatistics(Player player, bool is_last_time_player_lost, bool is_last_time_was_draw)
+{
+    if (is_last_time_player_lost)
+    {
+        playerIncreaseWins(player);
+        playerDecreaseLosses(player);
+    }
+    else if (is_last_time_was_draw)
+    {
+        playerIncreaseWins(player);
+        playerDecreaseDraws(player);
+    }
+}
+
 MapDataElement tournamentCopy(MapDataElement n)
 {
     if (!n)
@@ -254,7 +268,33 @@ void tournamentRemovePlayer(Tournament tournament, int player_id, Map players_gl
 
         while (NULL != game)
         {
-            gameRemovePlayer(game, player_id, players_global, tournament->players);
+            if ((player_id == gameGetFirstPlayer(game)) || (player_id == gameGetSecondPlayer(game)))
+            {
+                if (!gameIsPlayerLeft(game))
+                {
+                    int update_player_id;
+                    bool is_last_time_update_player_lost;
+                    bool is_last_time_was_draw = DRAW == gameGetWinner(game);
+
+                    if (gameGetFirstPlayer(game) == player_id)
+                    {
+                        update_player_id = gameGetSecondPlayer(game);
+                        is_last_time_update_player_lost = FIRST_PLAYER == gameGetWinner(game);
+                    }
+                    else
+                    {
+                        update_player_id = gameGetFirstPlayer(game);
+                        is_last_time_update_player_lost = SECOND_PLAYER == gameGetWinner(game);
+                    }
+
+                    Player player = mapGet(players_global, &update_player_id);
+                    tournamentUpdatePlayerStatistics(player, is_last_time_update_player_lost, is_last_time_was_draw);
+                    player = mapGet(tournament->players, &update_player_id);
+                    tournamentUpdatePlayerStatistics(player, is_last_time_update_player_lost, is_last_time_was_draw);
+                }
+
+                gameRemovePlayer(game, player_id);
+            }
 
             game = gameGetNext(game);
         }
