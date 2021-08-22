@@ -500,7 +500,8 @@ ChessResult chessRemoveTournament(ChessSystem chess, int tournament_id)
         player_id = mapGetNext(tournment->players);
     }
 
-    assert(mapRemove(chess->tournaments, &tournament_id) == MAP_SUCCESS);
+    // ToDo: decide if check needed
+    mapRemove(chess->tournaments, &tournament_id);
 
     return CHESS_SUCCESS;
 }

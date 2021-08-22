@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.0.0)
 
 project(hw0 VERSION 0.1.0 LANGUAGES C)
 
-set(MTM_FLAGS_DEBUG "-std=c99 --pedantic-errors -Wall -Werror")
-set(MTM_FLAGS_RELEASE "${MTM_FLAGS_DEBUG} -DNDBUG")
+set(MTM_FLAGS_DEBUG "-std=c99 -pedantic-errors -Wall -Werror")
+set(MTM_FLAGS_RELEASE "-std=c99 -pedantic-errors -Wall -Werror -DNDBEUG")
 
 set(CMAKE_C_FLAGS ${MTM_FLAGS_DEBUG})
 
