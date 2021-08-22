@@ -116,7 +116,6 @@ bool testBadArguments()
     ASSERT_TEST(chessAddGame(chess_system, 1, 0, 2, FIRST_PLAYER, 1) == CHESS_INVALID_ID);
     ASSERT_TEST(chessAddGame(chess_system, 1, 1, 0, FIRST_PLAYER, 1) == CHESS_INVALID_ID);
     ASSERT_TEST(chessAddGame(chess_system, 1, 1, 1, FIRST_PLAYER, 1) == CHESS_INVALID_ID);
-    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, 3, 1) == CHESS_INVALID_ID);
     ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, -1) == CHESS_INVALID_PLAY_TIME);
 
     ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
@@ -445,7 +444,7 @@ bool testChessRemovePlayer_2_maaroof() {
     fclose(file1);
 
     f1 = fopen("your_output/add_same_game_after_remove.txt", "r");
-    f2 = fopen("expected_output/add_same_game_after_remove.txt", "r");
+    f2 = fopen("expected_output/add_same_game_after_remove.txt", "r"); // Note: originaly maaroof had a bug here
     ASSERT_TEST(compareFile(f1, f2) == 0);
     fclose(f1);
     fclose(f2);

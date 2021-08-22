@@ -7,4 +7,4 @@ set(MTM_FLAGS_RELEASE "${MTM_FLAGS_DEBUG} -DNDEBUG")
 
 set(CMAKE_C_FLAGS ${MTM_FLAGS_DEBUG})
 
-add_executable(chessSystemTestsExample tests/chessSystemTestsExample.c chessSystem.c mtm_map/map.c)
+add_executable(chessSystemTestsExample tests/chessSystemTestsExample.c chessSystem.c mtm_map/map.c player.c tournament.c game.c utilities.c)
