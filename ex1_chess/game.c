@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 
+#define PLAYER_HAS_BEEN_REMOVED     -1
+
 struct game_t {
     struct game_t  *next;
     int             first_player;
@@ -96,7 +98,7 @@ void gameRemovePlayer(Game game, int player_id, Map players_global, Map players_
         gameUpdatePlayerStatistics(players_local, game->second_player, FIRST_PLAYER == game->winner, DRAW == game->winner);
 
         game->winner = SECOND_PLAYER;
-        game->first_player = -1;
+        game->first_player = PLAYER_HAS_BEEN_REMOVED;
     }
     else if (game->second_player == player_id)
     {
@@ -105,6 +107,6 @@ void gameRemovePlayer(Game game, int player_id, Map players_global, Map players_
 
         // CodeReview: add define of player whic removed
         game->winner = SECOND_PLAYER;
-        game->second_player = -1;
+        game->second_player = PLAYER_HAS_BEEN_REMOVED;
     }
 }

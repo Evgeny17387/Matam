@@ -119,7 +119,7 @@ typedef struct player_points_t
     double  level;
 } PlayerPoints_t, *PlayerPoints;
 
-static double playerGetLevel(Player player)
+static inline double playerGetLevel(Player player)
 {
     int number_of_played_games = player->wins + player->losses + player->draws;
 
@@ -176,10 +176,8 @@ bool playerPrintPlayersLevelIdSorted(Map players, FILE* file)
     {
         Player player = mapGet(players, player_id);
 
-        double level = playerGetLevel(player);
-
         players_points[i].id = *player_id;
-        players_points[i].level = level;
+        players_points[i].level = playerGetLevel(player);
 
         free(player_id);
         player_id = mapGetNext(players);
@@ -191,8 +189,11 @@ bool playerPrintPlayersLevelIdSorted(Map players, FILE* file)
 
     for (int i = 0; i < players_number; i++)
     {
+        // ToDo: this should be implemented differently
+        Player player = mapGet(players, &players_points[i].id);
+
         // ToDo: should we check if succeeded ?
-        if (0 != players_points[i].level)
+        if (0 != player->games)
         {
             fprintf(file, "%d %.2f\n", players_points[i].id, players_points[i].level);
         }

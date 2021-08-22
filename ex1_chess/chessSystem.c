@@ -15,11 +15,7 @@
 #define MIN_VALID_PLAYER_ID         1
 #define MIN_VALID_PLAY_TIME         0
 
-#define PLAYER_HAS_BEEN_REMOVED     -1
-
 #define INVALID_AVERAGE_TIME        -1
-
-#define FILE_WRITE_FAILED           0
 
 struct chess_system_t {
     Map tournaments;
