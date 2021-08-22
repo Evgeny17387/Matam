@@ -38,6 +38,7 @@ typedef struct tournament_t {
     Game    games;
     int     number_of_games;
     Map     players;
+    int     number_of_players;
     int     winnder_id;
     int     longest_time_game;
     double  average_time_game;
@@ -264,6 +265,7 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     tournament.winnder_id = 0;
     tournament.longest_time_game = 0;
     tournament.average_time_game = 0;
+    tournament.number_of_players = 0;
 
     tournament.location = malloc(strlen(tournament_location) + 1);
     if (NULL == tournament.location)
@@ -359,7 +361,7 @@ static bool addGame(Tournament tournament, Game game)
     return true;
 }
 
-static void addPlayer(Map players, int player_id, bool is_win, bool is_losse, bool is_draw)
+static bool addPlayer(Map players, int player_id, bool is_win, bool is_losse, bool is_draw)
 {
     Player player = mapGet(players, &player_id);
     if (NULL == player)
@@ -371,12 +373,16 @@ static void addPlayer(Map players, int player_id, bool is_win, bool is_losse, bo
 
         // ToDo: add if fails
         mapPut(players, &player_id, &player);
+
+        return true;
     }
     else
     {
         player->wins += is_win ? 1 : 0;
         player->losses += is_losse ? 1 : 0;
         player->draws += is_draw ? 1 : 0;
+
+        return false;
     }
 }
 
@@ -437,8 +443,14 @@ ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player,
     // ToDo: add if fails for both
     addPlayer(chess->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner);
     addPlayer(chess->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner);
-    addPlayer(tournament->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner);
-    addPlayer(tournament->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner);
+    if (addPlayer(tournament->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner))
+    {
+        tournament->number_of_players++;
+    }
+    if (addPlayer(tournament->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner))
+    {
+        tournament->number_of_players++;
+    }
 
     if (game.play_time > tournament->longest_time_game)
     {
@@ -831,7 +843,7 @@ ChessResult chessSaveTournamentStatistics(ChessSystem chess, char* path_file)
             fprintf(file, "%.2f\n", tournament->average_time_game);
             fprintf(file, "%s\n", tournament->location);
             fprintf(file, "%d\n", tournament->number_of_games);
-            fprintf(file, "%d\n", mapGetSize(tournament->players));
+            fprintf(file, "%d\n", tournament->number_of_players);
         }
 
         freeInt(tournament_id);
