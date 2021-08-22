@@ -324,14 +324,11 @@ void tournamentEnd(Tournament tournament)
 {
     tournament->is_ended = true;
 
-    // CodeReview: change to MapForEach
-    int* player_id = mapGetFirst(tournament->players);
-
     int max_points = 0;
     int min_losses = 0;
     int max_wins = 0;
 
-    while (NULL != player_id)
+    MAP_FOREACH(int*, player_id, tournament->players)
     {
         Player player = mapGet(tournament->players, player_id);
 
@@ -375,6 +372,5 @@ void tournamentEnd(Tournament tournament)
         }
 
         free(player_id);
-        player_id = mapGetNext(tournament->players);
     }
 }

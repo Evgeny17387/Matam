@@ -193,9 +193,9 @@ bool playerPrintPlayersLevelIdSorted(Map players, FILE* file)
         // ToDo: this should be implemented differently
         Player player = mapGet(players, &players_points[i].id);
 
-        // ToDo: should we check if succeeded ?
         if (0 != player->games)
         {
+            // ToDo: should we check if succeeded ?
             fprintf(file, "%d %.2f\n", players_points[i].id, players_points[i].level);
         }
     }
