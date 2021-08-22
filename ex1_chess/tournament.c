@@ -102,15 +102,15 @@ void tournamentFree(MapDataElement n)
 
     mapDestroy(tournament->players);
 
-    Game iterator = tournament->games;
+    Game game = tournament->games;
 
-    while (NULL != iterator)
+    while (NULL != game)
     {
-        Game iterator_next = gameGetNext(iterator);
+        Game game_next = gameGetNext(game);
 
-        gameFree(iterator);
+        gameFree(game);
 
-        iterator = iterator_next;
+        game = game_next;
     }
 
     free(tournament);
