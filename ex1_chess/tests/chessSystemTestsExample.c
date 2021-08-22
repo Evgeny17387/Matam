@@ -65,7 +65,7 @@ bool testChessAddGame(){
 }
 
 bool testChessPrintLevelsAndTournamentStatistics(){
-    FILE* file_levels = fopen("../tests/player_levels_your_output.txt", "w");
+    FILE* file_levels = fopen("./tests/player_levels_your_output.txt", "w");
     if(!file_levels){
         printf("test failed to open file, make sure you have the folder tests in the same folder with chessSystem"
                "excutable file and you have write permissions for the file /tests/player_levels_your_output.txt");
@@ -81,18 +81,18 @@ bool testChessPrintLevelsAndTournamentStatistics(){
     ASSERT_TEST(chessAddGame(chess, 1, 3, 4, DRAW, 400) == CHESS_SUCCESS);
     ASSERT_TEST(chessEndTournament(chess, 1) == CHESS_SUCCESS);
     ASSERT_TEST(chessSavePlayersLevels(chess, file_levels) == CHESS_SUCCESS);
-    ASSERT_TEST(chessSaveTournamentStatistics(chess, "../tests/tournament_statistics_your_output.txt") == CHESS_SUCCESS);
+    ASSERT_TEST(chessSaveTournamentStatistics(chess, "./tests/tournament_statistics_your_output.txt") == CHESS_SUCCESS);
     chessDestroy(chess);
     fclose(file_levels);
 
-    FILE* f1 = fopen("../tests/player_levels_your_output.txt", "r");
-    FILE* f2 = fopen("../tests/player_levels_expected_output.txt", "r");
+    FILE* f1 = fopen("./tests/player_levels_your_output.txt", "r");
+    FILE* f2 = fopen("./tests/player_levels_expected_output.txt", "r");
     ASSERT_TEST(compareFile(f1, f2) == 0);
     fclose(f1);
     fclose(f2);
 
-    f1 = fopen("../tests/tournament_statistics_your_output.txt", "r");
-    f2 = fopen("../tests/tournament_statistics_expected_output.txt", "r");
+    f1 = fopen("./tests/tournament_statistics_your_output.txt", "r");
+    f2 = fopen("./tests/tournament_statistics_expected_output.txt", "r");
     ASSERT_TEST(compareFile(f1, f2) == 0);
     fclose(f1);
     fclose(f2);
