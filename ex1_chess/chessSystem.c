@@ -163,7 +163,6 @@ ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player,
     }
 
     // ToDo: add if fails for both
-    // CodeReview: add note for what addPlayer function returns
     playerAddOrUpdate(chess->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner, play_time);
     playerAddOrUpdate(chess->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner, play_time);
 

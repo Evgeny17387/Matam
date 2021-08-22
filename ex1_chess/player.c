@@ -170,10 +170,8 @@ bool playerPrintPlayersLevelIdSorted(Map players, FILE* file)
         return false;
     }
 
-    int* player_id = mapGetFirst(players);
-
     int i = 0;
-    while (NULL != player_id)
+    MAP_FOREACH(int*, player_id, players)
     {
         Player player = mapGet(players, player_id);
 
@@ -181,7 +179,6 @@ bool playerPrintPlayersLevelIdSorted(Map players, FILE* file)
         players_points[i].level = playerGetLevel(player);
 
         free(player_id);
-        player_id = mapGetNext(players);
         i++;
         assert(i <= players_number);
     }
