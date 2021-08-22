@@ -188,7 +188,20 @@ ChessResult chessRemoveTournament(ChessSystem chess, int tournament_id)
         return CHESS_TOURNAMENT_NOT_EXIST;
     }
 
-    tournamentSubtractFromGlobalsPlayersStatistics(tournament, chess->players);
+    Map players_tournament = tournamentGetPlayers(tournament);
+
+    MAP_FOREACH(int*, player_id, players_tournament)
+    {
+        Player player_global = mapGet(chess->players, player_id);
+        assert(player_global != NULL);
+
+        Player player_local = mapGet(players_tournament, player_id);
+        assert(player_local != NULL);
+
+        playerSubtract(player_global, player_local);
+
+        freeInt(player_id);
+    }
 
     // ToDo: decide if check needed
     mapRemove(chess->tournaments, &tournament_id);

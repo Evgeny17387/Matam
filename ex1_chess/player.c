@@ -11,6 +11,52 @@ struct player_t {
     int play_time;
 };
 
+typedef struct player_points_t
+{
+    int     id;
+    double  level;
+} PlayerPoints_t, *PlayerPoints;
+
+static inline void playerSwap(PlayerPoints player_1, PlayerPoints player_2)
+{
+    PlayerPoints_t temp = *player_2;
+    *player_2 = *player_1;
+    *player_1 = temp;
+}
+
+static void playerSortPlayersLevel(PlayerPoints players_points, int n)
+{
+    for (int i = 0; i < n - 1; i++)
+    {
+        // Last i elements are already in place
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (players_points[j].level < players_points[j+1].level)
+            {
+                playerSwap(&players_points[j], &players_points[j+1]);
+            }
+            else if (players_points[j].level == players_points[j+1].level)
+            {
+                if (players_points[j].id > players_points[j+1].id)
+                {
+                    playerSwap(&players_points[j], &players_points[j+1]);
+                }
+            }
+        }
+    }
+}
+
+static inline double playerGetLevel(Player player)
+{
+    int number_of_played_games = player->wins + player->losses + player->draws;
+
+    double level = number_of_played_games == 0 ? 0 :
+        (double)(6 * player->wins - 10 * player->losses + 2 * player->draws)
+        / number_of_played_games;
+
+    return level;
+}
+
 int playerGetWins(Player player)
 {
     return player->wins;
@@ -111,52 +157,7 @@ void playerSubtract(Player player_1, Player player_2)
     player_1->losses -= player_2->losses;
     player_1->draws -= player_2->draws;
     player_1->games -= player_2->games;
-}
-
-typedef struct player_points_t
-{
-    int     id;
-    double  level;
-} PlayerPoints_t, *PlayerPoints;
-
-static inline double playerGetLevel(Player player)
-{
-    int number_of_played_games = player->wins + player->losses + player->draws;
-
-    double level = number_of_played_games == 0 ? 0 :
-        (double)(6 * player->wins - 10 * player->losses + 2 * player->draws)
-        / number_of_played_games;
-
-    return level;
-}
-
-static void playerSwap(PlayerPoints player_1, PlayerPoints player_2)
-{
-    PlayerPoints_t temp = *player_2;
-    *player_2 = *player_1;
-    *player_1 = temp;
-}
-
-static void playerSortPlayersLevel(PlayerPoints players_points, int n)
-{
-    for (int i = 0; i < n - 1; i++)
-    {
-        // Last i elements are already in place
-        for (int j = 0; j < n - i - 1; j++)
-        {
-            if (players_points[j].level < players_points[j+1].level)
-            {
-                playerSwap(&players_points[j], &players_points[j+1]);
-            }
-            else if (players_points[j].level == players_points[j+1].level)
-            {
-                if (players_points[j].id > players_points[j+1].id)
-                {
-                    playerSwap(&players_points[j], &players_points[j+1]);
-                }
-            }
-        }
-    }
+    player_1->play_time -= player_2->play_time;
 }
 
 bool playerPrintPlayersLevelIdSorted(Map players, FILE* file)

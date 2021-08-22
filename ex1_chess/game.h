@@ -8,7 +8,7 @@
 
 typedef struct game_t Game_t, *Game;
 
-Game gameNext(Game game);
+Game gameGetNext(Game game);
 
 void gameFree(Game game);
 

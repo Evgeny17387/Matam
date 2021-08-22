@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-#define PLAYER_HAS_BEEN_REMOVED     -1
+#define PLAYER_HAS_BEEN_REMOVED -1
 
 struct game_t {
     struct game_t  *next;
@@ -13,7 +13,25 @@ struct game_t {
     int             play_time;
 };
 
-Game gameNext(Game game)
+static void gameUpdatePlayerStatistics(Map players, int player_id, bool is_last_time_player_lost, bool is_last_time_was_draw)
+{
+    Player player = mapGet(players, &player_id);
+    if (NULL != player)
+    {
+        if (is_last_time_player_lost)
+        {
+            playerDecreaseLosses(player);
+            playerIncreaseWins(player);
+        }
+        else if (is_last_time_was_draw)
+        {
+            playerDecreaseDraws(player);
+            playerIncreaseWins(player);
+        }
+    }
+}
+
+Game gameGetNext(Game game)
 {
     return game->next;
 }
@@ -68,24 +86,6 @@ Game gameCreate(int first_player, int second_player, Winner winner, int play_tim
     game->next = NULL;
 
     return game;
-}
-
-static void gameUpdatePlayerStatistics(Map players, int player_id, bool is_last_time_player_lost, bool is_last_time_was_draw)
-{
-    Player player = mapGet(players, &player_id);
-    if (NULL != player)
-    {
-        if (is_last_time_player_lost)
-        {
-            playerDecreaseLosses(player);
-            playerIncreaseWins(player);
-        }
-        else if (is_last_time_was_draw)
-        {
-            playerDecreaseDraws(player);
-            playerIncreaseWins(player);
-        }
-    }
 }
 
 void gameRemovePlayer(Game game, int player_id, Map players_global, Map players_local)

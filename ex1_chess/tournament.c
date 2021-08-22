@@ -66,7 +66,7 @@ MapDataElement tournamentCopy(MapDataElement n)
         *iterator_destination = gameCopy(iterator_souce, NULL);
         // ToDo: check if malloc failed, if yes add logic for deleting all what has already been allocated
 
-        iterator_souce = gameNext(iterator_souce);
+        iterator_souce = gameGetNext(iterator_souce);
 
         // ToDo: implement somehow different
         iterator_destination = gameGetNextAddress(iterator_souce);
@@ -92,7 +92,7 @@ void tournamentFree(MapDataElement n)
 
     while (NULL != iterator)
     {
-        Game iterator_next = gameNext(iterator);
+        Game iterator_next = gameGetNext(iterator);
 
         gameFree(iterator);
 
@@ -150,7 +150,7 @@ bool tournamentIsGameExists(Tournament tournament, int first_player, int second_
             return true;
         }
 
-        game = gameNext(game);
+        game = gameGetNext(game);
     }
 
     return false;
@@ -241,20 +241,9 @@ bool tournamentAddGame(Tournament tournament, int first_player, int second_playe
     return true;
 }
 
-void tournamentSubtractFromGlobalsPlayersStatistics(Tournament tournament, Map players_global)
+Map tournamentGetPlayers(Tournament tournament)
 {
-    MAP_FOREACH(int*, player_id, tournament->players)
-    {
-        Player player_global = mapGet(players_global, player_id);
-        assert(player_global != NULL);
-
-        Player player_local = mapGet(tournament->players, player_id);
-        assert(player_local != NULL);
-
-        playerSubtract(player_global, player_local);
-
-        freeInt(player_id);
-    }
+    return tournament->players;
 }
 
 void tournamentRemovePlayer(Tournament tournament, int player_id, Map players_global)
@@ -267,7 +256,7 @@ void tournamentRemovePlayer(Tournament tournament, int player_id, Map players_gl
         {
             gameRemovePlayer(game, player_id, players_global, tournament->players);
 
-            game = gameNext(game);
+            game = gameGetNext(game);
         }
     }
 
