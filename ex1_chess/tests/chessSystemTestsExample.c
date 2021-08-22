@@ -136,12 +136,34 @@ bool testBadArguments()
 bool testPrivate()
 {
     ChessSystem chess_system = chessCreate();
-
+    FILE* file1 = fopen("./tests/your_output/player_levels_remove_tournment_1.txt", "w");
     ASSERT_TEST(chessAddTournament(chess_system, 1, 1, "London") == CHESS_SUCCESS);
-
     ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
-
+    ASSERT_TEST(chessRemoveTournament(chess_system, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessSavePlayersLevels(chess_system, file1) == CHESS_SUCCESS);
     chessDestroy(chess_system);
+    fclose(file1);
+    file1 = fopen("./tests/your_output/player_levels_remove_tournment_1.txt", "r");
+    FILE* file2 = fopen("./tests/expected_output/player_levels_remove_tournment_1.txt", "r");
+    ASSERT_TEST(compareFile(file1, file2) == 0);
+    fclose(file1);
+    fclose(file2);
+
+    chess_system = chessCreate();
+    file1 = fopen("./tests/your_output/player_levels_remove_tournment_2.txt", "w");
+    ASSERT_TEST(chessAddTournament(chess_system, 1, 1, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddTournament(chess_system, 2, 1, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 2, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessRemoveTournament(chess_system, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessSavePlayersLevels(chess_system, file1) == CHESS_SUCCESS);
+    chessDestroy(chess_system);
+    fclose(file1);
+    file1 = fopen("./tests/your_output/player_levels_remove_tournment_2.txt", "r");
+    file2 = fopen("./tests/expected_output/player_levels_remove_tournment_2.txt", "r");
+    ASSERT_TEST(compareFile(file1, file2) == 0);
+    fclose(file1);
+    fclose(file2);
 
     return true;
 }

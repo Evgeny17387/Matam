@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 // ToDo: check if should be 0 or 1
 #define MIN_VALID_GAMES_PER_PLAYER  1
@@ -475,12 +476,31 @@ ChessResult chessRemoveTournament(ChessSystem chess, int tournament_id)
         return CHESS_INVALID_ID;
     }
 
-    if (MAP_ITEM_DOES_NOT_EXIST == mapRemove(chess->tournaments, &tournament_id))
+    Tournament tournment = mapGet(chess->tournaments, &tournament_id);
+    if (NULL == tournment)
     {
         return CHESS_TOURNAMENT_NOT_EXIST;
     }
 
-    // ToDo: update statistics
+    int* player_id = mapGetFirst(tournment->players);
+
+    while (NULL != player_id)
+    {
+        Player player_chess = mapGet(chess->players, player_id);
+        assert(player_chess != NULL);
+
+        Player player_tournment = mapGet(tournment->players, player_id);
+        assert(player_tournment != NULL);
+
+        player_chess->wins -= player_tournment->wins;
+        player_chess->losses -= player_tournment->losses;
+        player_chess->draws -= player_tournment->draws;
+
+        freeInt(player_id);
+        player_id = mapGetNext(tournment->players);
+    }
+
+    assert(mapRemove(chess->tournaments, &tournament_id) == MAP_SUCCESS);
 
     return CHESS_SUCCESS;
 }
@@ -782,8 +802,8 @@ ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
     {
         Player player = mapGet(chess->players, player_id);
 
-        // ToDo: make sure total number of player games can't be 0
-        double level = (double)(6 * player->wins - 10 * player->losses + 2 * player->draws) / (player->wins + player->losses + player->draws);
+        int number_of_played_games = player->wins + player->losses + player->draws;
+        double level = number_of_played_games != 0 ? (double)(6 * player->wins - 10 * player->losses + 2 * player->draws) / number_of_played_games : 0;
 
         players_points[i].id = *player_id;
         players_points[i].level = level;
