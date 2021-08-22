@@ -24,12 +24,6 @@ bool tournamentIsEnded(Tournament tournament);
 
 bool tournamentAddGame(Tournament tournament, int first_player, int second_player, Winner winner, int play_time);
 
-void tournamentUpdateStatisticsOnNewGame(Tournament tournament, int play_time);
-
-void tournamentIncreaseNumberOfPlayers(Tournament tournament);
-
-Map tournamentGetPlayers(Tournament tournament);
-
 void tournamentSubtractFromGlobalsPlayersStatistics(Tournament tournament, Map players_global);
 
 void tournamentRemovePlayer(Tournament tournament, int player_id, Map players_global);

@@ -25,12 +25,12 @@ struct tournament_t {
 
 MapDataElement tournamentCopy(MapDataElement n)
 {
-    Tournament tournament_souce = (Tournament)n;
-
-    if (!tournament_souce)
+    if (!n)
     {
         return NULL;
     }
+
+    Tournament tournament_souce = (Tournament)n;
 
     Tournament tournament_destination = malloc(sizeof(*tournament_destination));
     if (!tournament_destination)
@@ -44,6 +44,7 @@ MapDataElement tournamentCopy(MapDataElement n)
     tournament_destination->location = malloc(strlen(tournament_souce->location) + 1);
     if (NULL == tournament_destination->location)
     {
+        free(tournament_destination);
         return NULL;
     }
     // ToDo: check if should add return code for copy result
@@ -52,6 +53,7 @@ MapDataElement tournamentCopy(MapDataElement n)
     tournament_destination->players = mapCopy(tournament_souce->players);
     if (NULL == tournament_destination->players)
     {
+        free(tournament_destination->location);
         free(tournament_destination);
         return NULL;
     }
@@ -66,7 +68,7 @@ MapDataElement tournamentCopy(MapDataElement n)
 
         iterator_souce = gameNext(iterator_souce);
 
-        // ToDo: implement somehow different, if it even works...
+        // ToDo: implement somehow different
         iterator_destination = gameGetNextAddress(iterator_souce);
     }
 
@@ -102,7 +104,6 @@ void tournamentFree(MapDataElement n)
 
 Tournament tournamentCreate(int max_games_per_player, const char* tournament_location)
 {
-    // ToDo: check if malloc succeeded
     Tournament tournament = malloc(sizeof(*tournament));
     if (NULL == tournament)
     {
@@ -121,6 +122,7 @@ Tournament tournamentCreate(int max_games_per_player, const char* tournament_loc
     tournament->location = malloc(strlen(tournament_location) + 1);
     if (NULL == tournament->location)
     {
+        free(tournament);
         return NULL;
     }
     // ToDo: check if should add return code for copy result
@@ -129,7 +131,9 @@ Tournament tournamentCreate(int max_games_per_player, const char* tournament_loc
     tournament->players = mapCreate(playerCopy, copyInt, playerFree, freeInt, compareInts);
     if (NULL == tournament->players)
     {
-        return NULL;
+        free(tournament->location);
+        free(tournament);
+       return NULL;
     }
 
     return tournament;
@@ -172,19 +176,19 @@ bool tournamentCheckLocationValidity(const char* tournament_location)
 
 bool tournamentIsPlayersExceededMaxGames(Tournament tournament, int player_id)
 {
-    int player_games_counter = 0;
+    int player_games = 0;
 
     Player player = mapGet(tournament->players, &player_id);
     if (NULL == player)
     {
-        player_games_counter = 0;
+        player_games = 0;
     }
     else
     {
-        player_games_counter = playerGetGames(player);
+        player_games = playerGetGames(player);
     }
 
-    if (player_games_counter >= tournament->max_games_per_player)
+    if (player_games >= tournament->max_games_per_player)
     {
         return true;
     }
@@ -201,9 +205,9 @@ bool tournamentAddGame(Tournament tournament, int first_player, int second_playe
 {
     Game* iterator = &(tournament->games);
 
+    // ToDo: consider saving tail as well
     while (NULL != *iterator)
     {
-        // ToDo: consider implementing a list ADT
         iterator = gameGetNextAddress(*iterator);
     }
 
@@ -213,11 +217,6 @@ bool tournamentAddGame(Tournament tournament, int first_player, int second_playe
         return false;
     }
 
-    return true;
-}
-
-void tournamentUpdateStatisticsOnNewGame(Tournament tournament, int play_time)
-{
     if (play_time > tournament->longest_time_game)
     {
         tournament->longest_time_game = play_time;
@@ -228,16 +227,18 @@ void tournamentUpdateStatisticsOnNewGame(Tournament tournament, int play_time)
     / (tournament->number_of_games + 1);
 
     tournament->number_of_games++;
-}
 
-void tournamentIncreaseNumberOfPlayers(Tournament tournament)
-{
-    tournament->number_of_players++;
-}
+    // ToDo: add if fails
+    if (playerAddOrUpdate(tournament->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner, play_time))
+    {
+        tournament->number_of_players++;
+    }
+    if (playerAddOrUpdate(tournament->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner, play_time))
+    {
+        tournament->number_of_players++;
+    }
 
-Map tournamentGetPlayers(Tournament tournament)
-{
-    return tournament->players;
+    return true;
 }
 
 void tournamentSubtractFromGlobalsPlayersStatistics(Tournament tournament, Map players_global)

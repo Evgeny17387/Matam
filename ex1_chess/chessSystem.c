@@ -22,6 +22,19 @@ struct chess_system_t {
     Map players;
 };
 
+static inline bool chessCheckIdValidity(int tournament_id, int first_player, int second_player)
+{
+    if ((tournament_id < MIN_VALID_TOURNMENT_ID) ||
+        (first_player < MIN_VALID_PLAYER_ID) ||
+        (second_player < MIN_VALID_PLAYER_ID) ||
+        (first_player == second_player))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 ChessSystem chessCreate()
 {
     ChessSystem chess_system = malloc(sizeof(*chess_system));
@@ -96,6 +109,7 @@ ChessResult chessAddTournament(ChessSystem chess, int tournament_id, int max_gam
     MapResult map_result = mapPut(chess->tournaments, &tournament_id, tournament);
     if (MAP_OUT_OF_MEMORY == map_result)
     {
+        tournamentFree(tournament);
         return CHESS_OUT_OF_MEMORY;
     }
 
@@ -111,11 +125,7 @@ ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player,
         return CHESS_NULL_ARGUMENT;
     }
 
-    // CodeReview: insert into inline function for code redability
-    if ((tournament_id < MIN_VALID_TOURNMENT_ID) ||
-        (first_player < MIN_VALID_PLAYER_ID) ||
-        (second_player < MIN_VALID_PLAYER_ID) ||
-        (first_player == second_player))
+    if (!chessCheckIdValidity(tournament_id, first_player, second_player))
     {
         return CHESS_INVALID_ID;
     }
@@ -156,17 +166,6 @@ ChessResult chessAddGame(ChessSystem chess, int tournament_id, int first_player,
     // CodeReview: add note for what addPlayer function returns
     playerAddOrUpdate(chess->players, first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner, play_time);
     playerAddOrUpdate(chess->players, second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner, play_time);
-
-    if (playerAddOrUpdate(tournamentGetPlayers(tournament), first_player, FIRST_PLAYER == winner, SECOND_PLAYER == winner, DRAW == winner, play_time))
-    {
-        tournamentIncreaseNumberOfPlayers(tournament);
-    }
-    if (playerAddOrUpdate(tournamentGetPlayers(tournament), second_player, SECOND_PLAYER == winner, FIRST_PLAYER == winner, DRAW == winner, play_time))
-    {
-        tournamentIncreaseNumberOfPlayers(tournament);
-    }
-
-    tournamentUpdateStatisticsOnNewGame(tournament, play_time);
 
     return CHESS_SUCCESS;
 }
