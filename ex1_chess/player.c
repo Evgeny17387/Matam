@@ -192,7 +192,10 @@ bool playerPrintPlayersLevelIdSorted(Map players, FILE* file)
     for (int i = 0; i < players_number; i++)
     {
         // ToDo: should we check if succeeded ?
-        fprintf(file, "%d %.2f\n", players_points[i].id, players_points[i].level);
+        if (0 != players_points[i].level)
+        {
+            fprintf(file, "%d %.2f\n", players_points[i].id, players_points[i].level);
+        }
     }
 
     free(players_points);
