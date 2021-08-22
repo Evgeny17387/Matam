@@ -154,7 +154,7 @@ bool testPrivate()
     ASSERT_TEST(chessAddTournament(chess_system, 1, 1, "London") == CHESS_SUCCESS);
     ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
     ASSERT_TEST(chessAddTournament(chess_system, 2, 1, "London") == CHESS_SUCCESS);
-    ASSERT_TEST(chessAddGame(chess_system, 2, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 2, 1, 2, SECOND_PLAYER, 1) == CHESS_SUCCESS);
     ASSERT_TEST(chessRemoveTournament(chess_system, 1) == CHESS_SUCCESS);
     ASSERT_TEST(chessSavePlayersLevels(chess_system, file1) == CHESS_SUCCESS);
     chessDestroy(chess_system);
