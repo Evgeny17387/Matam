@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#define ERROR_AVERAGE_TIME_FOR_NO_GAMES -1
+
 struct player_t {
     int wins;
     int losses;
@@ -204,5 +206,5 @@ bool playerPrintPlayersLevelIdSorted(Map players, FILE* file)
 
 double playerGetAveragePlayTime(Player player)
 {
-    return player->games == 0 ? 0 : (double)player->play_time / player->games;
+    return player->games == 0 ? ERROR_AVERAGE_TIME_FOR_NO_GAMES : (double)player->play_time / player->games;
 }

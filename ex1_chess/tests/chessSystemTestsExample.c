@@ -216,6 +216,7 @@ bool testPrivate()
     ASSERT_TEST(chessRemoveTournament(chess_system, 1) == CHESS_SUCCESS);
     ASSERT_TEST(chessCalculateAveragePlayTime(chess_system,3,chess_res)==1);
     chessDestroy(chess_system);
+    free(chess_res);
 
     return true;
 }
@@ -855,6 +856,38 @@ bool testChessPlayers_nadav()
     ASSERT_EQ(result, CHESS_SUCCESS);
     chessDestroy(chess);
 
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 120), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 3), CHESS_SUCCESS);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 1, &result), 90);
+    ASSERT_EQ(result, CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 120), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 3, &result), 90);
+    ASSERT_EQ(result, CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 120), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemoveTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 1, &result), -1);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 2, &result), -1);
+    ASSERT_EQ(chessCalculateAveragePlayTime(chess, 3, &result), -1);
+    ASSERT_EQ(result, CHESS_SUCCESS);
+    chessDestroy(chess);
+
     return true;
 }
 
@@ -1136,6 +1169,31 @@ bool testChessModification_nadav()
     ASSERT_EQ(chessAddGame(chess, 1, 1, 4, FIRST_PLAYER, 60), CHESS_EXCEEDED_GAMES);
     chessDestroy(chess);
 
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 2), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 3, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 30), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 30), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, FIRST_PLAYER, 30), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 2), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 3), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 4), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    chessDestroy(chess);
+
     return true;
 }
 
@@ -1357,6 +1415,57 @@ bool testChessStatistics_nadav()
 
     chess = chessCreate();
     ASSERT_NE(chess, NULL);
+    file = fopen("./nadav/your_outs/remove_open_tournament.levels", "w");
+    ASSERT_NE(file, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 20), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, SECOND_PLAYER, 50), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, DRAW, 50), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemoveTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 2, 5, "London"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 3, 4, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 3, 2, SECOND_PLAYER, 300), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 5, 4, SECOND_PLAYER, 220), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 2, 5, SECOND_PLAYER, 300), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 2), CHESS_SUCCESS);
+    ASSERT_EQ(chessSavePlayersLevels(chess, file), CHESS_SUCCESS);
+    fclose(file);
+    f1 = fopen("./nadav/expected_outs/remove_open_tournament.levels", "r");
+    f2 = fopen("./nadav/your_outs/remove_open_tournament.levels", "r");
+    ASSERT_TEST(compareFile(f1, f2) == 0);
+    fclose(f1);
+    fclose(f2);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    file = fopen("./nadav/your_outs/remove_finished_tournament.levels", "w");
+    ASSERT_NE(file, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 20), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, SECOND_PLAYER, 50), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 4, DRAW, 50), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemoveTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 2, 5, "London"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 3, 4, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 3, 2, SECOND_PLAYER, 300), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 5, 4, SECOND_PLAYER, 220), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 2, 5, SECOND_PLAYER, 300), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 2), CHESS_SUCCESS);
+    ASSERT_EQ(chessSavePlayersLevels(chess, file), CHESS_SUCCESS);
+    fclose(file);
+    f1 = fopen("./nadav/expected_outs/remove_finished_tournament.levels", "r");
+    f2 = fopen("./nadav/your_outs/remove_finished_tournament.levels", "r");
+    ASSERT_TEST(compareFile(f1, f2) == 0);
+    fclose(f1);
+    fclose(f2);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
     ASSERT_EQ(chessSaveTournamentStatistics(NULL, NULL), CHESS_NULL_ARGUMENT);
     ASSERT_EQ(chessSaveTournamentStatistics(chess, NULL), CHESS_NULL_ARGUMENT);
     ASSERT_EQ(chessSaveTournamentStatistics(NULL, (char *)"test.stats"), CHESS_NULL_ARGUMENT);
@@ -1537,6 +1646,49 @@ bool testChessStatistics_nadav()
     // ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
     // ASSERT_EQ(chessSaveTournamentStatistics(chess, (char *)"this/path/does/not/exist/test.stats"), CHESS_SAVE_FAILURE);
     // chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 20), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 50), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddTournament(chess, 2, 5, "London"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 3, 4, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 2, 3, DRAW, 300), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 2, 5, 4, SECOND_PLAYER, 220), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 2), CHESS_SUCCESS);
+    ASSERT_EQ(chessSaveTournamentStatistics(chess, "./nadav/your_outs/remove_and_add_same_game.stats"), CHESS_SUCCESS);
+    f1 = fopen("./nadav/expected_outs/remove_and_add_same_game.stats", "r");
+    f2 = fopen("./nadav/your_outs/remove_and_add_same_game.stats", "r");
+    ASSERT_TEST(compareFile(f1, f2) == 0);
+    fclose(f1);
+    fclose(f2);
+    chessDestroy(chess);
+
+    chess = chessCreate();
+    ASSERT_NE(chess, NULL);
+    ASSERT_EQ(chessAddTournament(chess, 1, 5, "Paris"), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 30), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 30), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 30), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 2), CHESS_SUCCESS);
+    ASSERT_EQ(chessRemovePlayer(chess, 3), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 2, 3, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessAddGame(chess, 1, 1, 2, FIRST_PLAYER, 60), CHESS_SUCCESS);
+    ASSERT_EQ(chessEndTournament(chess, 1), CHESS_SUCCESS);
+    ASSERT_EQ(chessSaveTournamentStatistics(chess, "./nadav/your_outs/remove_all_players_and_reenter.stats"), CHESS_SUCCESS);
+    f1 = fopen("./nadav/expected_outs/remove_all_players_and_reenter.stats", "r");
+    f2 = fopen("./nadav/your_outs/remove_all_players_and_reenter.stats", "r");
+    ASSERT_TEST(compareFile(f1, f2) == 0);
+    fclose(f1);
+    fclose(f2);
+    chessDestroy(chess);
 
     return true;
 }
