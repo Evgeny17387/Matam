@@ -199,6 +199,24 @@ bool testPrivate()
     fclose(file1);
     fclose(file2);
 
+    chess_system = chessCreate();
+    ASSERT_TEST(chessAddTournament(chess_system, 1, 2, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddTournament(chess_system, 2, 2, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddTournament(chess_system, 3, 2, "London") == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 2, FIRST_PLAYER, 4) == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 1, 1, 3, FIRST_PLAYER, 4) == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 2, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 2, 1, 3, FIRST_PLAYER, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 3, 1, 2, FIRST_PLAYER, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessAddGame(chess_system, 3, 1, 3, FIRST_PLAYER, 1) == CHESS_SUCCESS);
+    ChessResult* chess_res=malloc(sizeof (*chess_res));
+    ASSERT_TEST(chessCalculateAveragePlayTime(chess_system,1,chess_res)==2);
+    ASSERT_TEST(chessRemovePlayer(chess_system, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessCalculateAveragePlayTime(chess_system,3,chess_res)==2);
+    ASSERT_TEST(chessRemoveTournament(chess_system, 1) == CHESS_SUCCESS);
+    ASSERT_TEST(chessCalculateAveragePlayTime(chess_system,3,chess_res)==1);
+    chessDestroy(chess_system);
+
     return true;
 }
 
