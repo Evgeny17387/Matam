@@ -1,7 +1,7 @@
 #ifndef _PLAYER_H
 #define _PLAYER_H
 
-#include "mtm_map/map.h"
+#include "map.h"
 
 #include <stdio.h>
 #include <stdbool.h>

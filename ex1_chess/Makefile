@@ -1,0 +1,23 @@
+CC = gcc
+OBJS = chessSystemTestsExample.o chessSystem.o tournament.o game.o player.o utilities.o map.o
+CFLAGS = -std=c99 -Wall -Werror -pedantic-errors
+EXEC = chessSystemTestsExample
+
+$(EXEC): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $@
+
+prog: chessSystemTestsExample.o chessSystem.o tournament.o game.o player.o utilities.o
+
+chessSystemTestsExample.o: chessSystemTestsExample.c chessSystem.h test_utilities.h
+
+chessSystem.o: chessSystem.c chessSystem.h map.h utilities.h tournament.h player.h game.h
+
+tournament.o: tournament.c tournament.h chessSystem.h map.h game.h utilities.h player.h
+
+game.o: game.c game.h chessSystem.h map.h player.h
+
+player.o: player.c player.h map.h
+
+utilities.o: utilities.c utilities.h map.h
+
+map.o: map.c map.h

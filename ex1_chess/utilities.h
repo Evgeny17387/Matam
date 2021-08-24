@@ -1,7 +1,7 @@
 #ifndef _UTILITIES_H
 #define _UTILITIES_H
 
-#include "mtm_map/map.h"
+#include "map.h"
 
 MapKeyElement copyInt(MapKeyElement n);
 

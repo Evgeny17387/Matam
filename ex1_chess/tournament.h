@@ -2,7 +2,7 @@
 #define _TOURNMENT_H
 
 #include "chessSystem.h"
-#include "mtm_map/map.h"
+#include "map.h"
 
 #include <stdbool.h>
 

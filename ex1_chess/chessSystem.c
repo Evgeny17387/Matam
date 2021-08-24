@@ -1,5 +1,5 @@
 #include "chessSystem.h"
-#include "mtm_map/map.h"
+#include "map.h"
 #include "utilities.h"
 #include "tournament.h"
 #include "player.h"
