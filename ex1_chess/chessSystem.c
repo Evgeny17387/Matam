@@ -309,9 +309,14 @@ double chessCalculateAveragePlayTime(ChessSystem chess, int player_id, ChessResu
 
 ChessResult chessSavePlayersLevels(ChessSystem chess, FILE* file)
 {
-    if ((NULL == chess) || (NULL == file))
+    if (NULL == chess)
     {
         return CHESS_NULL_ARGUMENT;
+    }
+
+    if (NULL == file)
+    {
+        return CHESS_SAVE_FAILURE;
     }
 
     if (!playerPrintPlayersLevelIdSorted(chess->players, file))
