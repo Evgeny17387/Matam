@@ -1,11 +1,24 @@
-#include <stdio.h> 
-#include <stdlib.h>
-#include <string.h>
+// Original Version
+char* foo(char* str, int* x) {
+    char* str2;
+    int i;
+    x = strlen(str);
+    str2 = malloc(*x);
+    for (i = 0; i < *x; i++)
+        str2[i] = str[*x - i];
+    if (*x % 2 == 0) {
+        printf("%s", str);
+    }
+    if (*x % 2 != 0) 
+    {
+        printf("%s", str2);
+    }
+    return str2;
+}
 
-
+// Fixed Version
 char* foo(const char* str, int* x) // 1:str is not changed so we put const char* before it 
 { 
-     
     int len=strlen(str); // use len instead of *x in case of x=null
     if(x!=NULL)  // 2: need to make sure x is not null
         *x = strlen(str); //3: x is a pointer to integer so we must derefrence it before assigning an integer to it 
