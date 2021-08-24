@@ -6,8 +6,6 @@ EXEC = chessSystemTestsExample
 $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
-prog: chessSystemTestsExample.o chessSystem.o tournament.o game.o player.o utilities.o
-
 chessSystemTestsExample.o: chessSystemTestsExample.c chessSystem.h test_utilities.h
 
 chessSystem.o: chessSystem.c chessSystem.h map.h utilities.h tournament.h player.h game.h
