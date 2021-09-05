@@ -79,6 +79,14 @@ void ExamDetails_ExceptionTests()
     {
         cout << "Test 7 - Passes" << endl;
     }
+
+    try {
+        ExamDetails exam1(104032, 13, 11, 9.15, 3);
+    }
+    catch (ExamDetails::InvalidDateException& e)
+    {
+        cout << "Test 8 - Passes" << endl;
+    }
 }
 
 int main()

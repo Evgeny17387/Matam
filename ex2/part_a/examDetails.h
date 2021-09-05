@@ -18,6 +18,7 @@ namespace mtm
 
         void VerifyDate(int month, int day);
         void VerifyTime(double time);
+        void VerifyCourseId(int course_id);
 
     public:
         ExamDetails(int course_id, int month, int day, double hour, int length, const string link = "");
