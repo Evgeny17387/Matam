@@ -4,9 +4,11 @@ using std::string;
 using std::endl;
 using std::ostream;
 
+using namespace mtm;
+
 const int MONTH_DAYS = 30;
 
-mtm::ExamDetails::ExamDetails(int course_id, int month, int day, double hour, int length, const std::string link)
+ExamDetails::ExamDetails(int course_id, int month, int day, double hour, int length, const std::string link)
 {
     this->course_id = course_id;
     this->month = month;
@@ -16,11 +18,11 @@ mtm::ExamDetails::ExamDetails(int course_id, int month, int day, double hour, in
     this->link = link;
 }
 
-mtm::ExamDetails::~ExamDetails()
+ExamDetails::~ExamDetails()
 {
 }
 
-mtm::ExamDetails::ExamDetails(const ExamDetails& examDetails)
+ExamDetails::ExamDetails(const ExamDetails& examDetails)
 {
     this->course_id = examDetails.course_id;
     this->month = examDetails.month;
@@ -30,7 +32,7 @@ mtm::ExamDetails::ExamDetails(const ExamDetails& examDetails)
     this->link = examDetails.link;
 }
 
-mtm::ExamDetails& mtm::ExamDetails::operator=(const mtm::ExamDetails& examDetails)
+ExamDetails& ExamDetails::operator=(const ExamDetails& examDetails)
 {
     this->course_id = examDetails.course_id;
     this->month = examDetails.month;
@@ -42,38 +44,38 @@ mtm::ExamDetails& mtm::ExamDetails::operator=(const mtm::ExamDetails& examDetail
     return *this;
 }
 
-std::string mtm::ExamDetails::getLink() const
+std::string ExamDetails::getLink() const
 {
     return this->link;
 }
 
-void mtm::ExamDetails::setLink(std::string link)
+void ExamDetails::setLink(std::string link)
 {
     this->link = link;
 }
 
-int mtm::ExamDetails::operator-(const mtm::ExamDetails& examDetails) const
+int ExamDetails::operator-(const ExamDetails& examDetails) const
 {
     return (this->month - examDetails.month) * MONTH_DAYS + (this->day - examDetails.day);
 }
 
-bool mtm::ExamDetails::operator<(const mtm::ExamDetails& examDetails) const
+bool ExamDetails::operator<(const ExamDetails& examDetails) const
 {
     return *this - examDetails < 0 ? true : false;
 }
 
 namespace mtm
 {
-    ostream& operator<<(ostream& os, const mtm::ExamDetails& examDetails)
+    ostream& operator<<(ostream& os, const ExamDetails& examDetails)
     {
         os << examDetails.course_id;
         return os;
     }
 }
 
-mtm::ExamDetails mtm::ExamDetails::makeMatamExam()
+ExamDetails ExamDetails::makeMatamExam()
 {
-    mtm::ExamDetails examDetails(234124, 7, 28, 13.0, 3, "https://tinyurl.com/59hzps6m");
+    ExamDetails examDetails(234124, 7, 28, 13.0, 3, "https://tinyurl.com/59hzps6m");
 
     return examDetails;
 }
