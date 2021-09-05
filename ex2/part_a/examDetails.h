@@ -16,6 +16,9 @@ namespace mtm
         int duration;
         string link;
 
+        void VerifyDate(int month, int day);
+        void VerifyTime(double time);
+
     public:
         ExamDetails(int course_id, int month, int day, double hour, int length, const string link = "");
         ~ExamDetails();
@@ -34,5 +37,8 @@ namespace mtm
         friend ostream& operator<<(ostream& os, const ExamDetails& examDetails);
 
         static ExamDetails makeMatamExam();
+
+        class InvalidDateException{};
+        class InvalidTimeException{};
     };
 }

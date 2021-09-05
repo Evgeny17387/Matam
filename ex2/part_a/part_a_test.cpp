@@ -27,6 +27,60 @@ using namespace mtm;
 //     cout << endl;
 // }
 
+void ExamDetails_ExceptionTests()
+{
+    ExamDetails exam1(104032, 7, 11, 9.5, 3);
+    cout << "Test 1 - Passes" << endl;
+
+    try {
+        ExamDetails exam1(104032, 7, 11, 9.000001, 3);
+    }
+    catch (ExamDetails::InvalidTimeException& e)
+    {
+        cout << "Test 2 - Passes" << endl;
+    }
+
+    try {
+        ExamDetails exam1(104032, 7, 11, 9.15, 3);
+    }
+    catch (ExamDetails::InvalidTimeException& e)
+    {
+        cout << "Test 3 - Passes" << endl;
+    }
+
+    try {
+        ExamDetails exam1(104032, 0, 11, 9.5, 3);
+    }
+    catch (ExamDetails::InvalidDateException& e)
+    {
+        cout << "Test 4 - Passes" << endl;
+    }
+
+    try {
+        ExamDetails exam1(104032, 13, 11, 9.5, 3);
+    }
+    catch (ExamDetails::InvalidDateException& e)
+    {
+        cout << "Test 5 - Passes" << endl;
+    }
+
+    try {
+        ExamDetails exam1(104032, 7, 0, 9.5, 3);
+    }
+    catch (ExamDetails::InvalidDateException& e)
+    {
+        cout << "Test 6 - Passes" << endl;
+    }
+
+    try {
+        ExamDetails exam1(104032, 7, 31, 9.5, 3);
+    }
+    catch (ExamDetails::InvalidDateException& e)
+    {
+        cout << "Test 7 - Passes" << endl;
+    }
+}
+
 int main()
 {
     TEST("1.1")
@@ -43,14 +97,16 @@ int main()
     closest.setLink("https://tinyurl.com/ym8wf46t");
     cout << closest << endl;
 
-    // TEST("1.4")
-    // try {
-    //     ExamDetails exam4(236506, 42, 0, 13, 3, "https://tinyurl.com/ym8wf46t");
-    //     cout << exam4 << endl;
-    // }
-    // catch (ExamDetails::InvalidDateException& e) {
-    //     cout << "invalid date" << endl;
-    // }
+    TEST("1.4")
+    try {
+        ExamDetails exam4(236506, 42, 0, 13, 3, "https://tinyurl.com/ym8wf46t");
+        cout << exam4 << endl;
+    }
+    catch (ExamDetails::InvalidDateException& e) {
+        cout << "invalid date" << endl;
+    }
+
+    ExamDetails_ExceptionTests();
 
     // TEST("1.5")
     // SortedList<string> lst1 = SortedList<string>();
