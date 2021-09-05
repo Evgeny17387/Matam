@@ -12,21 +12,20 @@ namespace mtm
         int course_id;
         int month;
         int day;
-        double hour;
-        int length;
-        std::string link;
-
+        double time;
+        int duration;
+        string link;
 
     public:
-        ExamDetails(int course_id, int month, int day, double hour, int length, const std::string link = "");
+        ExamDetails(int course_id, int month, int day, double hour, int length, const string link = "");
         ~ExamDetails();
 
         ExamDetails(const ExamDetails& examDetails);
 
         ExamDetails& operator=(const ExamDetails& examDetails);
 
-        std::string getLink() const;
-        void setLink(std::string link);
+        string getLink() const;
+        void setLink(string link);
 
         int operator-(const ExamDetails& examDetails) const;
 

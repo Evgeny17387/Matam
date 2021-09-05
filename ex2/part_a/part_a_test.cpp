@@ -39,9 +39,9 @@ int main()
     ExamDetails& closest = (exam1 < exam2) ? exam1 : exam2;
     cout << "your closest exam is:" << endl << closest << endl;
 
-    // TEST("1.3")
-    // closest.setLink("https://tinyurl.com/ym8wf46t");
-    // cout << closest << endl;
+    TEST("1.3")
+    closest.setLink("https://tinyurl.com/ym8wf46t");
+    cout << closest << endl;
 
     // TEST("1.4")
     // try {
