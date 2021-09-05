@@ -64,10 +64,12 @@ ExamDetails::ExamDetails(int course_id, int month, int day, double time, int dur
     this->link = link;
 }
 
+// ToDo: is it really needed ?
 ExamDetails::~ExamDetails()
 {
 }
 
+// ToDo: is it really needed ?
 ExamDetails::ExamDetails(const ExamDetails& examDetails)
 {
     this->course_id = examDetails.course_id;
@@ -78,6 +80,7 @@ ExamDetails::ExamDetails(const ExamDetails& examDetails)
     this->link = examDetails.link;
 }
 
+// ToDo: is it really needed ?
 ExamDetails& ExamDetails::operator=(const ExamDetails& examDetails)
 {
     this->course_id = examDetails.course_id;
@@ -100,11 +103,13 @@ void ExamDetails::setLink(string link)
     this->link = link;
 }
 
+// ToDo: should it be friend ?
 int ExamDetails::operator-(const ExamDetails& examDetails) const
 {
     return (this->month - examDetails.month) * MONTH_DAYS + (this->day - examDetails.day);
 }
 
+// ToDo: should it be friend ?
 bool ExamDetails::operator<(const ExamDetails& examDetails) const
 {
     return *this - examDetails < 0 ? true : false;
@@ -112,6 +117,7 @@ bool ExamDetails::operator<(const ExamDetails& examDetails) const
 
 namespace mtm
 {
+    // ToDo: why it has to be friend ?
     ostream& operator<<(ostream& os, const ExamDetails& examDetails)
     {
         os << "Course Number: " << examDetails.course_id << endl;
