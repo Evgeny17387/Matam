@@ -1,11 +1,12 @@
 #include <iostream>
 
-// #include "sortedList.h"
+#include "sortedList.h"
 #include "examDetails.h"
 
 using std::cout;
 using std::endl;
-// using std::string;
+using std::string;
+
 using namespace mtm;
 
 #define TEST(num) cout << endl << "TEST " << (num) << endl;
@@ -115,12 +116,10 @@ void ExamDetails_ExceptionTests()
     }
 }
 
-int main()
+void SortedList_OriginalTests()
 {
-    ExamDetails_OriginalTests();
-    ExamDetails_ExceptionTests();
-
-    // TEST("1.5")
+    TEST("1.5")
+    SortedList<int> lst1;
     // SortedList<string> lst1 = SortedList<string>();
     // lst1.insert("Charlie");
     // lst1.insert("Bob");
@@ -153,6 +152,14 @@ int main()
     // printList(lst2);
     // cout << "----------" << endl;
     // printList(lst4);
+}
+
+int main()
+{
+    ExamDetails_OriginalTests();
+    ExamDetails_ExceptionTests();
+
+    SortedList_OriginalTests();
 
     return 0;
 }

@@ -1,3 +1,6 @@
+#ifndef _EXAM_DETAILS
+#define _EXAM_DETAILS
+
 #include <iostream>
 
 using std::string;
@@ -21,6 +24,7 @@ namespace mtm
         void VerifyCourseId(int course_id);
 
     public:
+
         ExamDetails(int course_id, int month, int day, double hour, int length, const string link = "");
         ~ExamDetails();
 
@@ -43,3 +47,5 @@ namespace mtm
         class InvalidTimeException{};
     };
 }
+
+#endif //_EXAM_DETAILS
