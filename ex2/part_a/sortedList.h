@@ -17,9 +17,9 @@ namespace mtm
             node *next;
         };
 
-        int size;
-
         node *head;
+
+        int size;
 
     public:
 
@@ -32,16 +32,34 @@ namespace mtm
 
         void insert(const T& t);
 
-        // class Iterator;
-        // Itereator begin() const;
-        // Itereator end() const;
-
-        // template <class T>
-        // class SortedList<T>::Iterator
-        // {
-        // }
-
+        class Iterator;
+        Iterator begin() const;
+        Iterator end() const;
+        
+        // ToDo: remove once not needed anymore
         class MethodNotImplementedYet{};
+    };
+
+    template <class T>
+    class SortedList<T>::Iterator
+    {
+    private:
+
+        const SortedList<T> *sortedList;
+
+        Iterator(const SortedList<T> *sortedList);
+
+        // ToDo: why needed ?
+        friend class SortedList<T>;
+
+    public:
+
+        const T& operator*() const;
+
+        Iterator& operator++();
+
+        bool operator==(const Iterator& iterator) const;
+
     };
 
     template <class T>
@@ -61,6 +79,7 @@ namespace mtm
         {
             node *temp = node_pointer->next;
             delete node_pointer;
+            this->size--;
             node_pointer = temp;
         }
 
@@ -99,20 +118,45 @@ namespace mtm
             node_pointer = node_pointer->next;
         }
 
+        this->size++;
         node_pointer->next = node_pointer_new;
     }
 
-    // template <class T>
-    // void SortedList<T>::begin() const
-    // {
-    //     return Iterator(this, 0);
-    // }
+    template <class T>
+    typename SortedList<T>::Iterator SortedList<T>::begin() const
+    {
+        return Iterator(this);
+    }
 
-    // template <class T>
-    // void SortedList<T>::end() const
-    // {
-    //     return Iterator(this, 0);
-    // }
+    template <class T>
+    typename SortedList<T>::Iterator SortedList<T>::end() const
+    {
+        return Iterator(this);
+    }
+
+    template <class T>
+    SortedList<T>::Iterator::Iterator(const SortedList<T> *sortedList)
+    {
+        this->sortedList = sortedList;
+    }
+
+    template <class T>
+    const T& SortedList<T>::Iterator::operator*() const
+    {
+        return sortedList->head->data;
+    }
+
+    template <class T>
+    typename SortedList<T>::Iterator& SortedList<T>::Iterator::operator++()
+    {
+        return *this;
+    }
+
+    template <class T>
+    bool SortedList<T>::Iterator::operator==(const Iterator& iterator) const
+    {
+        return true;
+    }
 }
 
 #endif //_SORTED_LIST

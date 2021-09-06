@@ -20,13 +20,13 @@ using namespace mtm;
 //     return (exam.getLink().find("tinyurl") != string::npos);
 // }
 
-// template<class T>
-// void printList(SortedList<T> list) {
-//     for (auto it = list.begin(); !(it == list.end()); ++it) {
-//         cout << *it << endl;
-//     }
-//     cout << endl;
-// }
+template<class T>
+void printList(SortedList<T> list) {
+    for (auto it = list.begin(); !(it == list.end()); ++it) {
+        cout << *it << endl;
+    }
+    cout << endl;
+}
 
 void ExamDetails_OriginalTests()
 {
@@ -125,7 +125,7 @@ void SortedList_OriginalTests()
     lst1.insert("Alice");
     lst1.insert("Donald");
 
-    // printList(lst1);
+    printList(lst1);
 
     // TEST("1.6")
     // SortedList<ExamDetails> lst2;
