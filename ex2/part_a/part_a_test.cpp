@@ -119,12 +119,11 @@ void ExamDetails_ExceptionTests()
 void SortedList_OriginalTests()
 {
     TEST("1.5")
-    SortedList<int> lst1;
-    // SortedList<string> lst1 = SortedList<string>();
-    // lst1.insert("Charlie");
-    // lst1.insert("Bob");
-    // lst1.insert("Alice");
-    // lst1.insert("Donald");
+    SortedList<string> lst1 = SortedList<string>();
+    lst1.insert("Charlie");
+    lst1.insert("Bob");
+    lst1.insert("Alice");
+    lst1.insert("Donald");
 
     // printList(lst1);
 
@@ -156,8 +155,8 @@ void SortedList_OriginalTests()
 
 int main()
 {
-    ExamDetails_OriginalTests();
-    ExamDetails_ExceptionTests();
+    // ExamDetails_OriginalTests();
+    // ExamDetails_ExceptionTests();
 
     SortedList_OriginalTests();
 
