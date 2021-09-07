@@ -49,6 +49,9 @@ namespace mtm
         template <class Condition>
         SortedList filter(Condition condition) const;
 
+        template <class Apply>
+        SortedList apply(Apply apply) const;
+
         Iterator begin() const;
         Iterator end() const;
 
@@ -219,6 +222,22 @@ namespace mtm
                 sortedList.insert(*it);
             }
         }
+
+        return sortedList;
+    }
+
+    template <class T>
+    template <class Apply>
+    SortedList<T> SortedList<T>::apply(Apply apply) const
+    {
+        SortedList<T> sortedList;
+
+        for (typename SortedList<T>::Iterator it = this->begin(); !(it == this->end()); ++it)
+        {
+            sortedList.insert(apply(*it));
+        }
+
+        // ToDo: should it be sorted again ? in case the new list is not sorted
 
         return sortedList;
     }
