@@ -137,23 +137,23 @@ void SortedList_OriginalTests()
 
     printList(lst2);
 
-    // TEST("1.7")
-    // SortedList<string> lst3 = lst1;
-    // printList(lst3);
+    TEST("1.7")
+    SortedList<string> lst3 = lst1;
+    printList(lst3);
 
-    // TEST("1.8")
-    // lst3 = lst3.apply(getLen);
-    // printList(lst3);
+    TEST("1.8")
+    lst3 = lst3.apply(getLen);
+    printList(lst3);
 
-    // TEST("1.9")
-    // lst3.remove(lst3.begin());
-    // printList(lst3);
+    TEST("1.9")
+    lst3.remove(lst3.begin());
+    printList(lst3);
 
-    // TEST("1.10")
-    // SortedList<ExamDetails> lst4 = lst2.filter(isTrollLink);
-    // printList(lst2);
-    // cout << "----------" << endl;
-    // printList(lst4);
+    TEST("1.10")
+    SortedList<ExamDetails> lst4 = lst2.filter(isTrollLink);
+    printList(lst2);
+    cout << "----------" << endl;
+    printList(lst4);
 }
 
 void SortedList_RemoveTests()
@@ -215,12 +215,12 @@ void SortedList_ApplyTests()
 
 int main()
 {
-    // ExamDetails_OriginalTests();
-    // ExamDetails_ExceptionTests();
+    ExamDetails_OriginalTests();
+    ExamDetails_ExceptionTests();
 
-    // SortedList_OriginalTests();
-    // SortedList_RemoveTests();
-    // SortedList_FilterTests();
+    SortedList_OriginalTests();
+    SortedList_RemoveTests();
+    SortedList_FilterTests();
     SortedList_ApplyTests();
 
     return 0;
