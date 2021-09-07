@@ -17,8 +17,18 @@ string getLen(string str)
     return std::to_string(str.length());
 }
 
+int zero(int x)
+{
+    return 0;
+}
+
 bool isTrollLink(const ExamDetails& exam) {
     return (exam.getLink().find("tinyurl") != string::npos);
+}
+
+bool isGreater(int x)
+{
+    return x > 0;
 }
 
 template<class T>
@@ -178,11 +188,6 @@ void SortedList_RemoveTests()
     printList(sortedList);
 }
 
-bool isGreater(int x)
-{
-    return x > 0;
-}
-
 void SortedList_FilterTests()
 {
     SortedList<int> sortedList;
@@ -194,11 +199,6 @@ void SortedList_FilterTests()
     sortedList.insert(5);
 
     printList(sortedList.filter(isGreater));
-}
-
-int zero(int x)
-{
-    return 0;
 }
 
 void SortedList_ApplyTests()
@@ -214,15 +214,49 @@ void SortedList_ApplyTests()
     printList(sortedList.apply(zero));
 }
 
+void SortedList_SrotedList()
+{
+    SortedList<int> sortedList;
+    sortedList.insert(0);
+    TEST("1")
+    printList(sortedList);
+
+    TEST("2")
+    sortedList.insert(0);
+    printList(sortedList);
+
+    TEST("3")
+    sortedList.remove(sortedList.begin());
+    printList(sortedList);
+
+    TEST("4")
+    sortedList.remove(sortedList.begin());
+    printList(sortedList);
+
+    TEST("5")
+    sortedList.insert(1);
+    sortedList.insert(3);
+    printList(sortedList);
+
+    TEST("6")
+    sortedList.insert(2);
+    printList(sortedList);
+
+    TEST("7")
+    sortedList.insert(4);
+    printList(sortedList);
+}
+
 int main()
 {
-    ExamDetails_OriginalTests();
-    ExamDetails_ExceptionTests();
+    // ExamDetails_OriginalTests();
+    // ExamDetails_ExceptionTests();
 
-    SortedList_OriginalTests();
-    SortedList_RemoveTests();
-    SortedList_FilterTests();
-    SortedList_ApplyTests();
+    // SortedList_OriginalTests();
+    // SortedList_RemoveTests();
+    // SortedList_FilterTests();
+    // SortedList_ApplyTests();
+    SortedList_SrotedList();
 
     return 0;
 }

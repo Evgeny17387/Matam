@@ -196,14 +196,36 @@ namespace mtm
         }
 
         // ToDo: implemented as sorted list
-        node *node_pointer = this->head;
-        while (NULL != node_pointer->next)
-        {
-            node_pointer = node_pointer->next;
-        }
+        // node *node_pointer = this->head;
+        // while (NULL != node_pointer->next)
+        // {
+        //     node_pointer = node_pointer->next;
+        // }
 
-        this->size++;
-        node_pointer->next = node_pointer_new;
+        // this->size++;
+        // node_pointer->next = node_pointer_new;
+
+        node **head_ref = &(this->head);
+
+        if ((NULL == *head_ref) || !((*head_ref)->data < node_pointer_new->data))
+        {
+            node_pointer_new->next = *head_ref;
+            *head_ref = node_pointer_new;
+            this->size++;
+        }
+        else
+        {
+            node *current = *head_ref;
+
+            while ((current->next != NULL) && (current->next->data < node_pointer_new->data))
+            {
+                current = current->next;
+            }
+
+            node_pointer_new->next = current->next;
+            current->next = node_pointer_new;
+            this->size++;
+        }
     }
 
     template <class T>
@@ -214,6 +236,7 @@ namespace mtm
         {
             node *next = this->head->next;
             delete this->head;
+            this->size--;
             this->head = next;
         }
         else
