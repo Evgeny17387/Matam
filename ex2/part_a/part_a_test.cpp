@@ -118,6 +118,9 @@ void ExamDetails_ExceptionTests()
 
 void SortedList_OriginalTests()
 {
+    ExamDetails exam1 = ExamDetails::makeMatamExam();
+    ExamDetails exam2(104032, 7, 11, 9.5, 3);
+
     TEST("1.5")
     SortedList<string> lst1 = SortedList<string>();
     lst1.insert("Charlie");
@@ -127,9 +130,9 @@ void SortedList_OriginalTests()
 
     printList(lst1);
 
-    // TEST("1.6")
-    // SortedList<ExamDetails> lst2;
-    // lst2.insert(exam1);
+    TEST("1.6")
+    SortedList<ExamDetails> lst2;
+    lst2.insert(exam1);
     // lst2.insert(exam2);
 
     // printList(lst2);
@@ -155,8 +158,8 @@ void SortedList_OriginalTests()
 
 int main()
 {
-    // ExamDetails_OriginalTests();
-    // ExamDetails_ExceptionTests();
+    ExamDetails_OriginalTests();
+    ExamDetails_ExceptionTests();
 
     SortedList_OriginalTests();
 
