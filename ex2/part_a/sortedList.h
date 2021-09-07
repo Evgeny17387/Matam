@@ -20,7 +20,7 @@ namespace mtm
 
             node(const T& t): data(t)
             {
-                next = NULL;
+                this->next = NULL;
             }
         };
 
@@ -39,9 +39,13 @@ namespace mtm
 
         void insert(const T& t);
 
+        // ToDo: what does it mean to indicate here "class Iterator" ?
+        class Iterator;
+
+        void remove(const Iterator& iterator);
+
         int length() const;
 
-        class Iterator;
         Iterator begin() const;
         Iterator end() const;
         
@@ -163,6 +167,33 @@ namespace mtm
 
         this->size++;
         node_pointer->next = node_pointer_new;
+    }
+
+    template <class T>
+    void SortedList<T>::remove(const Iterator& iterator)
+    {
+        // ToDo: check if out of range \ null
+        if (0 == iterator.index)
+        {
+            node *next = this->head->next;
+            delete this->head;
+            this->head = next;
+        }
+        else
+        {
+            node *current_node = this->head;
+            int index_temp = iterator.index;
+            while (index_temp > 1)
+            {
+                current_node = current_node->next;
+                index_temp--;
+            }
+
+            node *next = current_node->next->next;
+            delete current_node->next;
+            this->size--;
+            current_node->next = next;
+        }
     }
 
     template <class T>

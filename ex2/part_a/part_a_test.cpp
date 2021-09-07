@@ -11,14 +11,14 @@ using namespace mtm;
 
 #define TEST(num) cout << endl << "TEST " << (num) << endl;
 
-// string getLen(string str)
-// {
-//     return std::to_string(str.length());
-// }
+string getLen(string str)
+{
+    return std::to_string(str.length());
+}
 
-// bool isTrollLink(const ExamDetails& exam) {
-//     return (exam.getLink().find("tinyurl") != string::npos);
-// }
+bool isTrollLink(const ExamDetails& exam) {
+    return (exam.getLink().find("tinyurl") != string::npos);
+}
 
 template<class T>
 void printList(SortedList<T> list) {
@@ -156,12 +156,34 @@ void SortedList_OriginalTests()
     // printList(lst4);
 }
 
+void SortedList_Tests()
+{
+    SortedList<string> sortedList = SortedList<string>();
+    sortedList.insert("A");
+    printList(sortedList);
+
+    sortedList.remove(sortedList.begin());
+    printList(sortedList);
+
+    sortedList.insert("A");
+    sortedList.insert("B");
+    sortedList.remove(sortedList.begin());
+    printList(sortedList);
+
+    sortedList.insert("A");
+    auto iterator = sortedList.begin();
+    ++iterator;
+    sortedList.remove(iterator);
+    printList(sortedList);
+}
+
 int main()
 {
     ExamDetails_OriginalTests();
     ExamDetails_ExceptionTests();
 
     SortedList_OriginalTests();
+    SortedList_Tests();
 
     return 0;
 }
