@@ -1,6 +1,8 @@
 #ifndef _SORTED_LIST
 #define _SORTED_LIST
 
+using std::out_of_range;
+
 namespace mtm
 {
     template <class T>
@@ -55,6 +57,10 @@ namespace mtm
     public:
 
         ~Iterator();
+
+        Iterator(const Iterator& iterator);
+
+        Iterator& operator=(const Iterator& iterator);
 
         const T& operator*() const;
 
@@ -181,6 +187,23 @@ namespace mtm
     }
 
     template <class T>
+    SortedList<T>::Iterator::Iterator(const Iterator& iterator)
+    {
+        this->sortedList = iterator.sortedList;
+        this->index = iterator.index;
+    }
+
+    template <class T>
+    //ToDo: why typename needed ?
+    typename SortedList<T>::Iterator& SortedList<T>::Iterator::operator=(const Iterator& iterator)
+    {
+        this->sortedList = iterator.sortedList;
+        this->index = iterator.index;
+
+        return *this;
+    }
+
+    template <class T>
     const T& SortedList<T>::Iterator::operator*() const
     {
         // ToDo: what if this is NULL ? who should check that index is valid ?
@@ -200,10 +223,11 @@ namespace mtm
     template <class T>
     typename SortedList<T>::Iterator& SortedList<T>::Iterator::operator++()
     {
-        if (this->index >= sortedList->size - 1)
+        // ToDo: should it be -1 or this way ?
+        if (this->index >= sortedList->size)
         {
             // ToDo: should add here some log ?
-            throw std::out_of_range("");
+            throw out_of_range("");
         }
 
         this->index++;
