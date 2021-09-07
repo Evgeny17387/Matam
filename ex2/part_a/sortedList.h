@@ -1,8 +1,6 @@
 #ifndef _SORTED_LIST
 #define _SORTED_LIST
 
-using namespace std;
-
 namespace mtm
 {
     template <class T>
@@ -51,17 +49,18 @@ namespace mtm
 
         Iterator(const SortedList<T> *sortedList, int index);
 
-        // ToDo: why needed ?
+        // ToDo: is there a difference putting it here or in public section ?
         friend class SortedList<T>;
 
     public:
+
+        ~Iterator();
 
         const T& operator*() const;
 
         Iterator& operator++();
 
         bool operator==(const Iterator& iterator) const;
-
     };
 
     template <class T>
@@ -177,6 +176,11 @@ namespace mtm
     }
 
     template <class T>
+    SortedList<T>::Iterator::~Iterator()
+    {
+    }
+
+    template <class T>
     const T& SortedList<T>::Iterator::operator*() const
     {
         // ToDo: what if this is NULL ? who should check that index is valid ?
@@ -196,6 +200,12 @@ namespace mtm
     template <class T>
     typename SortedList<T>::Iterator& SortedList<T>::Iterator::operator++()
     {
+        if (this->index >= sortedList->size - 1)
+        {
+            // ToDo: should add here some log ?
+            throw std::out_of_range("");
+        }
+
         this->index++;
 
         return *this;
