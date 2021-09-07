@@ -54,9 +54,6 @@ namespace mtm
 
         Iterator begin() const;
         Iterator end() const;
-
-        // ToDo: remove once not needed anymore
-        class MethodNotImplementedYet{};
     };
 
     template <class T>
@@ -150,7 +147,40 @@ namespace mtm
     template <class T>
     SortedList<T>& SortedList<T>::operator=(const SortedList& sortedList)
     {
-        throw MethodNotImplementedYet();
+        this->head = NULL;
+        this->size = 0;
+
+        // ToDo: logic might be common among all operator= and copy constructor
+        if (NULL == sortedList.head)
+        {
+            *this;
+        }
+
+        node *node_list_original = sortedList.head;
+
+        node *node_new = new node(node_list_original->data);
+
+        this->head = node_new;
+
+        this->size++;
+
+        node *node_list_new = this->head;
+        node_list_original = node_list_original->next;
+
+        // ToDo: might use just iterator and insert instead
+        while (NULL != node_list_original)
+        {
+            node *node_new = new node(node_list_original->data);
+
+            node_list_new->next = node_new;
+            node_list_new = node_list_new->next;
+
+            this->size++;
+
+            node_list_original = node_list_original->next;
+        }
+        
+        return *this;
     }
 
     template <class T>
