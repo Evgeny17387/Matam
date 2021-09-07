@@ -47,7 +47,9 @@ namespace mtm
 
         const SortedList<T> *sortedList;
 
-        Iterator(const SortedList<T> *sortedList);
+        int index;
+
+        Iterator(const SortedList<T> *sortedList, int index);
 
         // ToDo: why needed ?
         friend class SortedList<T>;
@@ -89,7 +91,40 @@ namespace mtm
     template <class T>
     SortedList<T>::SortedList(const SortedList& sortedList)
     {
-        throw MethodNotImplementedYet();
+        this->head = NULL;
+        this->size = 0;
+
+        if (NULL == sortedList.head)
+        {
+            return;
+        }
+
+        node *node_list_original = sortedList.head;
+
+        node *node_new = new node;
+        node_new->next = NULL;
+        node_new->data = node_list_original->data;
+
+        this->head = node_new;
+
+        this->size++;
+
+        node *node_list_new = this->head;
+        node_list_original = node_list_original->next;
+
+        while (NULL != node_list_original)
+        {
+            node *node_new = new node;
+            node_new->next = NULL;
+            node_new->data = node_list_original->data;
+
+            node_list_new->next = node_new;
+            node_list_new = node_list_new->next;
+
+            this->size++;
+
+            node_list_original = node_list_original->next;
+        }
     }
 
     template <class T>
@@ -125,37 +160,51 @@ namespace mtm
     template <class T>
     typename SortedList<T>::Iterator SortedList<T>::begin() const
     {
-        return Iterator(this);
+        return Iterator(this, 0);
     }
 
     template <class T>
     typename SortedList<T>::Iterator SortedList<T>::end() const
     {
-        return Iterator(this);
+        return Iterator(this, this->size);
     }
 
     template <class T>
-    SortedList<T>::Iterator::Iterator(const SortedList<T> *sortedList)
+    SortedList<T>::Iterator::Iterator(const SortedList<T> *sortedList, int index)
     {
         this->sortedList = sortedList;
+        this->index = index;
     }
 
     template <class T>
     const T& SortedList<T>::Iterator::operator*() const
     {
-        return sortedList->head->data;
+        // ToDo: what if this is NULL ? who should check that index is valid ?
+        // ToDo: maybe implement this logic in Iterator Constructor
+        node *node = sortedList->head;
+        int index_temp = index;
+
+        while (index_temp > 0)
+        {
+            node = node->next;
+            index_temp--;
+        }
+
+        return node->data;
     }
 
     template <class T>
     typename SortedList<T>::Iterator& SortedList<T>::Iterator::operator++()
     {
+        this->index++;
+
         return *this;
     }
 
     template <class T>
     bool SortedList<T>::Iterator::operator==(const Iterator& iterator) const
     {
-        return true;
+        return this->index == iterator.index;
     }
 }
 
