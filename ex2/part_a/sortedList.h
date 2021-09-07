@@ -11,10 +11,16 @@ namespace mtm
     private:
 
         // ToDo: consider replacing with class
-        struct node
+        class node
         {
+        public:
             T data;
             node *next;
+
+            node(const T& t): data(t)
+            {
+                next = NULL;
+            }
         };
 
         node *head;
@@ -106,9 +112,7 @@ namespace mtm
 
         node *node_list_original = sortedList.head;
 
-        node *node_new = new node;
-        node_new->next = NULL;
-        node_new->data = node_list_original->data;
+        node *node_new = new node(node_list_original->data);
 
         this->head = node_new;
 
@@ -119,9 +123,7 @@ namespace mtm
 
         while (NULL != node_list_original)
         {
-            node *node_new = new node;
-            node_new->next = NULL;
-            node_new->data = node_list_original->data;
+            node *node_new = new node(node_list_original->data);
 
             node_list_new->next = node_new;
             node_list_new = node_list_new->next;
@@ -141,9 +143,7 @@ namespace mtm
     template <class T>
     void SortedList<T>::insert(const T& t)
     {
-        node *node_pointer_new = new node;
-        node_pointer_new->next = NULL;
-        node_pointer_new->data = t;
+        node *node_pointer_new = new node(t);
 
         if (NULL == this->head)
         {

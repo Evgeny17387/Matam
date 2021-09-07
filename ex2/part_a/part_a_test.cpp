@@ -133,9 +133,9 @@ void SortedList_OriginalTests()
     TEST("1.6")
     SortedList<ExamDetails> lst2;
     lst2.insert(exam1);
-    // lst2.insert(exam2);
+    lst2.insert(exam2);
 
-    // printList(lst2);
+    printList(lst2);
 
     // TEST("1.7")
     // SortedList<string> lst3 = lst1;
