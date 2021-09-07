@@ -10,7 +10,8 @@ namespace mtm
     {
     private:
 
-        // ToDo: consider replacing with class
+        // ToDo: consider replacing with struct
+        // ToDo: encapsulate data members
         class node
         {
         public:
@@ -37,6 +38,8 @@ namespace mtm
         SortedList& operator=(const SortedList& sortedList);
 
         void insert(const T& t);
+
+        int length() const;
 
         class Iterator;
         Iterator begin() const;
@@ -160,6 +163,12 @@ namespace mtm
 
         this->size++;
         node_pointer->next = node_pointer_new;
+    }
+
+    template <class T>
+    int SortedList<T>::length() const
+    {
+        return this->size;
     }
 
     template <class T>
