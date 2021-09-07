@@ -46,9 +46,12 @@ namespace mtm
 
         int length() const;
 
+        template <class Condition>
+        SortedList filter(Condition condition) const;
+
         Iterator begin() const;
         Iterator end() const;
-        
+
         // ToDo: remove once not needed anymore
         class MethodNotImplementedYet{};
     };
@@ -155,6 +158,7 @@ namespace mtm
         if (NULL == this->head)
         {
             this->head = node_pointer_new;
+            this->size++;
             return;
         }
 
@@ -200,6 +204,23 @@ namespace mtm
     int SortedList<T>::length() const
     {
         return this->size;
+    }
+
+    template <class T>
+    template <class Condition>
+    SortedList<T> SortedList<T>::filter(Condition condition) const
+    {
+        SortedList<T> sortedList;
+
+        for (typename SortedList<T>::Iterator it = this->begin(); !(it == this->end()); ++it)
+        {
+            if (condition(*it))
+            {
+                sortedList.insert(*it);
+            }
+        }
+
+        return sortedList;
     }
 
     template <class T>

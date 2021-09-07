@@ -156,7 +156,7 @@ void SortedList_OriginalTests()
     // printList(lst4);
 }
 
-void SortedList_Tests()
+void SortedList_RemoveTests()
 {
     SortedList<string> sortedList = SortedList<string>();
     sortedList.insert("A");
@@ -177,13 +177,32 @@ void SortedList_Tests()
     printList(sortedList);
 }
 
+bool isGreater(int x)
+{
+    return x > 0;
+}
+
+void SortedList_FilterTests()
+{
+    SortedList<int> sortedList;
+    sortedList.insert(0);
+    sortedList.insert(1);
+    sortedList.insert(2);
+    sortedList.insert(3);
+    sortedList.insert(4);
+    sortedList.insert(5);
+
+    printList(sortedList.filter(isGreater));
+}
+
 int main()
 {
-    ExamDetails_OriginalTests();
-    ExamDetails_ExceptionTests();
+    // ExamDetails_OriginalTests();
+    // ExamDetails_ExceptionTests();
 
-    SortedList_OriginalTests();
-    SortedList_Tests();
+    // SortedList_OriginalTests();
+    // SortedList_RemoveTests();
+    SortedList_FilterTests();
 
     return 0;
 }
