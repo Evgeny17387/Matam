@@ -35,6 +35,8 @@ namespace mtm
 
         void move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates);
 
+        void reload(const GridPoint& coordinates);
+
         friend ostream& operator<<(ostream& os, const Game& game);
 
         class IllegalArgument{};

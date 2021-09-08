@@ -2,7 +2,7 @@
 
 using namespace mtm;
 
-Character::Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range)
+Character::Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo)
 {
     this->team = team;
     this->health = health;
@@ -10,6 +10,7 @@ Character::Character(Team team, units_t health, units_t ammo, units_t range, uni
     this->range = range;
     this->power = power;
     this->move_range = move_range;
+    this->reload_ammo = reload_ammo;
 }
 
 Character::~Character()
@@ -24,6 +25,7 @@ Character::Character(const Character& character)
     this->range = character.range;
     this->power = character.power;
     this->move_range = character.move_range;
+    this->reload_ammo = character.reload_ammo;
 }
 
 Character& Character::operator=(const Character& character)
@@ -34,16 +36,22 @@ Character& Character::operator=(const Character& character)
     this->range = character.range;
     this->power = character.power;
     this->move_range = character.move_range;
+    this->reload_ammo = character.reload_ammo;
 
     return *this;
 }
 
-int Character::GetMoveRange() const
+int Character::getMoveRange() const
 {
     return this->move_range;
 }
 
-char Character::GetSymbol() const
+void Character::reload()
+{
+    this->ammo += this->reload_ammo;
+}
+
+char Character::getSymbol() const
 {
     return this->team == POWERLIFTERS ? 'C' : 'c';
 }

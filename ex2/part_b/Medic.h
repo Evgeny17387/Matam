@@ -19,7 +19,7 @@ namespace mtm
 
         Medic& operator=(const Medic& medic);
 
-        virtual char GetSymbol() const override;
+        virtual char getSymbol() const override;
 
         // ToDo: delete once not needed anymore
         class NotImplementedYet{};

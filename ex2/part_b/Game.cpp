@@ -51,7 +51,7 @@ Character* Game::makeCharacter(CharacterType type, Team team, units_t health, un
     
     default:
         // ToDo: what should be the default ?
-        return new Character(team, health, ammo, range, power, 0);
+        return new Character(team, health, ammo, range, power, 0, 0);
         break;
     }
 }
@@ -89,7 +89,7 @@ void Game::move(const GridPoint& src_coordinates, const GridPoint& dst_coordinat
         throw CellEmpty();
     }
 
-    if (GridPoint::distance(src_coordinates, dst_coordinates) > this->board[src_coordinates.col][src_coordinates.row]->GetMoveRange())
+    if (GridPoint::distance(src_coordinates, dst_coordinates) > this->board[src_coordinates.col][src_coordinates.row]->getMoveRange())
     {
         throw MoveTooFar();
     }
@@ -103,12 +103,29 @@ void Game::move(const GridPoint& src_coordinates, const GridPoint& dst_coordinat
     this->board[src_coordinates.col][src_coordinates.row] = NULL;
 }
 
+void Game::reload(const GridPoint& coordinates)
+{
+    if ((coordinates.row < 0) || (coordinates.col < 0) || (coordinates.row >= this->height) || (coordinates.col >= this->width))
+    {
+        throw IllegalCell();
+    }
+
+    // ToDo: write as private function, also use the check in move
+    if (this->board[coordinates.col][coordinates.row] == NULL)
+    {
+        throw CellEmpty();
+    }
+
+    this->board[coordinates.col][coordinates.row]->reload();
+}
+
 // ToDo: should it be used this way ?
 namespace mtm
 {
     // ToDo: why it has to be friend ?
     ostream& operator<<(ostream& os, const Game& game)
     {
+        // ToDo: replace with string
         char *begin = new char[game.width * game.height];
 
         for (int row = 0; row < game.height; row++)
@@ -117,7 +134,7 @@ namespace mtm
             {
                 if (game.board[col][row] != NULL)
                 {
-                    begin[row * game.width + col] = game.board[col][row]->GetSymbol();
+                    begin[row * game.width + col] = game.board[col][row]->getSymbol();
                 }
                 else
                 {

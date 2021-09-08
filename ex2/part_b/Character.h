@@ -9,12 +9,13 @@ namespace mtm
     {
     private:
 
-        units_t move_range;
-
         units_t health;
         units_t ammo;
         units_t range;
         units_t power;
+
+        units_t move_range;
+        units_t reload_ammo;
 
     protected:
 
@@ -22,7 +23,7 @@ namespace mtm
 
     public:
 
-        Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range);
+        Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload);
 
         ~Character();
 
@@ -30,10 +31,12 @@ namespace mtm
 
         Character& operator=(const Character& character);
 
-        int GetMoveRange() const;
+        int getMoveRange() const;
+
+        void reload();
 
         // ToDo: should be pure virtual once create character in game.cpp is resolved for default
-        virtual char GetSymbol() const;
+        virtual char getSymbol() const;
     };
 }
 
