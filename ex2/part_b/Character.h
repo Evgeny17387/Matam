@@ -9,21 +9,27 @@ namespace mtm
     {
     private:
 
-        CharacterType type;
         units_t health;
         units_t ammo;
         units_t range;
         units_t power;
 
+    protected:
+
+        Team team;
+
     public:
 
-        Character(CharacterType type, units_t health, units_t ammo, units_t range, units_t power);
+        Character(Team team, units_t health, units_t ammo, units_t range, units_t power);
 
         ~Character();
 
         Character(const Character& character);
 
         Character& operator=(const Character& character);
+
+        // ToDo: should be pure virtual once create character in game.cpp is resolved for default
+        virtual char GetSymbol() const;
     };
 }
 

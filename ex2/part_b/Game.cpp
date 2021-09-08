@@ -6,6 +6,11 @@ using namespace mtm;
 
 Game::Game(int height, int width): height(height), width(width), board(width, std::vector<Character*>(height))
 {
+    // ToDo: is that correct ? since the board init might throw exeption as well
+    if ((height <= 0) || (width <= 0))
+    {
+        throw IllegalArgument();
+    }
 }
 
 Game::~Game()
@@ -18,7 +23,7 @@ Game::Game(const Game& game)
     this->height = game.height;
     this->width = game.width;
 
-    throw IllegalArgument();
+    throw NotImplementedYet();
 }
 
 Game& Game::operator=(const Game& game)
@@ -26,7 +31,7 @@ Game& Game::operator=(const Game& game)
     this->height = game.height;
     this->width = game.width;
 
-    throw IllegalArgument();
+    throw NotImplementedYet();
 
     return *this;
 }
@@ -41,12 +46,12 @@ Character* Game::makeCharacter(CharacterType type, Team team, units_t health, un
     switch (type)
     {
     case CharacterType::MEDIC:
-        return new Medic(type, health, ammo, range, power);
+        return new Medic(team, health, ammo, range, power);
         break;
     
     default:
         // ToDo: what should be the default ?
-        return new Character(type, health, ammo, range, power);
+        return new Character(team, health, ammo, range, power);
         break;
     }
 }
@@ -58,10 +63,36 @@ void Game::addCharacter(const GridPoint& coordinates, Character *character)
         throw IllegalCell();
     }
 
-    if (NULL != this->board[coordinates.col][coordinates.row])
+    if (this->board[coordinates.col][coordinates.row] != NULL)
     {
         throw CellOccupied();
     }
 
     this->board[coordinates.col][coordinates.row] = character;
+}
+
+namespace mtm
+{
+    // ToDo: why it has to be friend ?
+    ostream& operator<<(ostream& os, const Game& game)
+    {
+        char *begin = new char[game.width * game.height];
+
+        for (int row = 0; row < game.height; row++)
+        {
+            for (int col = 0; col < game.width; col++)
+            {
+                if (game.board[col][row] != NULL)
+                {
+                    begin[row * game.width + col] = game.board[col][row]->GetSymbol();
+                }
+                else
+                {
+                    begin[row * game.width + col] = ' ';
+                }
+            }
+        }
+
+        return printGameBoard(os, begin, begin + game.width * game.height, game.width);
+    }
 }

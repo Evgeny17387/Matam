@@ -5,6 +5,9 @@
 #include "Character.h"
 
 #include <vector>
+#include <iostream>
+
+using std::ostream;
 
 namespace mtm
 {
@@ -30,9 +33,13 @@ namespace mtm
 
         void addCharacter(const GridPoint& coordinates, Character *character);
 
+        friend ostream& operator<<(ostream& os, const Game& game);
+
         class IllegalArgument{};
         class IllegalCell{};
         class CellOccupied{};
+
+        class NotImplementedYet{};
     };
 }
 

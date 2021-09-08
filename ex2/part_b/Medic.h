@@ -11,13 +11,15 @@ namespace mtm
 
     public:
 
-        Medic(CharacterType type, units_t health, units_t ammo, units_t range, units_t power);
+        Medic(Team team, units_t health, units_t ammo, units_t range, units_t power);
 
         ~Medic();
 
         Medic(const Medic& medic);
 
         Medic& operator=(const Medic& medic);
+
+        virtual char GetSymbol() const override;
 
         // ToDo: delete once not needed anymore
         class NotImplementedYet{};
