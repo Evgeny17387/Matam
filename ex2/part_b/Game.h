@@ -4,6 +4,8 @@
 #include "Auxiliaries.h"
 #include "Character.h"
 
+#include <vector>
+
 namespace mtm
 {
     class Game
@@ -11,7 +13,9 @@ namespace mtm
     private:
 
         int height;
-        int widht;
+        int width;
+
+        std::vector<std::vector<Character*>> board;
 
     public:
         Game(int height, int widht);
@@ -22,11 +26,13 @@ namespace mtm
 
         Game& operator=(const Game& game);
 
-        static Character makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power);
+        static Character* makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power);
 
-        void addCharacter(const GridPoint& coordinates, Character character);
+        void addCharacter(const GridPoint& coordinates, Character *character);
 
         class IllegalArgument{};
+        class IllegalCell{};
+        class CellOccupied{};
     };
 }
 
