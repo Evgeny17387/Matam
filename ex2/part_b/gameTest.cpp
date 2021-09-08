@@ -23,8 +23,8 @@ void example1() {
     // g1.addCharacter(GridPoint(6,1), Game::makeCharacter(CharacterType::SOLDIER, Team::CROSSFITTERS, 10, 2, 4, 5));
     // g1.addCharacter(GridPoint(6,4), Game::makeCharacter(CharacterType::MEDIC, Team::CROSSFITTERS, 10, 2, 4, 5));
     std::cout << g1 << std::endl;
-    // g1.move(GridPoint(1,1), GridPoint(1,2));
-    // std::cout << g1 << std::endl;
+    g1.move(GridPoint(1,1), GridPoint(1,2));
+    std::cout << g1 << std::endl;
 
 
     // try {

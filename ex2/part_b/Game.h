@@ -33,11 +33,14 @@ namespace mtm
 
         void addCharacter(const GridPoint& coordinates, Character *character);
 
+        void move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates);
+
         friend ostream& operator<<(ostream& os, const Game& game);
 
         class IllegalArgument{};
         class IllegalCell{};
         class CellOccupied{};
+        class CellEmpty{};
 
         class NotImplementedYet{};
     };

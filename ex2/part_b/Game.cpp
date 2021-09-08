@@ -71,6 +71,36 @@ void Game::addCharacter(const GridPoint& coordinates, Character *character)
     this->board[coordinates.col][coordinates.row] = character;
 }
 
+void Game::move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates)
+{
+    // ToDo: write as private function, also use the check in addCharacter
+    if ((src_coordinates.row < 0) || (src_coordinates.col < 0) || (src_coordinates.row >= this->height) || (src_coordinates.col >= this->width))
+    {
+        throw IllegalCell();
+    }
+
+    if ((dst_coordinates.row < 0) || (dst_coordinates.col < 0) || (dst_coordinates.row >= this->height) || (dst_coordinates.col >= this->width))
+    {
+        throw IllegalCell();
+    }
+
+    if (this->board[src_coordinates.col][src_coordinates.row] == NULL)
+    {
+        throw CellEmpty();
+    }
+
+    // ToDo: add check for character move capacity
+
+    if (this->board[dst_coordinates.col][dst_coordinates.row] != NULL)
+    {
+        throw CellOccupied();
+    }
+
+    this->board[dst_coordinates.col][dst_coordinates.row] = this->board[src_coordinates.col][src_coordinates.row];
+    this->board[src_coordinates.col][src_coordinates.row] = NULL;
+}
+
+// ToDo: should it be used this way ?
 namespace mtm
 {
     // ToDo: why it has to be friend ?
@@ -93,6 +123,10 @@ namespace mtm
             }
         }
 
-        return printGameBoard(os, begin, begin + game.width * game.height, game.width);
+        printGameBoard(os, begin, begin + game.width * game.height, game.width);
+
+        delete[] begin;
+
+        return os;
     }
 }
