@@ -9,6 +9,7 @@ namespace mtm
     {
     private:
 
+        CharacterType type;
         units_t health;
         units_t ammo;
         units_t range;
@@ -16,7 +17,7 @@ namespace mtm
 
     public:
 
-        Character(units_t health, units_t ammo, units_t range, units_t power);
+        Character(CharacterType type, units_t health, units_t ammo, units_t range, units_t power);
 
         ~Character();
 

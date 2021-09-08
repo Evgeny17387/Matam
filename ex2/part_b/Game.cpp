@@ -38,12 +38,12 @@ Character Game::makeCharacter(CharacterType type, Team team, units_t health, uni
     switch (type)
     {
     case CharacterType::MEDIC:
-        return Medic(health, ammo, range, power);
+        return Medic(type, health, ammo, range, power);
         break;
     
     default:
         // ToDo: what should be the default ?
-        return Character(health, ammo, range, power);
+        return Character(type, health, ammo, range, power);
         break;
     }
 }

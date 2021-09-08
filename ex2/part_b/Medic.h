@@ -11,7 +11,7 @@ namespace mtm
 
     public:
 
-        Medic(units_t health, units_t ammo, units_t range, units_t power);
+        Medic(CharacterType type, units_t health, units_t ammo, units_t range, units_t power);
 
         ~Medic();
 
