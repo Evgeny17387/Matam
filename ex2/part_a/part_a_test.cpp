@@ -249,13 +249,13 @@ void SortedList_SrotedList()
 
 int main()
 {
-    // ExamDetails_OriginalTests();
-    // ExamDetails_ExceptionTests();
+    ExamDetails_OriginalTests();
+    ExamDetails_ExceptionTests();
 
-    // SortedList_OriginalTests();
-    // SortedList_RemoveTests();
-    // SortedList_FilterTests();
-    // SortedList_ApplyTests();
+    SortedList_OriginalTests();
+    SortedList_RemoveTests();
+    SortedList_FilterTests();
+    SortedList_ApplyTests();
     SortedList_SrotedList();
 
     return 0;
