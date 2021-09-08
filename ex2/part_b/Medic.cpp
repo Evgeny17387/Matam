@@ -8,6 +8,7 @@ Medic::Medic(CharacterType type, units_t health, units_t ammo, units_t range, un
 
 Medic::~Medic()
 {
+    // ToDo: how to implement ?
 }
 
 Medic::Medic(const Medic& medic): Character(medic)

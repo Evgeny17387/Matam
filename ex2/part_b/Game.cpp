@@ -53,7 +53,7 @@ Character* Game::makeCharacter(CharacterType type, Team team, units_t health, un
 
 void Game::addCharacter(const GridPoint& coordinates, Character *character)
 {
-    if ((coordinates.row < 1) || (coordinates.col < 1) || (coordinates.row > this->height) || (coordinates.col > this->width))
+    if ((coordinates.row < 0) || (coordinates.col < 0) || (coordinates.row >= this->height) || (coordinates.col >= this->width))
     {
         throw IllegalCell();
     }
@@ -63,5 +63,5 @@ void Game::addCharacter(const GridPoint& coordinates, Character *character)
         throw CellOccupied();
     }
 
-    this->board[coordinates.col - 1][coordinates.row - 1] = character;
+    this->board[coordinates.col][coordinates.row] = character;
 }
