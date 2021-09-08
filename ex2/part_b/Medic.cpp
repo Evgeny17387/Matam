@@ -17,5 +17,6 @@ Medic::Medic(const Medic& medic): Character(medic)
 Medic& Medic::operator=(const Medic& medic)
 {
     // ToDo: how to implement ?
+    throw NotImplementedYet();
     return *this;
 }

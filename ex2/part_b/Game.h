@@ -25,6 +25,8 @@ namespace mtm
         static Character makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power);
 
         void addCharacter(const GridPoint& coordinates, Character character);
+
+        class IllegalArgument{};
     };
 }
 

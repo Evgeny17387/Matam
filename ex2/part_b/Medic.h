@@ -18,6 +18,9 @@ namespace mtm
         Medic(const Medic& medic);
 
         Medic& operator=(const Medic& medic);
+
+        // ToDo: delete once not needed anymore
+        class NotImplementedYet{};
     };
 }
 
