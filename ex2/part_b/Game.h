@@ -41,6 +41,7 @@ namespace mtm
         class IllegalCell{};
         class CellOccupied{};
         class CellEmpty{};
+        class MoveTooFar{};
 
         class NotImplementedYet{};
     };
