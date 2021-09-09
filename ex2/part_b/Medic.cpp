@@ -31,6 +31,12 @@ Medic& Medic::operator=(const Medic& medic)
     return *this;
 }
 
+char Medic::getSymbol() const
+{
+    // ToDo: Should it be implemented this way ?
+    return this->team == POWERLIFTERS ? 'M' : 'm';
+}
+
 bool Medic::isEnoughAmmo(Team defender_team) const
 {
     units_t min_ammo_for_attack = AMMO_TO_ATTACK_ALLY;
@@ -74,10 +80,4 @@ units_t Medic::attack(Team defender_team)
         this->ammo -= ATTACK_AMMO_COST;
         return -this->power;
     }
-}
-
-char Medic::getSymbol() const
-{
-    // ToDo: Should it be implemented this way ?
-    return this->team == POWERLIFTERS ? 'M' : 'm';
 }

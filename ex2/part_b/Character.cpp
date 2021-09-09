@@ -66,17 +66,12 @@ bool Character::isAttackInRange(int attack_range) const
     return true;
 }
 
-void Character::updateHealth(units_t impact)
-{
-    this->health += impact;
-}
-
 units_t Character::getHealth() const
 {
     return this->health;
 }
 
-char Character::getSymbol() const
+void Character::updateHealth(units_t impact)
 {
-    return this->team == POWERLIFTERS ? 'C' : 'c';
+    this->health += impact;
 }

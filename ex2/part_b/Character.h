@@ -21,6 +21,9 @@ namespace mtm
         units_t ammo;
         units_t power;
 
+        // ToDo: delete once not needed anymore
+        class NotImplementedYet{};
+
     public:
 
         Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload);
@@ -31,6 +34,8 @@ namespace mtm
 
         Character& operator=(const Character& character);
 
+        virtual char getSymbol() const = 0;
+
         int getMoveRange() const;
 
         void reload();
@@ -39,18 +44,15 @@ namespace mtm
 
         bool isAttackInRange(int attack_range) const;
 
+        units_t getHealth() const;
+
+        void updateHealth(units_t impact);
+
         virtual bool isEnoughAmmo(Team defender_team) const = 0;
 
         virtual bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const = 0;
 
         virtual units_t attack(Team defender_team) = 0;
-
-        void updateHealth(units_t impact);
-
-        units_t getHealth() const;
-
-        // ToDo: should be pure virtual once create character in game.cpp is resolved for default
-        virtual char getSymbol() const;
     };
 }
 
