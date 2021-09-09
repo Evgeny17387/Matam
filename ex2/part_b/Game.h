@@ -53,6 +53,9 @@ namespace mtm
         class CellOccupied{};
         class CellEmpty{};
         class MoveTooFar{};
+        class OutOfRange{};
+        class OutOfAmmo{};
+        class IllegalTarget{};
 
         class NotImplementedYet{};
     };

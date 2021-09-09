@@ -19,7 +19,13 @@ namespace mtm
 
         Medic& operator=(const Medic& medic);
 
-        virtual char getSymbol() const override;
+        bool isAttackInRange(int range) const override;
+
+        bool isEnoughAmmo(Team defender_team) const override;
+
+        bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const override;
+
+        char getSymbol() const override;
 
         // ToDo: delete once not needed anymore
         class NotImplementedYet{};

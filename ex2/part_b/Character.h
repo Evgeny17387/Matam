@@ -10,7 +10,6 @@ namespace mtm
     private:
 
         units_t health;
-        units_t ammo;
         units_t range;
         units_t power;
 
@@ -20,6 +19,7 @@ namespace mtm
     protected:
 
         Team team;
+        units_t ammo;
 
     public:
 
@@ -36,6 +36,12 @@ namespace mtm
         void reload();
 
         Team getTeam() const;
+
+        virtual bool isAttackInRange(int range) const = 0;
+
+        virtual bool isEnoughAmmo(Team defender_team) const = 0;
+
+        virtual bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const = 0;
 
         // ToDo: should be pure virtual once create character in game.cpp is resolved for default
         virtual char getSymbol() const;

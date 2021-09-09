@@ -51,7 +51,7 @@ Character* Game::makeCharacter(CharacterType type, Team team, units_t health, un
     
     default:
         // ToDo: what should be the default ?
-        return new Character(team, health, ammo, range, power, 0, 0);
+        throw IllegalArgument();
         break;
     }
 }
@@ -95,7 +95,23 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
     verifyLegalCoordinates(dst_coordinates);
     verifyCellNotEmpty(src_coordinates);
 
+    Character *attacker = this->board[src_coordinates.col][src_coordinates.row];
+    Character *defender = this->board[dst_coordinates.col][dst_coordinates.row];
 
+    if (!attacker->isAttackInRange(GridPoint::distance(src_coordinates, dst_coordinates)))
+    {
+        throw OutOfRange();
+    }
+
+    if (!attacker->isEnoughAmmo(defender->getTeam()))
+    {
+        throw OutOfAmmo();
+    }
+
+    if (!attacker->canAttack(defender == NULL, src_coordinates == dst_coordinates))
+    {
+        throw IllegalTarget();
+    }
 }
 
 bool Game::isOver(Team* winningTeam) const
