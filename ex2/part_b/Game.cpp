@@ -112,6 +112,14 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
     {
         throw IllegalTarget();
     }
+
+    defender->updateHealth(attacker->attack(defender->getTeam()));
+
+    if (defender->getHealth() <= 0)
+    {
+        delete defender;
+        this->board[dst_coordinates.col][dst_coordinates.row] = NULL;
+    }
 }
 
 bool Game::isOver(Team* winningTeam) const

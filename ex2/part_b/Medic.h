@@ -19,11 +19,11 @@ namespace mtm
 
         Medic& operator=(const Medic& medic);
 
-        bool isAttackInRange(int range) const override;
-
         bool isEnoughAmmo(Team defender_team) const override;
 
         bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const override;
+
+        units_t attack(Team defender_team) override;
 
         char getSymbol() const override;
 

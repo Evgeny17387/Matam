@@ -3,9 +3,13 @@
 using namespace mtm;
 
 const units_t MOVE_RANGE = 5;
+
 const units_t RELOAD_AMMO = 5;
+
 const units_t AMMO_TO_ATTACK_RIVAL = 1;
 const units_t AMMO_TO_ATTACK_ALLY = 0;
+
+const units_t ATTACK_AMMO_COST = 1;
 
 Medic::Medic(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
 {
@@ -25,16 +29,6 @@ Medic& Medic::operator=(const Medic& medic)
     // ToDo: how to implement ?
     throw NotImplementedYet();
     return *this;
-}
-
-bool Medic::isAttackInRange(int range) const
-{
-    if (range > MOVE_RANGE)
-    {
-        return false;
-    }
-
-    return true;
 }
 
 bool Medic::isEnoughAmmo(Team defender_team) const
@@ -67,6 +61,19 @@ bool Medic::canAttack(bool is_destination_empty, bool is_destination_equals_sour
     }
 
     return true;
+}
+
+units_t Medic::attack(Team defender_team)
+{
+    if (defender_team == this->team)
+    {
+        return this->power;
+    }
+    else
+    {
+        this->ammo -= ATTACK_AMMO_COST;
+        return -this->power;
+    }
 }
 
 char Medic::getSymbol() const

@@ -56,6 +56,26 @@ Team Character::getTeam() const
     return this->team;
 }
 
+bool Character::isAttackInRange(int attack_range) const
+{
+    if (attack_range > this->range)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+void Character::updateHealth(units_t impact)
+{
+    this->health += impact;
+}
+
+units_t Character::getHealth() const
+{
+    return this->health;
+}
+
 char Character::getSymbol() const
 {
     return this->team == POWERLIFTERS ? 'C' : 'c';
