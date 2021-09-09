@@ -2,7 +2,9 @@
 
 using namespace mtm;
 
+#include "Soldier.h"
 #include "Medic.h"
+#include "Sniper.h"
 
 Game::Game(int height, int width): height(height), width(width), board(width, std::vector<Character*>(height))
 {
@@ -45,10 +47,18 @@ Character* Game::makeCharacter(CharacterType type, Team team, units_t health, un
 
     switch (type)
     {
+    case CharacterType::SOLDIER:
+        return new Soldier(team, health, ammo, range, power);
+        break;
+
     case CharacterType::MEDIC:
         return new Medic(team, health, ammo, range, power);
         break;
-    
+
+    case CharacterType::SNIPER:
+        return new Sniper(team, health, ammo, range, power);
+        break;
+
     default:
         // ToDo: what should be the default ?
         throw IllegalArgument();

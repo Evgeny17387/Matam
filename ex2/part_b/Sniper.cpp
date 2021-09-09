@@ -1,41 +1,41 @@
-#include "Soldier.h"
+#include "Sniper.h"
 
 using namespace mtm;
 
-const units_t MOVE_RANGE = 3;
+const units_t MOVE_RANGE = 4;
 
-const units_t RELOAD_AMMO = 3;
+const units_t RELOAD_AMMO = 2;
 
 const units_t AMMO_TO_ATTACK_RIVAL = 1;
 const units_t AMMO_TO_ATTACK_ALLY = 1;
 
-Soldier::Soldier(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
+Sniper::Sniper(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
 {
 }
 
-Soldier::~Soldier()
+Sniper::~Sniper()
 {
     // ToDo: how to implement ?
 }
 
-Soldier::Soldier(const Soldier& soldier): Character(soldier)
+Sniper::Sniper(const Sniper& sniper): Character(sniper)
 {
 }
 
-Soldier& Soldier::operator=(const Soldier& soldier)
+Sniper& Sniper::operator=(const Sniper& sniper)
 {
     // ToDo: how to implement ?
     throw NotImplementedYet();
     return *this;
 }
 
-char Soldier::getSymbol() const
+char Sniper::getSymbol() const
 {
     // ToDo: Should it be implemented this way ?
-    return this->team == POWERLIFTERS ? 'S' : 's';
+    return this->team == POWERLIFTERS ? 'N' : 'n';
 }
 
-bool Soldier::isEnoughAmmo(Team defender_team) const
+bool Sniper::isEnoughAmmo(Team defender_team) const
 {
     units_t min_ammo_for_attack = AMMO_TO_ATTACK_ALLY;
 
@@ -52,12 +52,12 @@ bool Soldier::isEnoughAmmo(Team defender_team) const
     return true;
 }
 
-bool Soldier::canAttack(bool is_destination_empty, bool is_destination_equals_source) const
+bool Sniper::canAttack(bool is_destination_empty, bool is_destination_equals_source) const
 {
     return true;
 }
 
-units_t Soldier::attack(Team defender_team)
+units_t Sniper::attack(Team defender_team)
 {
     if (defender_team == this->team)
     {

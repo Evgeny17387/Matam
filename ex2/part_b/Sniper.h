@@ -1,0 +1,32 @@
+#ifndef _SNIPER_H
+#define _SNIPER_H
+
+#include "Character.h"
+
+namespace mtm
+{
+    class Sniper: public Character
+    {
+    private:
+
+    public:
+
+        Sniper(Team team, units_t health, units_t ammo, units_t range, units_t power);
+
+        ~Sniper();
+
+        Sniper(const Sniper& sniper);
+
+        Sniper& operator=(const Sniper& sniper);
+
+        char getSymbol() const override;
+
+        bool isEnoughAmmo(Team defender_team) const override;
+
+        bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const override;
+
+        units_t attack(Team defender_team) override;
+    };
+}
+
+#endif // _SNIPER_H
