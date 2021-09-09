@@ -17,6 +17,6 @@ set(MTM_FLAGS_RELEASE "${MTM_FLAGS_DEBUG} -DNDEBUG")
 set(CMAKE_CPP_FLAGS ${MTM_FLAGS_DEBUG})
 
 # Add the names of your source files here
-set(CPP_FILES "gameTest.cpp" "Game.cpp" "Character.cpp" "Medic.cpp" "Auxiliaries.cpp")
+set(CPP_FILES "gameTest.cpp" "Game.cpp" "Character.cpp" "Medic.cpp" "Soldier.cpp" "Auxiliaries.cpp")
 
 add_executable(test ${CPP_FILES})
