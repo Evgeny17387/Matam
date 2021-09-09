@@ -35,6 +35,8 @@ namespace mtm
 
         void reload();
 
+        Team getTeam() const;
+
         // ToDo: should be pure virtual once create character in game.cpp is resolved for default
         virtual char getSymbol() const;
     };

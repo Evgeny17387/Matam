@@ -51,6 +51,11 @@ void Character::reload()
     this->ammo += this->reload_ammo;
 }
 
+Team Character::getTeam() const
+{
+    return this->team;
+}
+
 char Character::getSymbol() const
 {
     return this->team == POWERLIFTERS ? 'C' : 'c';

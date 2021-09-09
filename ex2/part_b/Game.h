@@ -37,6 +37,8 @@ namespace mtm
 
         void reload(const GridPoint& coordinates);
 
+        bool isOver(Team* winningTeam=NULL) const;
+
         friend ostream& operator<<(ostream& os, const Game& game);
 
         class IllegalArgument{};

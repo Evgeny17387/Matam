@@ -119,6 +119,51 @@ void Game::reload(const GridPoint& coordinates)
     this->board[coordinates.col][coordinates.row]->reload();
 }
 
+bool Game::isOver(Team* winningTeam) const
+{
+    int power_lifters_counter = 0;
+    int cross_fitters_counter = 0;
+
+    // ToDo: implement generic iteration over board with some apply, to use also in operator<<
+    for (int row = 0; row < this->height; row++)
+    {
+        for (int col = 0; col < this->width; col++)
+        {
+            if (this->board[col][row] != NULL)
+            {
+                // ToDo: i don't like this, maybe implement as array of counters
+                if (this->board[col][row]->getTeam() == Team::POWERLIFTERS)
+                {
+                    power_lifters_counter++;
+                }
+                else if (this->board[col][row]->getTeam() == Team::CROSSFITTERS)
+                {
+                    cross_fitters_counter++;
+                }
+            }
+        }
+    }
+
+    if ((power_lifters_counter != 0) && (cross_fitters_counter == 0))
+    {
+        if (winningTeam != NULL)
+        {
+            *winningTeam = Team::POWERLIFTERS;
+        }
+        return true;
+    }
+    else if ((cross_fitters_counter != 0) && (power_lifters_counter == 0))
+    {
+        if (winningTeam != NULL)
+        {
+            *winningTeam = Team::CROSSFITTERS;
+        }
+        return true;
+    }
+
+    return false;
+}
+
 // ToDo: should it be used this way ?
 namespace mtm
 {
