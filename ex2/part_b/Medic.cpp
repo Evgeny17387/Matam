@@ -27,6 +27,6 @@ Medic& Medic::operator=(const Medic& medic)
 
 char Medic::getSymbol() const
 {
-    // Should it be implemented this way ?
+    // ToDo: Should it be implemented this way ?
     return this->team == POWERLIFTERS ? 'M' : 'm';
 }

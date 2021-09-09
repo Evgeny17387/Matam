@@ -58,46 +58,24 @@ Character* Game::makeCharacter(CharacterType type, Team team, units_t health, un
 
 void Game::addCharacter(const GridPoint& coordinates, Character *character)
 {
-    if ((coordinates.row < 0) || (coordinates.col < 0) || (coordinates.row >= this->height) || (coordinates.col >= this->width))
-    {
-        throw IllegalCell();
-    }
-
-    if (this->board[coordinates.col][coordinates.row] != NULL)
-    {
-        throw CellOccupied();
-    }
+    verifyLegalCoordinates(coordinates);
+    verifyCellEmpty(coordinates);
 
     this->board[coordinates.col][coordinates.row] = character;
 }
 
 void Game::move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates)
 {
-    // ToDo: write as private function, also use the check in addCharacter
-    if ((src_coordinates.row < 0) || (src_coordinates.col < 0) || (src_coordinates.row >= this->height) || (src_coordinates.col >= this->width))
-    {
-        throw IllegalCell();
-    }
-
-    if ((dst_coordinates.row < 0) || (dst_coordinates.col < 0) || (dst_coordinates.row >= this->height) || (dst_coordinates.col >= this->width))
-    {
-        throw IllegalCell();
-    }
-
-    if (this->board[src_coordinates.col][src_coordinates.row] == NULL)
-    {
-        throw CellEmpty();
-    }
+    verifyLegalCoordinates(src_coordinates);
+    verifyLegalCoordinates(dst_coordinates);
+    verifyCellNotEmpty(src_coordinates);
 
     if (GridPoint::distance(src_coordinates, dst_coordinates) > this->board[src_coordinates.col][src_coordinates.row]->getMoveRange())
     {
         throw MoveTooFar();
     }
 
-    if (this->board[dst_coordinates.col][dst_coordinates.row] != NULL)
-    {
-        throw CellOccupied();
-    }
+    verifyCellEmpty(dst_coordinates);
 
     this->board[dst_coordinates.col][dst_coordinates.row] = this->board[src_coordinates.col][src_coordinates.row];
     this->board[src_coordinates.col][src_coordinates.row] = NULL;
@@ -105,18 +83,19 @@ void Game::move(const GridPoint& src_coordinates, const GridPoint& dst_coordinat
 
 void Game::reload(const GridPoint& coordinates)
 {
-    if ((coordinates.row < 0) || (coordinates.col < 0) || (coordinates.row >= this->height) || (coordinates.col >= this->width))
-    {
-        throw IllegalCell();
-    }
-
-    // ToDo: write as private function, also use the check in move
-    if (this->board[coordinates.col][coordinates.row] == NULL)
-    {
-        throw CellEmpty();
-    }
+    verifyLegalCoordinates(coordinates);
+    verifyCellNotEmpty(coordinates);
 
     this->board[coordinates.col][coordinates.row]->reload();
+}
+
+void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordinates)
+{
+    verifyLegalCoordinates(src_coordinates);
+    verifyLegalCoordinates(dst_coordinates);
+    verifyCellNotEmpty(src_coordinates);
+
+
 }
 
 bool Game::isOver(Team* winningTeam) const
@@ -125,6 +104,7 @@ bool Game::isOver(Team* winningTeam) const
     int cross_fitters_counter = 0;
 
     // ToDo: implement generic iteration over board with some apply, to use also in operator<<
+    // ToDo: also replace with foreach
     for (int row = 0; row < this->height; row++)
     {
         for (int col = 0; col < this->width; col++)
@@ -193,5 +173,29 @@ namespace mtm
         delete[] begin;
 
         return os;
+    }
+}
+
+void Game::verifyLegalCoordinates(const GridPoint& coordinates) const
+{
+    if ((coordinates.row < 0) || (coordinates.col < 0) || (coordinates.row >= this->height) || (coordinates.col >= this->width))
+    {
+        throw IllegalCell();
+    }
+}
+
+void Game::verifyCellNotEmpty(const GridPoint& coordinates) const
+{
+    if (this->board[coordinates.col][coordinates.row] == NULL)
+    {
+        throw CellEmpty();
+    }
+}
+
+void Game::verifyCellEmpty(const GridPoint& coordinates) const
+{
+    if (this->board[coordinates.col][coordinates.row] != NULL)
+    {
+        throw CellOccupied();
     }
 }

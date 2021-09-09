@@ -20,7 +20,12 @@ namespace mtm
 
         std::vector<std::vector<Character*>> board;
 
+        void verifyLegalCoordinates(const GridPoint& coordinates) const;
+        void verifyCellNotEmpty(const GridPoint& coordinates) const;
+        void verifyCellEmpty(const GridPoint& coordinates) const;
+
     public:
+
         Game(int height, int widht);
 
         ~Game();
@@ -36,6 +41,8 @@ namespace mtm
         void move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates);
 
         void reload(const GridPoint& coordinates);
+
+        void attack(const GridPoint& src_coordinates, const GridPoint& dst_coordinates);
 
         bool isOver(Team* winningTeam=NULL) const;
 
