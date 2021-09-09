@@ -9,8 +9,6 @@ const units_t RELOAD_AMMO = 5;
 const units_t AMMO_TO_ATTACK_RIVAL = 1;
 const units_t AMMO_TO_ATTACK_ALLY = 0;
 
-const units_t ATTACK_AMMO_COST = 1;
-
 Medic::Medic(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
 {
 }
@@ -77,7 +75,7 @@ units_t Medic::attack(Team defender_team)
     }
     else
     {
-        this->ammo -= ATTACK_AMMO_COST;
+        this->ammo -= AMMO_TO_ATTACK_RIVAL;
         return -this->power;
     }
 }
