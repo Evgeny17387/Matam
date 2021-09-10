@@ -30,7 +30,7 @@ namespace mtm
 
         Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload);
 
-        ~Character();
+        virtual ~Character();
 
         Character(const Character& character);
 

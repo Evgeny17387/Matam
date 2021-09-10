@@ -1,11 +1,10 @@
 #include "Game.h"
 #include "Exceptions.h"
-
-using namespace mtm;
-
 #include "Soldier.h"
 #include "Medic.h"
 #include "Sniper.h"
+
+using namespace mtm;
 
 Game::Game(int height, int width): height(height), width(width), board(width, std::vector<Character*>(height, NULL))
 {
@@ -92,7 +91,7 @@ Character* Game::makeCharacter(CharacterType type, Team team, units_t health, un
         break;
 
     default:
-        // ToDo: what should be the default ?
+        // ToDo: what should be the default ? simply check compilation fail, add assert to make sure
         throw IllegalArgument();
         break;
     }
@@ -157,6 +156,7 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
 
     attacker->chargeAttackAmmoCost(defender);
 
+    // ToDo: maybe better to pass board to character
     for (int row_diff = -attacker->getImpactRange(); row_diff <= attacker->getImpactRange(); row_diff++)
     {
         for (int col_diff = -attacker->getImpactRange(); col_diff <= attacker->getImpactRange(); col_diff++)

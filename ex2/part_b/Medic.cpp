@@ -53,7 +53,7 @@ bool Medic::isEnoughAmmo(Character* character) const
     // ToDo: ihs.....
     if (character == NULL)
     {
-        true;
+        return true;
     }
 
     units_t min_ammo_for_attack = AMMO_PER_ATTACK_ALLY;

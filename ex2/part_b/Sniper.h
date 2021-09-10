@@ -15,7 +15,7 @@ namespace mtm
 
         Sniper(Team team, units_t health, units_t ammo, units_t range, units_t power);
 
-        ~Sniper();
+        ~Sniper() override;
 
         Sniper(const Sniper& sniper);
 

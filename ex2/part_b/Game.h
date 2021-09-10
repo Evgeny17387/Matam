@@ -3,7 +3,6 @@
 
 #include "Auxiliaries.h"
 #include "Character.h"
-#include "Exceptions.h"
 
 #include <vector>
 #include <iostream>

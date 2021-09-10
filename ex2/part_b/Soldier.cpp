@@ -56,6 +56,7 @@ bool Soldier::isAttackInRange(const GridPoint& coordinates_src, const GridPoint&
         return false;
     }
 
+    // ToDo: make sure in Piazza
     if (!isOnTheSameLine(coordinates_src, coordinates_dst))
     {
         return false;
