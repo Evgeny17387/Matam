@@ -41,7 +41,10 @@ Game::Game(const Game& game)
     {
         for (int col = 0; col < this->width; col++)
         {
-            this->board[col][row] = game.board[col][row];
+            if (game.board[col][row] != NULL)
+            {
+                this->board[col][row] = game.board[col][row]->clone();
+            }
         }
     }
 }
@@ -57,7 +60,10 @@ Game& Game::operator=(const Game& game)
     {
         for (int col = 0; col < this->width; col++)
         {
-            this->board[col][row] = game.board[col][row];
+            if (game.board[col][row] != NULL)
+            {
+                this->board[col][row] = game.board[col][row]->clone();
+            }
         }
     }
 

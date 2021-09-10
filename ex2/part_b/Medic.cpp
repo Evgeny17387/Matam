@@ -17,7 +17,6 @@ Medic::Medic(Team team, units_t health, units_t ammo, units_t range, units_t pow
 
 Medic::~Medic()
 {
-    // ToDo: how to implement ?
 }
 
 Medic::Medic(const Medic& medic): Character(medic)
@@ -101,4 +100,9 @@ units_t Medic::attack(Team defender_team, const GridPoint& coordinates_dst, cons
     {
         return -this->power;
     }
+}
+
+Character* Medic::clone() const
+{
+    return new Medic(*this);
 }

@@ -57,6 +57,8 @@ namespace mtm
         units_t getHealth() const;
 
         void updateHealth(units_t impact);
+
+        virtual Character* clone() const = 0;
     };
 }
 

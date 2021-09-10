@@ -21,11 +21,11 @@ Sniper::Sniper(Team team, units_t health, units_t ammo, units_t range, units_t p
 
 Sniper::~Sniper()
 {
-    // ToDo: how to implement ?
 }
 
 Sniper::Sniper(const Sniper& sniper): Character(sniper)
 {
+    this->regular_shots_count = 0;
 }
 
 Sniper& Sniper::operator=(const Sniper& sniper)
@@ -105,4 +105,9 @@ units_t Sniper::attack(Team defender_team, const GridPoint& coordinates_dst, con
     {
         return -this->power;
     }
+}
+
+Character* Sniper::clone() const
+{
+    return new Sniper(*this);
 }

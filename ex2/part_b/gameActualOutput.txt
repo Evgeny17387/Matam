@@ -98,3 +98,28 @@ A game related error has occurred: MoveTooFar
 |S| | | | | |m| |n| |
 | | | | | | |m| | | |
 *********************
+*********************
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | |n| | | |
+| | | |S| | |m| |n| |
+| | | | | | |m| | | |
+*********************
+*********************
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | |n| | | |
+|S| | | | | |m| |n| |
+| | | | | | |m| | | |
+*********************
+A game related error has occurred: OutOfAmmo
+A game related error has occurred: CellEmpty
+A game related error has occurred: IllegalCell
+A game related error has occurred: IllegalCell
+*********************
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | |n| | | |
+| | | |S| | |m| |n| |
+| | | | | | |m| | | |
+*********************
