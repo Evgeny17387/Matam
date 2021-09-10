@@ -6,7 +6,7 @@ const units_t MOVE_RANGE = 3;
 
 const units_t RELOAD_AMMO = 3;
 
-const units_t AMMO_TO_ATTACK = 1;
+const units_t AMMO_PER_ATTACK = 1;
 
 const units_t NO_DAMAGE = 0;
 
@@ -67,9 +67,7 @@ bool Soldier::isAttackInRange(const GridPoint& coordinates_src, const GridPoint&
 
 bool Soldier::isEnoughAmmo(Team defender_team) const
 {
-    units_t min_ammo_for_attack = AMMO_TO_ATTACK;
-
-    if (this->ammo < min_ammo_for_attack)
+    if (this->ammo < AMMO_PER_ATTACK)
     {
         return false;
     }
@@ -77,7 +75,7 @@ bool Soldier::isEnoughAmmo(Team defender_team) const
     return true;
 }
 
-bool Soldier::canAttack(bool is_destination_empty, bool is_destination_equals_source) const
+bool Soldier::canAttack(bool is_destination_empty, bool is_destination_equals_source, Team defender_team) const
 {
     return true;
 }
@@ -89,7 +87,7 @@ units_t Soldier::getImpactRange() const
 
 units_t Soldier::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
 {
-    this->ammo -= AMMO_TO_ATTACK;
+    this->ammo -= AMMO_PER_ATTACK;
 
     if (defender_team == this->team)
     {

@@ -6,8 +6,8 @@ const units_t MOVE_RANGE = 5;
 
 const units_t RELOAD_AMMO = 5;
 
-const units_t AMMO_TO_ATTACK_RIVAL = 1;
-const units_t AMMO_TO_ATTACK_ALLY = 0;
+const units_t AMMO_PER_ATTACK_RIVAL = 1;
+const units_t AMMO_PER_ATTACK_ALLY = 0;
 
 const units_t ATTACK_IMPACT_ONLY_SINGLE_CELL = 0;
 
@@ -51,11 +51,11 @@ bool Medic::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& c
 
 bool Medic::isEnoughAmmo(Team defender_team) const
 {
-    units_t min_ammo_for_attack = AMMO_TO_ATTACK_ALLY;
+    units_t min_ammo_for_attack = AMMO_PER_ATTACK_ALLY;
 
     if (defender_team != this->team)
     {
-        min_ammo_for_attack = AMMO_TO_ATTACK_RIVAL;
+        min_ammo_for_attack = AMMO_PER_ATTACK_RIVAL;
     }
 
     if (this->ammo < min_ammo_for_attack)
@@ -66,7 +66,7 @@ bool Medic::isEnoughAmmo(Team defender_team) const
     return true;
 }
 
-bool Medic::canAttack(bool is_destination_empty, bool is_destination_equals_source) const
+bool Medic::canAttack(bool is_destination_empty, bool is_destination_equals_source, Team defender_team) const
 {
     if (is_destination_empty)
     {
@@ -88,13 +88,17 @@ units_t Medic::getImpactRange() const
 
 units_t Medic::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
 {
+    if (defender_team != this->team)
+    {
+        this->ammo -= AMMO_PER_ATTACK_RIVAL;
+    }
+
     if (defender_team == this->team)
     {
         return this->power;
     }
     else
     {
-        this->ammo -= AMMO_TO_ATTACK_RIVAL;
         return -this->power;
     }
 }

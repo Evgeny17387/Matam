@@ -27,7 +27,7 @@ namespace mtm
 
         bool isEnoughAmmo(Team defender_team) const override;
 
-        bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const override;
+        bool canAttack(bool is_destination_empty, bool is_destination_equals_source, Team defender_team) const override;
 
         units_t getImpactRange() const override;
 

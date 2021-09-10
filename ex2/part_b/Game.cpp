@@ -127,7 +127,7 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
         throw OutOfAmmo();
     }
 
-    if (!attacker->canAttack(defender == NULL, src_coordinates == dst_coordinates))
+    if (!attacker->canAttack(defender == NULL, src_coordinates == dst_coordinates, defender->getTeam()))
     {
         throw IllegalTarget();
     }

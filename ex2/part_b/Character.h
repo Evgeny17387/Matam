@@ -46,7 +46,7 @@ namespace mtm
 
         virtual bool isEnoughAmmo(Team defender_team) const = 0;
 
-        virtual bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const = 0;
+        virtual bool canAttack(bool is_destination_empty, bool is_destination_equals_source, Team defender_team) const = 0;
 
         virtual units_t getImpactRange() const = 0;
 
