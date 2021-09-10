@@ -82,7 +82,7 @@ bool Soldier::canAttack(bool is_destination_empty, bool is_destination_equals_so
 
 units_t Soldier::getImpactRange() const
 {
-    return this->range / 3 + 1;
+    return divideToClosestUpperInt(this->range, 3);
 }
 
 units_t Soldier::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
@@ -104,9 +104,9 @@ units_t Soldier::attack(Team defender_team, const GridPoint& coordinates_dst, co
             int attack_range = GridPoint::distance(coordinates_dst, coordinates_attack);
 
             // ToDo: duplicate logic with getImpactRange
-            int max_range_affect = this->range / 3 + 1;
+            int max_range_affect = divideToClosestUpperInt(this->range, 3);
 
-            units_t reduced_damage = this->power / 2 + 1;
+            units_t reduced_damage = divideToClosestUpperInt(this->power, 2);
 
             if (attack_range > max_range_affect)
             {

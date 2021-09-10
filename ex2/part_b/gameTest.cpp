@@ -32,11 +32,11 @@ void example1() {
         std::cout << e.what() << std::endl;
     }
 
-    // try {
-    //     g1.attack(GridPoint(1,4), GridPoint(6,1)); // should not work - not in range
-    // } catch (mtm::OutOfRange& e) {
-    //     std::cout << e.what() << std::endl;
-    // }
+    try {
+        g1.attack(GridPoint(1,4), GridPoint(6,1)); // should not work - not in range
+    } catch (mtm::OutOfRange& e) {
+        std::cout << e.what() << std::endl;
+    }
 
     // g1.move(GridPoint(1,4), GridPoint(3,2));
     // std::cout << g1 << std::endl;
