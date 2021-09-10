@@ -83,6 +83,7 @@ namespace mtm
         const T& operator*() const;
 
         const_iterator& operator++();
+        // ToDo: there wasn't such operator in the requirements
         const_iterator operator++(int);
 
         bool operator==(const const_iterator& const_iterator) const;
@@ -387,7 +388,7 @@ namespace mtm
     template <class T>
     bool SortedList<T>::const_iterator::operator==(const const_iterator& const_iterator) const
     {
-        return this->index == const_iterator.index;
+        return (this->sortedList == const_iterator.sortedList) && (this->index == const_iterator.index);
     }
 }
 
