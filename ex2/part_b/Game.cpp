@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Exceptions.h"
 
 using namespace mtm;
 

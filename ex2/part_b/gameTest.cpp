@@ -26,12 +26,11 @@ void example1() {
     g1.move(GridPoint(1,1), GridPoint(1,2));
     std::cout << g1 << std::endl;
 
-
-    // try {
-    //     g1.attack(GridPoint(1,4), GridPoint(1,2)); // can't attak ally
-    // } catch (mtm::IllegalTarget& e) {
-    //     std::cout << e.what() << std::endl;
-    // }
+    try {
+        g1.attack(GridPoint(1,4), GridPoint(1,2)); // can't attak ally
+    } catch (mtm::IllegalTarget& e) {
+        std::cout << e.what() << std::endl;
+    }
 
     // try {
     //     g1.attack(GridPoint(1,4), GridPoint(6,1)); // should not work - not in range

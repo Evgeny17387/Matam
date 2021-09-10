@@ -3,6 +3,7 @@
 
 #include "Auxiliaries.h"
 #include "Character.h"
+#include "Exceptions.h"
 
 #include <vector>
 #include <iostream>
@@ -47,15 +48,6 @@ namespace mtm
         bool isOver(Team* winningTeam=NULL) const;
 
         friend ostream& operator<<(ostream& os, const Game& game);
-
-        class IllegalArgument{};
-        class IllegalCell{};
-        class CellOccupied{};
-        class CellEmpty{};
-        class MoveTooFar{};
-        class OutOfRange{};
-        class OutOfAmmo{};
-        class IllegalTarget{};
 
         class NotImplementedYet{};
     };
