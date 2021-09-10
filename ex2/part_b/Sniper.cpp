@@ -9,6 +9,8 @@ const units_t RELOAD_AMMO = 2;
 const units_t AMMO_TO_ATTACK_RIVAL = 1;
 const units_t AMMO_TO_ATTACK_ALLY = 1;
 
+const units_t ATTACK_IMPACT_ONLY_SINGLE_CELL = 0;
+
 Sniper::Sniper(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
 {
 }
@@ -74,7 +76,12 @@ bool Sniper::canAttack(bool is_destination_empty, bool is_destination_equals_sou
     return true;
 }
 
-units_t Sniper::attack(Team defender_team)
+units_t Sniper::getImpactRange() const
+{
+    return ATTACK_IMPACT_ONLY_SINGLE_CELL;
+}
+
+units_t Sniper::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
 {
     if (defender_team == this->team)
     {

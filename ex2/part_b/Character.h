@@ -48,7 +48,9 @@ namespace mtm
 
         virtual bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const = 0;
 
-        virtual units_t attack(Team defender_team) = 0;
+        virtual units_t getImpactRange() const = 0;
+
+        virtual units_t attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack) = 0;
 
         units_t getHealth() const;
 

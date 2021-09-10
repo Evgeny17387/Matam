@@ -9,6 +9,8 @@ const units_t RELOAD_AMMO = 5;
 const units_t AMMO_TO_ATTACK_RIVAL = 1;
 const units_t AMMO_TO_ATTACK_ALLY = 0;
 
+const units_t ATTACK_IMPACT_ONLY_SINGLE_CELL = 0;
+
 Medic::Medic(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
 {
 }
@@ -79,7 +81,12 @@ bool Medic::canAttack(bool is_destination_empty, bool is_destination_equals_sour
     return true;
 }
 
-units_t Medic::attack(Team defender_team)
+units_t Medic::getImpactRange() const
+{
+    return ATTACK_IMPACT_ONLY_SINGLE_CELL;
+}
+
+units_t Medic::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
 {
     if (defender_team == this->team)
     {

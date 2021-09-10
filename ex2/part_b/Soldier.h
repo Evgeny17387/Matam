@@ -29,7 +29,9 @@ namespace mtm
 
         bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const override;
 
-        units_t attack(Team defender_team) override;
+        units_t getImpactRange() const override;
+
+        units_t attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack) override;
     };
 }
 
