@@ -10,8 +10,13 @@ const units_t AMMO_PER_ATTACK = 1;
 
 const units_t ATTACK_IMPACT_ONLY_SINGLE_CELL = 0;
 
+const int DOUBLE_IMPACT_SHOT_COUNT = 3;
+
+const int DOUBLE_IMPACT_SHOT = 2;
+
 Sniper::Sniper(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
 {
+    this->regular_shots_count = 0;
 }
 
 Sniper::~Sniper()
@@ -89,9 +94,12 @@ units_t Sniper::attack(Team defender_team, const GridPoint& coordinates_dst, con
 {
     this->ammo -= AMMO_PER_ATTACK;
 
-    if (defender_team == this->team)
+    this->regular_shots_count++;
+
+    if (this->regular_shots_count == DOUBLE_IMPACT_SHOT_COUNT)
     {
-        return this->power;
+        this->regular_shots_count = 0;
+        return -this->power * DOUBLE_IMPACT_SHOT;
     }
     else
     {
