@@ -2,44 +2,9 @@
 
 using namespace mtm;
 
-// ToDo: change to init list
-Character::Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo)
+Character::Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo):
+    health(health), move_range(move_range), reload_ammo(reload_ammo), team(team), ammo(ammo), range(range), power(power)
 {
-    this->team = team;
-    this->health = health;
-    this->ammo = ammo;
-    this->range = range;
-    this->power = power;
-    this->move_range = move_range;
-    this->reload_ammo = reload_ammo;
-}
-
-Character::~Character()
-{
-}
-
-Character::Character(const Character& character)
-{
-    this->team = character.team;
-    this->health = character.health;
-    this->ammo = character.ammo;
-    this->range = character.range;
-    this->power = character.power;
-    this->move_range = character.move_range;
-    this->reload_ammo = character.reload_ammo;
-}
-
-Character& Character::operator=(const Character& character)
-{
-    this->team = character.team;
-    this->health = character.health;
-    this->ammo = character.ammo;
-    this->range = character.range;
-    this->power = character.power;
-    this->move_range = character.move_range;
-    this->reload_ammo = character.reload_ammo;
-
-    return *this;
 }
 
 int Character::getMoveRange() const

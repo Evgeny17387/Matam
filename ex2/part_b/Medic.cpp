@@ -15,21 +15,6 @@ Medic::Medic(Team team, units_t health, units_t ammo, units_t range, units_t pow
 {
 }
 
-Medic::~Medic()
-{
-}
-
-Medic::Medic(const Medic& medic): Character(medic)
-{
-}
-
-Medic& Medic::operator=(const Medic& medic)
-{
-    // ToDo: how to implement ?
-    throw NotImplementedYet();
-    return *this;
-}
-
 char Medic::getSymbol() const
 {
     // ToDo: Should it be implemented this way ?

@@ -13,11 +13,9 @@ namespace mtm
 
         Medic(Team team, units_t health, units_t ammo, units_t range, units_t power);
 
-        ~Medic() override;
-
-        Medic(const Medic& medic);
-
-        Medic& operator=(const Medic& medic);
+        ~Medic() = default;
+        Medic(const Medic& medic) = default;
+        Medic& operator=(const Medic& medic) = default;
 
         char getSymbol() const override;
 

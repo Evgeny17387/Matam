@@ -3,8 +3,6 @@
 #include <vector>
 #include <iostream>
 
-using std::ostream;
-
 using namespace mtm;
 
 const char* IllegalTarget::what() const noexcept

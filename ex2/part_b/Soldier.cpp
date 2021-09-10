@@ -14,21 +14,6 @@ Soldier::Soldier(Team team, units_t health, units_t ammo, units_t range, units_t
 {
 }
 
-Soldier::~Soldier()
-{
-}
-
-Soldier::Soldier(const Soldier& soldier): Character(soldier)
-{
-}
-
-Soldier& Soldier::operator=(const Soldier& soldier)
-{
-    // ToDo: how to implement ?
-    throw NotImplementedYet();
-    return *this;
-}
-
 char Soldier::getSymbol() const
 {
     // ToDo: Should it be implemented this way ?

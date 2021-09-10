@@ -19,22 +19,6 @@ Sniper::Sniper(Team team, units_t health, units_t ammo, units_t range, units_t p
     this->regular_shots_count = 0;
 }
 
-Sniper::~Sniper()
-{
-}
-
-Sniper::Sniper(const Sniper& sniper): Character(sniper)
-{
-    this->regular_shots_count = 0;
-}
-
-Sniper& Sniper::operator=(const Sniper& sniper)
-{
-    // ToDo: how to implement ?
-    throw NotImplementedYet();
-    return *this;
-}
-
 char Sniper::getSymbol() const
 {
     // ToDo: Should it be implemented this way ?

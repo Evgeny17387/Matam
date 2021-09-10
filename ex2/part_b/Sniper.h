@@ -15,11 +15,9 @@ namespace mtm
 
         Sniper(Team team, units_t health, units_t ammo, units_t range, units_t power);
 
-        ~Sniper() override;
-
-        Sniper(const Sniper& sniper);
-
-        Sniper& operator=(const Sniper& sniper);
+        ~Sniper() = default;
+        Sniper(const Sniper& sniper) = default;
+        Sniper& operator=(const Sniper& sniper) = default;
 
         char getSymbol() const override;
 
