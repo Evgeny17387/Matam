@@ -50,7 +50,7 @@ bool Sniper::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& 
         return false;
     }
 
-    int min_attach_range = this->range / 2 + 1;
+    int min_attach_range = divideToClosestUpperInt(this->range, 2);
 
     if (attack_range < min_attach_range)
     {

@@ -21,6 +21,8 @@ namespace mtm
         units_t range;
         units_t power;
 
+        int divideToClosestUpperInt(int number, int divider) const;
+
         // ToDo: delete once not needed anymore
         class NotImplementedYet{};
 

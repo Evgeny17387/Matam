@@ -65,3 +65,8 @@ void Character::updateHealth(units_t impact)
 {
     this->health += impact;
 }
+
+int Character::divideToClosestUpperInt(int number, int divider) const
+{
+    return number % divider == 0 ? number / divider : number / divider + 1;
+}
