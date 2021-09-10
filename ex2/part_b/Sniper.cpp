@@ -90,10 +90,13 @@ units_t Sniper::getImpactRange() const
     return ATTACK_IMPACT_ONLY_SINGLE_CELL;
 }
 
-units_t Sniper::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
+void Sniper::chargeAttackAmmoCost(Character* defender)
 {
     this->ammo -= AMMO_PER_ATTACK;
+}
 
+units_t Sniper::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
+{
     this->regular_shots_count++;
 
     if (this->regular_shots_count == DOUBLE_IMPACT_SHOT_COUNT)

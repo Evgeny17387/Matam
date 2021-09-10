@@ -138,10 +138,11 @@ A game related error has occurred: IllegalCell
 | | | | | | |m| | | |
 *********************
 A game related error has occurred: IllegalTarget
+A game related error has occurred: OutOfAmmo
 *********************
 | | | | | | | | | | |
 | | | | | | | | | | |
-| | | | | | | | | | |
+| | | | | | |n| | | |
 | | | |S| | | | |n| |
 | | | | | | | | | | |
 *********************

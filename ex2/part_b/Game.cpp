@@ -155,6 +155,8 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
         throw IllegalTarget();
     }
 
+    attacker->chargeAttackAmmoCost(defender);
+
     for (int row_diff = -attacker->getImpactRange(); row_diff <= attacker->getImpactRange(); row_diff++)
     {
         for (int col_diff = -attacker->getImpactRange(); col_diff <= attacker->getImpactRange(); col_diff++)

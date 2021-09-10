@@ -91,13 +91,16 @@ units_t Medic::getImpactRange() const
     return ATTACK_IMPACT_ONLY_SINGLE_CELL;
 }
 
-units_t Medic::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
+void Medic::chargeAttackAmmoCost(Character* defender)
 {
-    if (defender_team != this->team)
+    if (defender->getTeam() != this->team)
     {
         this->ammo -= AMMO_PER_ATTACK_RIVAL;
     }
+}
 
+units_t Medic::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
+{
     if (defender_team == this->team)
     {
         return this->power;
