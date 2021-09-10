@@ -17,7 +17,16 @@ Game::Game(int height, int width): height(height), width(width), board(width, st
 
 Game::~Game()
 {
-    // ToDo: implement
+    for (int row = 0; row < this->height; row++)
+    {
+        for (int col = 0; col < this->width; col++)
+        {
+            if (this->board[col][row] != NULL)
+            {
+                delete board[col][row];
+            }
+        }
+    }
 }
 
 Game::Game(const Game& game)
