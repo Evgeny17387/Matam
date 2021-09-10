@@ -86,7 +86,11 @@ units_t Soldier::getImpactRange() const
 
 units_t Soldier::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
 {
-    this->ammo -= AMMO_PER_ATTACK;
+    // ToDo: could be implemented otherwise ?
+    if (coordinates_dst == coordinates_attack)
+    {
+        this->ammo -= AMMO_PER_ATTACK;
+    }
 
     if (defender_team == this->team)
     {

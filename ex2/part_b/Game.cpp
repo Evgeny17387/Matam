@@ -180,7 +180,7 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
             if (defender->getHealth() <= 0)
             {
                 delete defender;
-                this->board[dst_coordinates.col][dst_coordinates.row] = NULL;
+                this->board[attack_coordinates.col][attack_coordinates.row] = NULL;
             }
 
         }
