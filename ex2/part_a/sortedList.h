@@ -1,7 +1,7 @@
 #ifndef _SORTED_LIST
 #define _SORTED_LIST
 
-#include <iostream>
+#include <stdexcept>
 
 using std::out_of_range;
 
