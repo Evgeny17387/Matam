@@ -5,7 +5,7 @@
 
 namespace mtm
 {
-    // ToDo: is this how it should be implemented ?
+    // ToDo: is this how it should be implemented ? can we do it with template ?
     class Exception: public std::exception
     {
     public:
