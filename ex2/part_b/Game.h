@@ -6,8 +6,11 @@
 
 #include <vector>
 #include <iostream>
+#include <memory>
 
 using std::ostream;
+using std::shared_ptr;
+using std::vector;
 
 namespace mtm
 {
@@ -18,7 +21,7 @@ namespace mtm
         int height;
         int width;
 
-        std::vector<std::vector<Character*>> board;
+        vector<vector<shared_ptr<Character>>> board;
 
         void verifyLegalCoordinates(const GridPoint& coordinates) const;
         void verifyCellNotEmpty(const GridPoint& coordinates) const;
@@ -34,9 +37,9 @@ namespace mtm
 
         Game& operator=(const Game& game);
 
-        static Character* makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power);
+        static shared_ptr<Character> makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power);
 
-        void addCharacter(const GridPoint& coordinates, Character *character);
+        void addCharacter(const GridPoint& coordinates, shared_ptr<Character> character);
 
         void move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates);
 

@@ -6,7 +6,7 @@
 
 using namespace mtm;
 
-Game::Game(int height, int width): height(height), width(width), board(width, std::vector<Character*>(height, NULL))
+Game::Game(int height, int width): height(height), width(width), board(width, std::vector<shared_ptr<Character>>(height, NULL))
 {
     // ToDo: is that correct ? since the board init might throw exeption as well
     if ((height <= 0) || (width <= 0))
@@ -23,7 +23,7 @@ Game::~Game()
         {
             if (this->board[col][row] != NULL)
             {
-                delete board[col][row];
+                board[col][row].reset();
             }
         }
     }
@@ -34,7 +34,7 @@ Game::Game(const Game& game)
     this->height = game.height;
     this->width = game.width;
 
-    this->board = std::vector<std::vector<Character*>>(this->width, std::vector<Character*>(this->height, NULL));
+    this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 
     for (int row = 0; row < this->height; row++)
     {
@@ -42,7 +42,7 @@ Game::Game(const Game& game)
         {
             if (game.board[col][row] != NULL)
             {
-                this->board[col][row] = game.board[col][row]->clone();
+                this->board[col][row] = shared_ptr<Character>(game.board[col][row]->clone());
             }
         }
     }
@@ -53,7 +53,7 @@ Game& Game::operator=(const Game& game)
     this->height = game.height;
     this->width = game.width;
 
-    this->board = std::vector<std::vector<Character*>>(this->width, std::vector<Character*>(this->height, NULL));
+    this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 
     for (int row = 0; row < this->height; row++)
     {
@@ -61,7 +61,7 @@ Game& Game::operator=(const Game& game)
         {
             if (game.board[col][row] != NULL)
             {
-                this->board[col][row] = game.board[col][row]->clone();
+                this->board[col][row] = shared_ptr<Character>(game.board[col][row]->clone());
             }
         }
     }
@@ -69,7 +69,7 @@ Game& Game::operator=(const Game& game)
     return *this;
 }
 
-Character* Game::makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power)
+shared_ptr<Character> Game::makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power)
 {
     if ((health <= 0) || (ammo < 0) || (range < 0) || (power < 0))
     {
@@ -79,15 +79,15 @@ Character* Game::makeCharacter(CharacterType type, Team team, units_t health, un
     switch (type)
     {
     case CharacterType::SOLDIER:
-        return new Soldier(team, health, ammo, range, power);
+        return std::shared_ptr<Character>(new Soldier(team, health, ammo, range, power));
         break;
 
     case CharacterType::MEDIC:
-        return new Medic(team, health, ammo, range, power);
+        return std::shared_ptr<Character>(new Medic(team, health, ammo, range, power));
         break;
 
     case CharacterType::SNIPER:
-        return new Sniper(team, health, ammo, range, power);
+        return std::shared_ptr<Character>(new Sniper(team, health, ammo, range, power));
         break;
 
     default:
@@ -97,7 +97,7 @@ Character* Game::makeCharacter(CharacterType type, Team team, units_t health, un
     }
 }
 
-void Game::addCharacter(const GridPoint& coordinates, Character *character)
+void Game::addCharacter(const GridPoint& coordinates, shared_ptr<Character> character)
 {
     verifyLegalCoordinates(coordinates);
     verifyCellEmpty(coordinates);
@@ -136,25 +136,25 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
     verifyLegalCoordinates(dst_coordinates);
     verifyCellNotEmpty(src_coordinates);
 
-    Character *attacker = this->board[src_coordinates.col][src_coordinates.row];
-    Character *defender = this->board[dst_coordinates.col][dst_coordinates.row];
+    shared_ptr<Character> attacker = this->board[src_coordinates.col][src_coordinates.row];
+    shared_ptr<Character> defender = this->board[dst_coordinates.col][dst_coordinates.row];
 
     if (!attacker->isAttackInRange(src_coordinates, dst_coordinates))
     {
         throw OutOfRange();
     }
 
-    if (!attacker->isEnoughAmmo(defender))
+    if (!attacker->isEnoughAmmo(defender.get()))
     {
         throw OutOfAmmo();
     }
 
-    if (!attacker->canAttack(defender, src_coordinates == dst_coordinates))
+    if (!attacker->canAttack(defender.get(), src_coordinates == dst_coordinates))
     {
         throw IllegalTarget();
     }
 
-    attacker->chargeAttackAmmoCost(defender);
+    attacker->chargeAttackAmmoCost(defender.get());
 
     // ToDo: maybe better to pass board to character
     for (int row_diff = -attacker->getImpactRange(); row_diff <= attacker->getImpactRange(); row_diff++)
@@ -181,7 +181,7 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
 
             if (defender->getHealth() <= 0)
             {
-                delete defender;
+                defender.reset();
                 this->board[attack_coordinates.col][attack_coordinates.row] = NULL;
             }
 
