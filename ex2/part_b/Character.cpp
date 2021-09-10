@@ -56,16 +56,6 @@ Team Character::getTeam() const
     return this->team;
 }
 
-bool Character::isAttackInRange(int attack_range) const
-{
-    if (attack_range > this->range)
-    {
-        return false;
-    }
-
-    return true;
-}
-
 units_t Character::getHealth() const
 {
     return this->health;

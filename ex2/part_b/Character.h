@@ -10,7 +10,6 @@ namespace mtm
     private:
 
         units_t health;
-        units_t range;
 
         units_t move_range;
         units_t reload_ammo;
@@ -19,6 +18,7 @@ namespace mtm
 
         Team team;
         units_t ammo;
+        units_t range;
         units_t power;
 
         // ToDo: delete once not needed anymore
@@ -42,17 +42,17 @@ namespace mtm
 
         Team getTeam() const;
 
-        bool isAttackInRange(int attack_range) const;
-
-        units_t getHealth() const;
-
-        void updateHealth(units_t impact);
+        virtual bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const = 0;
 
         virtual bool isEnoughAmmo(Team defender_team) const = 0;
 
         virtual bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const = 0;
 
         virtual units_t attack(Team defender_team) = 0;
+
+        units_t getHealth() const;
+
+        void updateHealth(units_t impact);
     };
 }
 

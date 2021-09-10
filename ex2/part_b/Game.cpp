@@ -108,7 +108,7 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
     Character *attacker = this->board[src_coordinates.col][src_coordinates.row];
     Character *defender = this->board[dst_coordinates.col][dst_coordinates.row];
 
-    if (!attacker->isAttackInRange(GridPoint::distance(src_coordinates, dst_coordinates)))
+    if (!attacker->isAttackInRange(src_coordinates, dst_coordinates))
     {
         throw OutOfRange();
     }

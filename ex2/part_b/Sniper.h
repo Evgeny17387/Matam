@@ -21,6 +21,8 @@ namespace mtm
 
         char getSymbol() const override;
 
+        bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
+
         bool isEnoughAmmo(Team defender_team) const override;
 
         bool canAttack(bool is_destination_empty, bool is_destination_equals_source) const override;

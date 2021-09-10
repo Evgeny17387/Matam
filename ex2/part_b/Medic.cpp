@@ -35,6 +35,18 @@ char Medic::getSymbol() const
     return this->team == POWERLIFTERS ? 'M' : 'm';
 }
 
+bool Medic::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
+{
+    int attack_range = GridPoint::distance(coordinates_src, coordinates_dst);
+
+    if (attack_range > this->range)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool Medic::isEnoughAmmo(Team defender_team) const
 {
     units_t min_ammo_for_attack = AMMO_TO_ATTACK_ALLY;

@@ -9,6 +9,8 @@ namespace mtm
     {
     private:
 
+        bool isOnTheSameLine(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const;
+
     public:
 
         Soldier(Team team, units_t health, units_t ammo, units_t range, units_t power);
@@ -20,6 +22,8 @@ namespace mtm
         Soldier& operator=(const Soldier& soldier);
 
         char getSymbol() const override;
+
+        bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
 
         bool isEnoughAmmo(Team defender_team) const override;
 
