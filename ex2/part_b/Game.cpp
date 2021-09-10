@@ -7,7 +7,7 @@ using namespace mtm;
 #include "Medic.h"
 #include "Sniper.h"
 
-Game::Game(int height, int width): height(height), width(width), board(width, std::vector<Character*>(height))
+Game::Game(int height, int width): height(height), width(width), board(width, std::vector<Character*>(height, NULL))
 {
     // ToDo: is that correct ? since the board init might throw exeption as well
     if ((height <= 0) || (width <= 0))
@@ -35,7 +35,15 @@ Game::Game(const Game& game)
     this->height = game.height;
     this->width = game.width;
 
-    throw NotImplementedYet();
+    this->board = std::vector<std::vector<Character*>>(this->width, std::vector<Character*>(this->height, NULL));
+
+    for (int row = 0; row < this->height; row++)
+    {
+        for (int col = 0; col < this->width; col++)
+        {
+            this->board[col][row] = game.board[col][row];
+        }
+    }
 }
 
 Game& Game::operator=(const Game& game)
@@ -43,7 +51,15 @@ Game& Game::operator=(const Game& game)
     this->height = game.height;
     this->width = game.width;
 
-    throw NotImplementedYet();
+    this->board = std::vector<std::vector<Character*>>(this->width, std::vector<Character*>(this->height, NULL));
+
+    for (int row = 0; row < this->height; row++)
+    {
+        for (int col = 0; col < this->width; col++)
+        {
+            this->board[col][row] = game.board[col][row];
+        }
+    }
 
     return *this;
 }

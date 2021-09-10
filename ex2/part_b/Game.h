@@ -48,8 +48,6 @@ namespace mtm
         bool isOver(Team* winningTeam=NULL) const;
 
         friend ostream& operator<<(ostream& os, const Game& game);
-
-        class NotImplementedYet{};
     };
 }
 
