@@ -60,7 +60,7 @@ bool Sniper::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& 
     return true;
 }
 
-bool Sniper::isEnoughAmmo(Team defender_team) const
+bool Sniper::isEnoughAmmo(Character* character) const
 {
     if (this->ammo < AMMO_PER_ATTACK)
     {
@@ -70,14 +70,14 @@ bool Sniper::isEnoughAmmo(Team defender_team) const
     return true;
 }
 
-bool Sniper::canAttack(bool is_destination_empty, bool is_destination_equals_source, Team defender_team) const
+bool Sniper::canAttack(Character* character, bool is_destination_equals_source) const
 {
-    if (is_destination_empty)
+    if (character == NULL)
     {
         return false;
     }
 
-    if (defender_team == this->team)
+    if (character->getTeam() == this->team)
     {
         return false;
     }

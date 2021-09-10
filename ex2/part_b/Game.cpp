@@ -145,12 +145,12 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
         throw OutOfRange();
     }
 
-    if (!attacker->isEnoughAmmo(defender->getTeam()))
+    if (!attacker->isEnoughAmmo(defender))
     {
         throw OutOfAmmo();
     }
 
-    if (!attacker->canAttack(defender == NULL, src_coordinates == dst_coordinates, defender->getTeam()))
+    if (!attacker->canAttack(defender, src_coordinates == dst_coordinates))
     {
         throw IllegalTarget();
     }

@@ -64,7 +64,7 @@ bool Soldier::isAttackInRange(const GridPoint& coordinates_src, const GridPoint&
     return true;
 }
 
-bool Soldier::isEnoughAmmo(Team defender_team) const
+bool Soldier::isEnoughAmmo(Character* character) const
 {
     if (this->ammo < AMMO_PER_ATTACK)
     {
@@ -74,7 +74,7 @@ bool Soldier::isEnoughAmmo(Team defender_team) const
     return true;
 }
 
-bool Soldier::canAttack(bool is_destination_empty, bool is_destination_equals_source, Team defender_team) const
+bool Soldier::canAttack(Character* character, bool is_destination_equals_source) const
 {
     return true;
 }

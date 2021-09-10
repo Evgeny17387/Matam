@@ -48,11 +48,17 @@ bool Medic::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& c
     return true;
 }
 
-bool Medic::isEnoughAmmo(Team defender_team) const
+bool Medic::isEnoughAmmo(Character* character) const
 {
+    // ToDo: ihs.....
+    if (character == NULL)
+    {
+        true;
+    }
+
     units_t min_ammo_for_attack = AMMO_PER_ATTACK_ALLY;
 
-    if (defender_team != this->team)
+    if (character->getTeam() != this->team)
     {
         min_ammo_for_attack = AMMO_PER_ATTACK_RIVAL;
     }
@@ -65,9 +71,9 @@ bool Medic::isEnoughAmmo(Team defender_team) const
     return true;
 }
 
-bool Medic::canAttack(bool is_destination_empty, bool is_destination_equals_source, Team defender_team) const
+bool Medic::canAttack(Character* character, bool is_destination_equals_source) const
 {
-    if (is_destination_empty)
+    if (character == NULL)
     {
         return false;
     }
