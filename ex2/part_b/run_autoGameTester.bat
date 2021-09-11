@@ -1,0 +1,10 @@
+.\build\test.exe < .\autoGameTester\input\game_input_0.txt > .\autoGameTester\output\actual\game_output_0.txt
+.\build\test.exe < .\autoGameTester\input\game_input_1.txt > .\autoGameTester\output\actual\game_output_1.txt
+.\build\test.exe < .\autoGameTester\input\game_input_2.txt > .\autoGameTester\output\actual\game_output_2.txt
+.\build\test.exe < .\autoGameTester\input\game_input_3.txt > .\autoGameTester\output\actual\game_output_3.txt
+.\build\test.exe < .\autoGameTester\input\game_input_4.txt > .\autoGameTester\output\actual\game_output_4.txt
+.\build\test.exe < .\autoGameTester\input\game_input_5.txt > .\autoGameTester\output\actual\game_output_5.txt
+.\build\test.exe < .\autoGameTester\input\game_input_6.txt > .\autoGameTester\output\actual\game_output_6.txt
+.\build\test.exe < .\autoGameTester\input\game_input_7.txt > .\autoGameTester\output\actual\game_output_7.txt
+.\build\test.exe < .\autoGameTester\input\game_input_8.txt > .\autoGameTester\output\actual\game_output_8.txt
+.\build\test.exe < .\autoGameTester\input\game_input_9.txt > .\autoGameTester\output\actual\game_output_9.txt
