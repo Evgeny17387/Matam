@@ -1,5 +1,5 @@
 CC = g++
-OBJS = main.o examDetails.o
+OBJS = part_a_test.o examDetails.o
 CFLAGS = -std=c++11 -Wall -Werror -pedantic-errors -g
 EXEC = test
 
@@ -7,6 +7,9 @@ $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@
 
 main.o: main.cpp sortedList.h testClass.h
+	$(CC) $(CFLAGS) -c $*.cpp
+
+part_a_test.o: part_a_test.cpp sortedList.h examDetails.h
 	$(CC) $(CFLAGS) -c $*.cpp
 
 examDetails.o: examDetails.cpp examDetails.h

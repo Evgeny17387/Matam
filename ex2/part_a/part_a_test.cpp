@@ -1,13 +1,13 @@
+//
+// Created by ittay on 3/9/2021.
+//
 #include <iostream>
-
 #include "sortedList.h"
 #include "examDetails.h"
 
 using std::cout;
 using std::endl;
 using std::string;
-using std::to_string;
-
 using namespace mtm;
 
 #define TEST(num) cout << endl << "TEST " << (num) << endl;
@@ -17,18 +17,8 @@ string getLen(string str)
     return std::to_string(str.length());
 }
 
-int zero(int x)
-{
-    return 0;
-}
-
 bool isTrollLink(const ExamDetails& exam) {
     return (exam.getLink().find("tinyurl") != string::npos);
-}
-
-bool isGreater(int x)
-{
-    return x > 0;
 }
 
 template<class T>
@@ -39,12 +29,12 @@ void printList(SortedList<T> list) {
     cout << endl;
 }
 
-void ExamDetails_OriginalTests()
+int main()
 {
     TEST("1.1")
     ExamDetails exam1 = ExamDetails::makeMatamExam();
     ExamDetails exam2(104032, 7, 11, 9.5, 3);
-    ExamDetails exam3 = exam1;
+    ExamDetails exam3 = exam1; 
     cout << "the difference between MATAM and infi 2m is " << (exam1-exam2) << " days";
 
     TEST("1.2")
@@ -63,74 +53,7 @@ void ExamDetails_OriginalTests()
     catch (ExamDetails::InvalidDateException& e) {
         cout << "invalid date" << endl;
     }
-}
 
-void ExamDetails_ExceptionTests()
-{
-    ExamDetails exam1(104032, 7, 11, 9.5, 3);
-    cout << "Test 1 - Passes" << endl;
-
-    try {
-        ExamDetails exam1(104032, 7, 11, 9.000001, 3);
-    }
-    catch (ExamDetails::InvalidTimeException& e)
-    {
-        cout << "Test 2 - Passes" << endl;
-    }
-
-    try {
-        ExamDetails exam1(104032, 7, 11, 9.15, 3);
-    }
-    catch (ExamDetails::InvalidTimeException& e)
-    {
-        cout << "Test 3 - Passes" << endl;
-    }
-
-    try {
-        ExamDetails exam1(104032, 0, 11, 9.5, 3);
-    }
-    catch (ExamDetails::InvalidDateException& e)
-    {
-        cout << "Test 4 - Passes" << endl;
-    }
-
-    try {
-        ExamDetails exam1(104032, 13, 11, 9.5, 3);
-    }
-    catch (ExamDetails::InvalidDateException& e)
-    {
-        cout << "Test 5 - Passes" << endl;
-    }
-
-    try {
-        ExamDetails exam1(104032, 7, 0, 9.5, 3);
-    }
-    catch (ExamDetails::InvalidDateException& e)
-    {
-        cout << "Test 6 - Passes" << endl;
-    }
-
-    try {
-        ExamDetails exam1(104032, 7, 31, 9.5, 3);
-    }
-    catch (ExamDetails::InvalidDateException& e)
-    {
-        cout << "Test 7 - Passes" << endl;
-    }
-
-    try {
-        ExamDetails exam1(104032, 13, 11, 9.15, 3);
-    }
-    catch (ExamDetails::InvalidDateException& e)
-    {
-        cout << "Test 8 - Passes" << endl;
-    }
-}
-
-void SortedList_OriginalTests()
-{
-    ExamDetails exam1 = ExamDetails::makeMatamExam();
-    ExamDetails exam2(104032, 7, 11, 9.5, 3);
 
     TEST("1.5")
     SortedList<string> lst1 = SortedList<string>();
@@ -156,6 +79,7 @@ void SortedList_OriginalTests()
     lst3 = lst3.apply(getLen);
     printList(lst3);
 
+
     TEST("1.9")
     lst3.remove(lst3.begin());
     printList(lst3);
@@ -165,98 +89,6 @@ void SortedList_OriginalTests()
     printList(lst2);
     cout << "----------" << endl;
     printList(lst4);
-}
-
-void SortedList_RemoveTests()
-{
-    SortedList<string> sortedList = SortedList<string>();
-    sortedList.insert("A");
-    printList(sortedList);
-
-    sortedList.remove(sortedList.begin());
-    printList(sortedList);
-
-    sortedList.insert("A");
-    sortedList.insert("B");
-    sortedList.remove(sortedList.begin());
-    printList(sortedList);
-
-    sortedList.insert("A");
-    auto iterator = sortedList.begin();
-    ++iterator;
-    sortedList.remove(iterator);
-    printList(sortedList);
-}
-
-void SortedList_FilterTests()
-{
-    SortedList<int> sortedList;
-    sortedList.insert(0);
-    sortedList.insert(1);
-    sortedList.insert(2);
-    sortedList.insert(3);
-    sortedList.insert(4);
-    sortedList.insert(5);
-
-    printList(sortedList.filter(isGreater));
-}
-
-void SortedList_ApplyTests()
-{
-    SortedList<int> sortedList;
-    sortedList.insert(0);
-    sortedList.insert(1);
-    sortedList.insert(2);
-    sortedList.insert(3);
-    sortedList.insert(4);
-    sortedList.insert(5);
-
-    printList(sortedList.apply(zero));
-}
-
-void SortedList_SrotedList()
-{
-    SortedList<int> sortedList;
-    sortedList.insert(0);
-    TEST("1")
-    printList(sortedList);
-
-    TEST("2")
-    sortedList.insert(0);
-    printList(sortedList);
-
-    TEST("3")
-    sortedList.remove(sortedList.begin());
-    printList(sortedList);
-
-    TEST("4")
-    sortedList.remove(sortedList.begin());
-    printList(sortedList);
-
-    TEST("5")
-    sortedList.insert(1);
-    sortedList.insert(3);
-    printList(sortedList);
-
-    TEST("6")
-    sortedList.insert(2);
-    printList(sortedList);
-
-    TEST("7")
-    sortedList.insert(4);
-    printList(sortedList);
-}
-
-int main()
-{
-    ExamDetails_OriginalTests();
-    ExamDetails_ExceptionTests();
-
-    SortedList_OriginalTests();
-    SortedList_RemoveTests();
-    SortedList_FilterTests();
-    SortedList_ApplyTests();
-    SortedList_SrotedList();
 
     return 0;
 }
