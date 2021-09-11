@@ -14,6 +14,7 @@ namespace mtm
     {
     private:
 
+        // ToDo: maybe write in different file ?
         // ToDo: consider replacing with struct
         // ToDo: encapsulate data members
         class node
@@ -57,6 +58,7 @@ namespace mtm
         const_iterator end() const;
     };
 
+    // ToDo: maybe write in different file ?
     template <class T>
     class SortedList<T>::const_iterator
     {
@@ -214,7 +216,7 @@ namespace mtm
     template <class T>
     void SortedList<T>::remove(const const_iterator& const_iterator)
     {
-        // ToDo: what should be thrown in case out of range iterator ?
+        // ToDo: should the iterator be checked for validity ?
         if (0 == const_iterator.index)
         {
             node* temp = this->head->next;
@@ -315,8 +317,7 @@ namespace mtm
     {
         if (this->index >= sortedList->size)
         {
-            // ToDo: should add here some log ?
-            throw out_of_range("");
+            throw out_of_range("const_iterator has already reached last item in the list");
         }
 
         this->index++;
@@ -329,8 +330,7 @@ namespace mtm
     {
         if (this->index >= sortedList->size)
         {
-            // ToDo: should add here some log ?
-            throw out_of_range("");
+            throw out_of_range("const_iterator has already reached last item in the list");
         }
 
         SortedList<T>::const_iterator temp = *this;

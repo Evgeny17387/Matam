@@ -70,7 +70,6 @@ void ExamDetails::splitTimeToHoursAndMinutes(double time, int& time_hours, int& 
 // ToDo: why does it have to be declared this way ?
 namespace mtm
 {
-    // ToDo: why it has to be friend ?
     ostream& operator<<(ostream& os, const ExamDetails& examDetails)
     {
         os << "Course Number: " << examDetails.course_id << endl;
