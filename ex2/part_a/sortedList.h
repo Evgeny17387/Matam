@@ -3,6 +3,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <cassert>
 
 using std::out_of_range;
 
@@ -21,9 +22,8 @@ namespace mtm
             T data;
             node *next;
 
-            node(const T& t): data(t)
+            node(const T& t): data(t), next(NULL)
             {
-                this->next = NULL;
             }
         };
 
@@ -34,15 +34,13 @@ namespace mtm
     public:
 
         SortedList();
+
         ~SortedList();
-
         SortedList(const SortedList& sortedList);
-
         SortedList& operator=(const SortedList& sortedList);
 
         void insert(const T& t);
 
-        // ToDo: what does it mean to indicate here "class Iterator" ?
         class const_iterator;
 
         void remove(const const_iterator& const_iterator);
@@ -50,10 +48,10 @@ namespace mtm
         int length() const;
 
         template <class Condition>
-        SortedList filter(Condition condition) const;
+        SortedList filter(const Condition& condition) const;
 
         template <class Apply>
-        SortedList apply(Apply apply) const;
+        SortedList apply(const Apply& apply) const;
 
         const_iterator begin() const;
         const_iterator end() const;
@@ -70,16 +68,13 @@ namespace mtm
 
         const_iterator(const SortedList<T> *sortedList, int index);
 
-        // ToDo: is there a difference putting it here or in public section ?
         friend class SortedList<T>;
 
     public:
 
-        ~const_iterator();
-
-        const_iterator(const const_iterator& const_iterator);
-
-        const_iterator& operator=(const const_iterator& const_iterator);
+        ~const_iterator() = default;
+        const_iterator(const const_iterator& const_iterator) = default;
+        const_iterator& operator=(const const_iterator& const_iterator) = default;
 
         const T& operator*() const;
 
@@ -91,60 +86,48 @@ namespace mtm
     };
 
     template <class T>
-    SortedList<T>::SortedList()
+    SortedList<T>::SortedList(): head(NULL), size(0)
     {
-        this->head = NULL;
-        this->size = 0;
     }
 
     template <class T>
     SortedList<T>::~SortedList()
     {
-        node *node_pointer = this->head;
+        node* node_pointer = this->head;
 
-        // ToDo: replace with itertor
         while (NULL != node_pointer)
         {
-            node *temp = node_pointer->next;
+            node* temp = node_pointer->next;
             delete node_pointer;
             this->size--;
             node_pointer = temp;
         }
+        assert(this->size == 0);
 
         this->head = NULL;
     }
 
     template <class T>
-    SortedList<T>::SortedList(const SortedList& sortedList)
+    SortedList<T>::SortedList(const SortedList& sortedList): head(NULL), size(0)
     {
-        this->head = NULL;
-        this->size = 0;
+        // ToDo: logic might be common among operator= and copy constructor
 
         if (NULL == sortedList.head)
         {
             return;
         }
 
-        node *node_list_original = sortedList.head;
-
-        node *node_new = new node(node_list_original->data);
-
-        this->head = node_new;
-
+        this->head = new node(sortedList.head->data);
         this->size++;
 
-        node *node_list_new = this->head;
-        node_list_original = node_list_original->next;
-
-        while (NULL != node_list_original)
+        node* node_list_new = this->head;
+        node* node_list_original = sortedList.head->next;
+        while (node_list_original != NULL)
         {
-            node *node_new = new node(node_list_original->data);
-
-            node_list_new->next = node_new;
-            node_list_new = node_list_new->next;
-
+            // ToDo: add case for memory exception
+            node_list_new->next = new node(node_list_original->data);
             this->size++;
-
+            node_list_new = node_list_new->next;
             node_list_original = node_list_original->next;
         }
     }
@@ -157,43 +140,36 @@ namespace mtm
             return *this;
         }
 
-        node *node_list_new = this->head;
-
+        node* node_list_new = this->head;
         while (node_list_new != NULL)
         {
             node* node_temp = node_list_new->next;
             delete node_list_new;
+            this->size--;
             node_list_new = node_temp;
         }
 
         this->head = NULL;
         this->size = 0;
 
-        // ToDo: logic might be common among all operator= and copy constructor
+        // ToDo: logic might be common among operator= and copy constructor
+
         if (NULL == sortedList.head)
         {
             return *this;
         }
 
-        node *node_list_original = sortedList.head;
-
-        this->head = new node(node_list_original->data);
-
+        this->head = new node(sortedList.head->data);
         this->size++;
 
         node_list_new = this->head;
-        node_list_original = node_list_original->next;
-
-        // ToDo: might use just iterator and insert instead
+        node* node_list_original = sortedList.head->next;
         while (NULL != node_list_original)
         {
-            node *node_new = new node(node_list_original->data);
-
-            node_list_new->next = node_new;
-            node_list_new = node_list_new->next;
-
+            // ToDo: add case for memory exception
+            node_list_new->next = new node(node_list_original->data);
             this->size++;
-
+            node_list_new = node_list_new->next;
             node_list_original = node_list_original->next;
         }
         
@@ -203,7 +179,7 @@ namespace mtm
     template <class T>
     void SortedList<T>::insert(const T& t)
     {
-        node *node_pointer_new = new node(t);
+        node* node_pointer_new = new node(t);
 
         if (NULL == this->head)
         {
@@ -212,7 +188,7 @@ namespace mtm
             return;
         }
 
-        node **head_ref = &(this->head);
+        node** head_ref = &(this->head);
 
         if ((NULL == *head_ref) || !((*head_ref)->data < node_pointer_new->data))
         {
@@ -222,7 +198,7 @@ namespace mtm
         }
         else
         {
-            node *current = *head_ref;
+            node* current = *head_ref;
 
             while ((current->next != NULL) && (current->next->data < node_pointer_new->data))
             {
@@ -238,17 +214,17 @@ namespace mtm
     template <class T>
     void SortedList<T>::remove(const const_iterator& const_iterator)
     {
-        // ToDo: check if out of range \ null
+        // ToDo: what should be thrown in case out of range iterator ?
         if (0 == const_iterator.index)
         {
-            node *next = this->head->next;
+            node* temp = this->head->next;
             delete this->head;
             this->size--;
-            this->head = next;
+            this->head = temp;
         }
         else
         {
-            node *current_node = this->head;
+            node* current_node = this->head;
             int index_temp = const_iterator.index;
             while (index_temp > 1)
             {
@@ -256,10 +232,10 @@ namespace mtm
                 index_temp--;
             }
 
-            node *next = current_node->next->next;
+            node* temp = current_node->next->next;
             delete current_node->next;
             this->size--;
-            current_node->next = next;
+            current_node->next = temp;
         }
     }
 
@@ -271,7 +247,7 @@ namespace mtm
 
     template <class T>
     template <class Condition>
-    SortedList<T> SortedList<T>::filter(Condition condition) const
+    SortedList<T> SortedList<T>::filter(const Condition& condition) const
     {
         SortedList<T> sortedList;
 
@@ -288,7 +264,7 @@ namespace mtm
 
     template <class T>
     template <class Apply>
-    SortedList<T> SortedList<T>::apply(Apply apply) const
+    SortedList<T> SortedList<T>::apply(const Apply& apply) const
     {
         SortedList<T> sortedList;
 
@@ -297,12 +273,11 @@ namespace mtm
             sortedList.insert(apply(*it));
         }
 
-        // ToDo: should it be sorted again ? in case the new list is not sorted
-
         return sortedList;
     }
 
     template <class T>
+    // ToDo: is class and typename can be both indicated here meaning the same ?
     typename SortedList<T>::const_iterator SortedList<T>::begin() const
     {
         return const_iterator(this, 0);
@@ -315,44 +290,19 @@ namespace mtm
     }
 
     template <class T>
-    SortedList<T>::const_iterator::const_iterator(const SortedList<T> *sortedList, int index)
+    SortedList<T>::const_iterator::const_iterator(const SortedList<T> *sortedList, int index): sortedList(sortedList), index(index)
     {
-        this->sortedList = sortedList;
-        this->index = index;
-    }
-
-    template <class T>
-    SortedList<T>::const_iterator::~const_iterator()
-    {
-    }
-
-    template <class T>
-    SortedList<T>::const_iterator::const_iterator(const const_iterator& const_iterator)
-    {
-        this->sortedList = const_iterator.sortedList;
-        this->index = const_iterator.index;
-    }
-
-    template <class T>
-    //ToDo: why typename needed ?
-    typename SortedList<T>::const_iterator& SortedList<T>::const_iterator::operator=(const const_iterator& const_iterator)
-    {
-        this->sortedList = const_iterator.sortedList;
-        this->index = const_iterator.index;
-
-        return *this;
     }
 
     template <class T>
     const T& SortedList<T>::const_iterator::operator*() const
     {
-        // ToDo: what if this is NULL ? who should check that index is valid ?
-        // ToDo: maybe implement this logic in const_iterator Constructor
-        node *node = sortedList->head;
+        node* node = sortedList->head;
         int index_temp = index;
 
         while (index_temp > 0)
         {
+            // ToDo: what if this is NULL ? who should check that index is valid ?
             node = node->next;
             index_temp--;
         }
@@ -363,7 +313,6 @@ namespace mtm
     template <class T>
     typename SortedList<T>::const_iterator& SortedList<T>::const_iterator::operator++()
     {
-        // ToDo: should it be -1 or this way ?
         if (this->index >= sortedList->size)
         {
             // ToDo: should add here some log ?
@@ -378,7 +327,6 @@ namespace mtm
     template <class T>
     typename SortedList<T>::const_iterator SortedList<T>::const_iterator::operator++(int)
     {
-        // ToDo: should it be -1 or this way ?
         if (this->index >= sortedList->size)
         {
             // ToDo: should add here some log ?
@@ -391,7 +339,6 @@ namespace mtm
 
         return temp;
     }
-
 
     template <class T>
     bool SortedList<T>::const_iterator::operator==(const const_iterator& const_iterator) const
