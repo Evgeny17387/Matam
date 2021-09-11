@@ -6,13 +6,14 @@
 
 using namespace mtm;
 
-Game::Game(int height, int width): height(height), width(width), board(width, std::vector<shared_ptr<Character>>(height, NULL))
+Game::Game(int height, int width): height(height), width(width)
 {
-    // ToDo: is that correct ? since the board init might throw exeption as well
     if ((height <= 0) || (width <= 0))
     {
         throw IllegalArgument();
     }
+
+    this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 }
 
 Game::~Game()

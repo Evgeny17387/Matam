@@ -813,15 +813,15 @@ int main(){
     std::map<std::string, std::function<bool()>> tests;
 
     // ADD_TEST(testErrorNames);
-    // ADD_TEST(testConstructor);
+    ADD_TEST(testConstructor);
     // ADD_TEST(testCopyConstructor);
     // ADD_TEST(testAssignemntOperator);
     // ADD_TEST(testAddCharacter);
     // ADD_TEST(testMakeCharacter);
     // ADD_TEST(testMove);
     // ADD_TEST(testAttackGeneric);
-    ADD_TEST(testAttackSoldier);
-    ADD_TEST(testAttackMedic);
+    // ADD_TEST(testAttackSoldier);
+    // ADD_TEST(testAttackMedic);
     // ADD_TEST(testAttackSniper);
     // ADD_TEST(testReload);
     // ADD_TEST(testOutput);
