@@ -9,6 +9,7 @@ using std::ostream;
 
 using namespace mtm;
 
+// ToDo: check if these should be part of the class api
 const int MONTH_FIRT = 1;
 const int MONTH_LAST = 12;
 
@@ -51,6 +52,7 @@ int ExamDetails::operator-(const ExamDetails& examDetails) const
 }
 
 // ToDo: should it be friend ?
+// ToDo: add check for time in case they are in the same day
 bool ExamDetails::operator<(const ExamDetails& examDetails) const
 {
     return *this - examDetails < 0 ? true : false;
@@ -67,7 +69,7 @@ void ExamDetails::splitTimeToHoursAndMinutes(double time, int& time_hours, int& 
     time_minutes = (int)(minutes * MINUTES_IN_HOUR);
 }
 
-// ToDo: why does it have to be declared this way ?
+// ToDo: change to namespace mtm for all
 namespace mtm
 {
     ostream& operator<<(ostream& os, const ExamDetails& examDetails)
@@ -91,9 +93,7 @@ namespace mtm
 
 ExamDetails ExamDetails::makeMatamExam()
 {
-    ExamDetails examDetails(MATAM_COURSE_ID, MATAM_EXAM_DATE_MONTH, MATAM_EXAM_DATE_DAY, MATAM_EXAM_TIME, MATAM_EXAM_DURAION, MATAM_EXAM_LINK);
-
-    return examDetails;
+    return ExamDetails(MATAM_COURSE_ID, MATAM_EXAM_DATE_MONTH, MATAM_EXAM_DATE_DAY, MATAM_EXAM_TIME, MATAM_EXAM_DURAION, MATAM_EXAM_LINK);
 }
 
 void ExamDetails::verifyDate(int month, int day)
@@ -109,6 +109,7 @@ void ExamDetails::verifyDate(int month, int day)
     }
 }
 
+// ToDo: use modf, add time negative check
 void ExamDetails::verifyTime(double time)
 {
     double time_interval_index = time / TIME_INTERVAL;

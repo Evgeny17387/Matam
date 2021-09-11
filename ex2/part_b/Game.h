@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 
+// ToDo: don't...
 using std::ostream;
 using std::shared_ptr;
 using std::vector;
@@ -32,9 +33,7 @@ namespace mtm
         Game(int height, int widht);
 
         ~Game();
-
         Game(const Game& game);
-
         Game& operator=(const Game& game);
 
         static shared_ptr<Character> makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power);

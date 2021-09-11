@@ -20,10 +20,8 @@ namespace mtm
         units_t range;
         units_t power;
 
+        // ToDo: maybe turn into static
         int divideToClosestUpperInt(int number, int divider) const;
-
-        // ToDo: delete once not needed anymore
-        class NotImplementedYet{};
 
     public:
 
@@ -42,8 +40,10 @@ namespace mtm
 
         Team getTeam() const;
 
+        // ToDo: don't do pure virtual, and implement only in character and sniper
         virtual bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const = 0;
 
+        // ToDo: don't do pure virtual, and implement only in character and medic
         virtual bool isEnoughAmmo(Character* character) const = 0;
 
         virtual bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const = 0;

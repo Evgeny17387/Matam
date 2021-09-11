@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cassert>
 
+// ToDo: don't do it
 using std::out_of_range;
 
 namespace mtm
@@ -14,9 +15,6 @@ namespace mtm
     {
     private:
 
-        // ToDo: maybe write in different file ?
-        // ToDo: consider replacing with struct
-        // ToDo: encapsulate data members
         class node
         {
         public:
@@ -58,13 +56,13 @@ namespace mtm
         const_iterator end() const;
     };
 
-    // ToDo: maybe write in different file ?
+    // ToDo: maybe should be inside SortedList<T>
     template <class T>
     class SortedList<T>::const_iterator
     {
     private:
 
-        const SortedList<T> *sortedList;
+        const SortedList<T>* sortedList;
 
         int index;
 
@@ -126,7 +124,7 @@ namespace mtm
         node* node_list_original = sortedList.head->next;
         while (node_list_original != NULL)
         {
-            // ToDo: add case for memory exception
+            // ToDo: add case for memory exception, throw furhter after completing destroying the list
             node_list_new->next = new node(node_list_original->data);
             this->size++;
             node_list_new = node_list_new->next;
@@ -216,7 +214,7 @@ namespace mtm
     template <class T>
     void SortedList<T>::remove(const const_iterator& const_iterator)
     {
-        // ToDo: should the iterator be checked for validity ?
+        // ToDo: check if out of range
         if (0 == const_iterator.index)
         {
             node* temp = this->head->next;
@@ -253,7 +251,7 @@ namespace mtm
     {
         SortedList<T> sortedList;
 
-        for (typename SortedList<T>::const_iterator it = this->begin(); !(it == this->end()); ++it)
+        for (class SortedList<T>::const_iterator it = this->begin(); !(it == this->end()); ++it)
         {
             if (condition(*it))
             {
@@ -270,7 +268,7 @@ namespace mtm
     {
         SortedList<T> sortedList;
 
-        for (typename SortedList<T>::const_iterator it = this->begin(); !(it == this->end()); ++it)
+        for (class SortedList<T>::const_iterator it = this->begin(); !(it == this->end()); ++it)
         {
             sortedList.insert(apply(*it));
         }

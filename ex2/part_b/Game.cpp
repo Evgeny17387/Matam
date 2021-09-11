@@ -16,6 +16,7 @@ Game::Game(int height, int width): height(height), width(width)
     this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 }
 
+// ToDo: should be default
 Game::~Game()
 {
     for (int row = 0; row < this->height; row++)
@@ -30,11 +31,8 @@ Game::~Game()
     }
 }
 
-Game::Game(const Game& game)
+Game::Game(const Game& game): height(game.height), width(game.width)
 {
-    this->height = game.height;
-    this->width = game.width;
-
     this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 
     for (int row = 0; row < this->height; row++)
@@ -51,10 +49,15 @@ Game::Game(const Game& game)
 
 Game& Game::operator=(const Game& game)
 {
+    if (this == &game)
+    {
+        return *this;
+    }
+
     this->height = game.height;
     this->width = game.width;
 
-    // ToDo: delete all existing characters
+    // ToDo: delete all existing characters, use vector.clear, make sure
 
     this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 
@@ -94,6 +97,7 @@ shared_ptr<Character> Game::makeCharacter(CharacterType type, Team team, units_t
         break;
 
     default:
+        // ToDo: can be assume that the enum is valid
         // ToDo: what should be the default ? simply check compilation fail, add assert to make sure
         throw IllegalArgument();
         break;
@@ -184,6 +188,7 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
 
             if (defender->getHealth() <= 0)
             {
+                // ToDo: check if should be delete with delete *address
                 defender.reset();
                 this->board[attack_coordinates.col][attack_coordinates.row] = NULL;
             }
@@ -192,6 +197,8 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
     }
 }
 
+// ToDo: maintain a counter, update per attack and add character
+// ToDo: don't exceeds 30 lines per function
 bool Game::isOver(Team* winningTeam) const
 {
     int power_lifters_counter = 0;
@@ -245,7 +252,7 @@ namespace mtm
     ostream& operator<<(ostream& os, const Game& game)
     {
         // ToDo: replace with string
-        char *begin = new char[game.width * game.height];
+        char* begin = new char[game.width * game.height];
 
         for (int row = 0; row < game.height; row++)
         {
