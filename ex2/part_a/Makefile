@@ -1,6 +1,6 @@
 CC = g++
 OBJS = main.o examDetails.o
-CFLAGS = -std=c++11 -Wall -Werror -pedantic-errors
+CFLAGS = -std=c++11 -Wall -Werror -pedantic-errors -g
 EXEC = test
 
 $(EXEC): $(OBJS)

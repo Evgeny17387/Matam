@@ -11864,7 +11864,7 @@ int main ()
     listTest4();
     listTest5();
     listTest6();
-    //listTest7() - strings / ExamDetails
+    // listTest7() - strings / ExamDetails
     listTest8();
     listTest9();
     listTest10();

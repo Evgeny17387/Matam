@@ -156,6 +156,15 @@ namespace mtm
             return *this;
         }
 
+        node *node_list_new = this->head;
+
+        while (node_list_new != NULL)
+        {
+            node* node_temp = node_list_new->next;
+            delete node_list_new;
+            node_list_new = node_temp;
+        }
+
         this->head = NULL;
         this->size = 0;
 
@@ -167,13 +176,11 @@ namespace mtm
 
         node *node_list_original = sortedList.head;
 
-        node *node_new = new node(node_list_original->data);
-
-        this->head = node_new;
+        this->head = new node(node_list_original->data);
 
         this->size++;
 
-        node *node_list_new = this->head;
+        node_list_new = this->head;
         node_list_original = node_list_original->next;
 
         // ToDo: might use just iterator and insert instead
