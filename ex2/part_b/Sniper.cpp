@@ -54,7 +54,7 @@ bool Sniper::isEnoughAmmo(Character* character) const
     return true;
 }
 
-bool Sniper::canAttack(Character* character, bool is_destination_equals_source) const
+bool Sniper::canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
 {
     if (character == NULL)
     {

@@ -23,7 +23,7 @@ namespace mtm
 
         bool isEnoughAmmo(Character* character) const override;
 
-        bool canAttack(Character* character, bool is_destination_equals_source) const override;
+        bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
 
         units_t getImpactRange() const override;
 

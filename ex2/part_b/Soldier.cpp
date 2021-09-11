@@ -41,12 +41,6 @@ bool Soldier::isAttackInRange(const GridPoint& coordinates_src, const GridPoint&
         return false;
     }
 
-    // ToDo: make sure in Piazza
-    if (!isOnTheSameLine(coordinates_src, coordinates_dst))
-    {
-        return false;
-    }
-
     return true;
 }
 
@@ -60,8 +54,13 @@ bool Soldier::isEnoughAmmo(Character* character) const
     return true;
 }
 
-bool Soldier::canAttack(Character* character, bool is_destination_equals_source) const
+bool Soldier::canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
 {
+    if (!isOnTheSameLine(coordinates_src, coordinates_dst))
+    {
+        return false;
+    }
+
     return true;
 }
 

@@ -53,6 +53,8 @@ Game& Game::operator=(const Game& game)
     this->height = game.height;
     this->width = game.width;
 
+    // ToDo: delete all existing characters
+
     this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 
     for (int row = 0; row < this->height; row++)
@@ -149,7 +151,7 @@ void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordin
         throw OutOfAmmo();
     }
 
-    if (!attacker->canAttack(defender.get(), src_coordinates == dst_coordinates))
+    if (!attacker->canAttack(defender.get(), src_coordinates, dst_coordinates))
     {
         throw IllegalTarget();
     }
