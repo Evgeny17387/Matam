@@ -1,10 +1,12 @@
 #ifndef _EXAM_DETAILS
 #define _EXAM_DETAILS
 
+#include <stdexcept>
 #include <iostream>
 
 using std::string;
 using std::ostream;
+using std::exception;
 
 namespace mtm
 {
@@ -19,18 +21,18 @@ namespace mtm
         int duration;
         string link;
 
-        void VerifyDate(int month, int day);
-        void VerifyTime(double time);
-        void VerifyCourseId(int course_id);
+        static void verifyDate(int month, int day);
+        static void verifyTime(double time);
+
+        static void splitTimeToHoursAndMinutes(double time, int& time_hours, int& time_minutes);
 
     public:
 
         ExamDetails(int course_id, int month, int day, double hour, int length, const string link = "");
-        ~ExamDetails();
 
-        ExamDetails(const ExamDetails& examDetails);
-
-        ExamDetails& operator=(const ExamDetails& examDetails);
+        ~ExamDetails() = default;
+        ExamDetails(const ExamDetails& examDetails) = default;
+        ExamDetails& operator=(const ExamDetails& examDetails) = default;
 
         string getLink() const;
         void setLink(string link);
@@ -43,8 +45,8 @@ namespace mtm
 
         static ExamDetails makeMatamExam();
 
-        class InvalidDateException{};
-        class InvalidTimeException{};
+        class InvalidDateException: public exception{};
+        class InvalidTimeException: public exception{};
     };
 }
 

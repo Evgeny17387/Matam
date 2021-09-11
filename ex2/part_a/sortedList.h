@@ -2,6 +2,7 @@
 #define _SORTED_LIST
 
 #include <stdexcept>
+#include <iostream>
 
 using std::out_of_range;
 
@@ -83,7 +84,7 @@ namespace mtm
         const T& operator*() const;
 
         const_iterator& operator++();
-        // ToDo: there wasn't such operator in the requirements
+        // ToDo: there wasn't such operator in the requirements, maybe delete just before handing the assignment ?
         const_iterator operator++(int);
 
         bool operator==(const const_iterator& const_iterator) const;
