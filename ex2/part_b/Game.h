@@ -8,11 +8,6 @@
 #include <iostream>
 #include <memory>
 
-// ToDo: don't...
-using std::ostream;
-using std::shared_ptr;
-using std::vector;
-
 namespace mtm
 {
     class Game
@@ -22,7 +17,7 @@ namespace mtm
         int height;
         int width;
 
-        vector<vector<shared_ptr<Character>>> board;
+        std::vector<std::vector<std::shared_ptr<Character>>> board;
 
         void verifyLegalCoordinates(const GridPoint& coordinates) const;
         void verifyCellNotEmpty(const GridPoint& coordinates) const;
@@ -36,9 +31,9 @@ namespace mtm
         Game(const Game& game);
         Game& operator=(const Game& game);
 
-        static shared_ptr<Character> makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power);
+        static std::shared_ptr<Character> makeCharacter(CharacterType type, Team team, units_t health, units_t ammo, units_t range, units_t power);
 
-        void addCharacter(const GridPoint& coordinates, shared_ptr<Character> character);
+        void addCharacter(const GridPoint& coordinates, std::shared_ptr<Character> character);
 
         void move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates);
 
@@ -48,7 +43,7 @@ namespace mtm
 
         bool isOver(Team* winningTeam=NULL) const;
 
-        friend ostream& operator<<(ostream& os, const Game& game);
+        friend std::ostream& operator<<(std::ostream& os, const Game& game);
     };
 }
 
