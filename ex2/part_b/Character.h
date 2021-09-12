@@ -26,8 +26,7 @@ namespace mtm
 
         Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo);
 
-        // ToDo: maybe this shouldn't be virtual once implement smart pointers
-        virtual ~Character() = default;
+        ~Character() = default;
         Character(const Character& character) = default;
         Character& operator=(const Character& character) = default;
 

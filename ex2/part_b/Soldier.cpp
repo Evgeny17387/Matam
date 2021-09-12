@@ -27,7 +27,6 @@ namespace mtm
             return false;
         }
 
-        // ToDo: this can be both line and point, is that o.k. ?
         return true;
     }
 
