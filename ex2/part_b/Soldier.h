@@ -12,7 +12,7 @@ namespace mtm
         int max_range_affect;
         units_t reduced_damage;
 
-        bool isOnTheSameLine(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const;
+        static bool isOnTheSameLine(const GridPoint& coordinates_src, const GridPoint& coordinates_dst);
 
         void singleAttack(Character* defender, const GridPoint& coordinates_dst, const GridPoint& attack_coordinates);
 

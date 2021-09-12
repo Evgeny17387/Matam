@@ -26,7 +26,7 @@ namespace mtm
         return new Soldier(*this);
     }
 
-    bool Soldier::isOnTheSameLine(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
+    bool Soldier::isOnTheSameLine(const GridPoint& coordinates_src, const GridPoint& coordinates_dst)
     {
         if ((coordinates_src.col != coordinates_dst.col) && (coordinates_src.row != coordinates_dst.row))
         {

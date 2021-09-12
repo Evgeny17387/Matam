@@ -21,7 +21,6 @@ namespace mtm
 
     protected:
 
-        // ToDo: refactor members after final version
         units_t ammo;
         units_t range;
         units_t power;
