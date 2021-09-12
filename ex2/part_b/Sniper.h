@@ -19,15 +19,13 @@ namespace mtm
         Sniper(const Sniper& sniper) = default;
         Sniper& operator=(const Sniper& sniper) = default;
 
+        Character* clone() const override;
+
         bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
 
         bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
 
-        units_t getImpactRange() const override;
-
-        units_t attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack) override;
-
-        Character* clone() const override;
+        void attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst) override;
     };
 }
 

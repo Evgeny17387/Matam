@@ -9,7 +9,12 @@ namespace mtm
     {
     private:
 
+        int max_range_affect;
+        units_t reduced_damage;
+
         bool isOnTheSameLine(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const;
+
+        void singleAttack(Character* defender, const GridPoint& coordinates_dst, const GridPoint& attack_coordinates);
 
     public:
 
@@ -19,13 +24,11 @@ namespace mtm
         Soldier(const Soldier& soldier) = default;
         Soldier& operator=(const Soldier& soldier) = default;
 
+        Character* clone() const override;
+
         bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
 
-        units_t getImpactRange() const override;
-
-        units_t attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack) override;
-
-        Character* clone() const override;
+        void attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst) override;
     };
 }
 

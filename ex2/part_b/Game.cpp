@@ -132,6 +132,40 @@ namespace mtm
         this->board[coordinates.col][coordinates.row]->reload();
     }
 
+    void Game::updatePlayersStatus()
+    {
+        // ToDo: check if possible to iterate over board with class function
+        for (int row = 0; row < this->height; row++)
+        {
+            for (int col = 0; col < this->width; col++)
+            {
+                shared_ptr<Character> defender = board[col][row];
+
+                if (defender == NULL)
+                {
+                    continue;
+                }
+
+                if (defender->getHealth() <= 0)
+                {
+                    if (defender.get()->getTeam() == Team::POWERLIFTERS)
+                    {
+                        this->power_lifters_counter--;
+                    }
+                    else if (defender.get()->getTeam() == Team::CROSSFITTERS)
+                    {
+                        this->cross_fitters_counter--;
+                    }
+
+                    // ToDo: check if should be delete with delete *address
+                    defender.reset();
+                    this->board[col][row] = NULL;
+                }
+            }
+
+        }
+    }
+
     void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordinates)
     {
         verifyLegalCoordinates(src_coordinates);
@@ -156,49 +190,9 @@ namespace mtm
             throw IllegalTarget();
         }
 
-        attacker->chargeAttackAmmoCost(defender.get());
+        attacker->attack(this->board, dst_coordinates);
 
-        // ToDo: maybe better to pass board to character
-        for (int row_diff = -attacker->getImpactRange(); row_diff <= attacker->getImpactRange(); row_diff++)
-        {
-            for (int col_diff = -attacker->getImpactRange(); col_diff <= attacker->getImpactRange(); col_diff++)
-            {
-                GridPoint attack_coordinates = dst_coordinates;
-                attack_coordinates.row += row_diff;
-                attack_coordinates.col += col_diff;
-
-                if ((attack_coordinates.row < 0) || (attack_coordinates.col < 0) || (attack_coordinates.row >= this->height) || (attack_coordinates.col >= this->width))
-                {
-                    continue;
-                }
-
-                defender = this->board[attack_coordinates.col][attack_coordinates.row];
-
-                if (defender == NULL)
-                {
-                    continue;
-                }
-
-                defender->updateHealth(attacker->attack(defender->getTeam(), dst_coordinates, attack_coordinates));
-
-                if (defender->getHealth() <= 0)
-                {
-                    if (defender.get()->getTeam() == Team::POWERLIFTERS)
-                    {
-                        this->power_lifters_counter--;
-                    }
-                    else if (defender.get()->getTeam() == Team::CROSSFITTERS)
-                    {
-                        this->cross_fitters_counter--;
-                    }
-
-                    // ToDo: check if should be delete with delete *address
-                    defender.reset();
-                    this->board[attack_coordinates.col][attack_coordinates.row] = NULL;
-                }
-
-            }
-        }
+        updatePlayersStatus();
     }
 
     // ToDo: don't exceeds 30 lines per function

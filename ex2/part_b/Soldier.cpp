@@ -1,5 +1,7 @@
 #include "Soldier.h"
 
+using std::shared_ptr;
+
 namespace mtm
 {
     const units_t MOVE_RANGE = 3;
@@ -15,6 +17,13 @@ namespace mtm
     Soldier::Soldier(Team team, units_t health, units_t ammo, units_t range, units_t power):
         Character(team, health, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK, SYMBOL, ammo, range, power)
     {
+        this->max_range_affect = divideToClosestUpperInt(this->range, 3);
+        this->reduced_damage = divideToClosestUpperInt(this->power, 2);
+    }
+
+    Character* Soldier::clone() const
+    {
+        return new Soldier(*this);
     }
 
     bool Soldier::isOnTheSameLine(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
@@ -37,46 +46,64 @@ namespace mtm
         return true;
     }
 
-    units_t Soldier::getImpactRange() const
+    void Soldier::singleAttack(Character* defender, const GridPoint& coordinates_dst, const GridPoint& attack_coordinates)
     {
-        return divideToClosestUpperInt(this->range, 3);
-    }
+        units_t impact = 0;
 
-    units_t Soldier::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
-    {
-        if (defender_team == this->getTeam())
+        if (defender->getTeam() == this->getTeam())
         {
-            return NO_DAMAGE;
+            impact = NO_DAMAGE;
         }
         else
         {
-            if (coordinates_dst == coordinates_attack)
+            if (coordinates_dst == attack_coordinates)
             {
-                return -this->power;
+                impact = -this->power;
             }
             else
             {
-                int attack_range = GridPoint::distance(coordinates_dst, coordinates_attack);
-
-                // ToDo: duplicate logic with getImpactRange
-                int max_range_affect = divideToClosestUpperInt(this->range, 3);
-
-                units_t reduced_damage = divideToClosestUpperInt(this->power, 2);
+                int attack_range = GridPoint::distance(coordinates_dst, attack_coordinates);
 
                 if (attack_range > max_range_affect)
                 {
-                    return NO_DAMAGE;
+                    impact = NO_DAMAGE;
                 }
                 else
                 {
-                    return -reduced_damage;
+                    impact = -reduced_damage;
                 }
             }
         }
+
+        defender->updateHealth(impact);
     }
 
-    Character* Soldier::clone() const
+    void Soldier::attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst)
     {
-        return new Soldier(*this);
+        this->ammo -= AMMO_PER_ATTACK;
+
+        for (int row_diff = -this->max_range_affect; row_diff <= this->max_range_affect; row_diff++)
+        {
+            for (int col_diff = -this->max_range_affect; col_diff <= this->max_range_affect; col_diff++)
+            {
+                GridPoint attack_coordinates = coordinates_dst;
+                attack_coordinates.row += row_diff;
+                attack_coordinates.col += col_diff;
+
+                if ((attack_coordinates.row < 0) || (attack_coordinates.col < 0) || (attack_coordinates.row >= (int)board[0].size()) || (attack_coordinates.col >= (int)board.size()))
+                {
+                    continue;
+                }
+
+                shared_ptr<Character> defender = board[attack_coordinates.col][attack_coordinates.row];
+
+                if (defender == NULL)
+                {
+                    continue;
+                }
+
+                singleAttack(defender.get(), coordinates_dst, attack_coordinates);
+            }
+        }
     }
 }

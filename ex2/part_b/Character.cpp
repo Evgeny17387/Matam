@@ -18,14 +18,24 @@ namespace mtm
         return this->move_range;
     }
 
-    void Character::reload()
-    {
-        this->ammo += this->reload_ammo;
-    }
-
     Team Character::getTeam() const
     {
         return this->team;
+    }
+
+    units_t Character::getHealth() const
+    {
+        return this->health;
+    }
+
+    void Character::updateHealth(units_t impact)
+    {
+        this->health += impact;
+    }
+
+    void Character::reload()
+    {
+        this->ammo += this->reload_ammo;
     }
 
     bool Character::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
@@ -40,7 +50,6 @@ namespace mtm
         return true;
     }
 
-
     bool Character::isEnoughAmmo(Character* character) const
     {
         if (this->ammo < this->ammo_per_attack)
@@ -49,21 +58,6 @@ namespace mtm
         }
 
         return true;
-    }
-
-    void Character::chargeAttackAmmoCost(Character* defender)
-    {
-        this->ammo -= this->ammo_per_attack;
-    }
-
-    units_t Character::getHealth() const
-    {
-        return this->health;
-    }
-
-    void Character::updateHealth(units_t impact)
-    {
-        this->health += impact;
     }
 
     int Character::divideToClosestUpperInt(int number, int divider)

@@ -3,6 +3,9 @@
 
 #include "Auxiliaries.h"
 
+#include <vector>
+#include <memory>
+
 namespace mtm
 {
     class Character
@@ -37,27 +40,21 @@ namespace mtm
 
         int getMoveRange() const;
 
-        void reload();
-
         Team getTeam() const;
 
-        virtual bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const;
+        units_t getHealth() const;
+        void updateHealth(units_t impact);
 
+        void reload();
+
+        virtual bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const;
         virtual bool isEnoughAmmo(Character* character) const;
+
+        virtual Character* clone() const = 0;
 
         virtual bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const = 0;
 
-        virtual units_t getImpactRange() const = 0;
-
-        virtual void chargeAttackAmmoCost(Character* defender);
-
-        virtual units_t attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack) = 0;
-
-        units_t getHealth() const;
-
-        void updateHealth(units_t impact);
-
-        virtual Character* clone() const = 0;
+        virtual void attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst) = 0;
     };
 }
 

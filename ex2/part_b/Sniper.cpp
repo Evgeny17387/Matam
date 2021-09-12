@@ -1,5 +1,7 @@
 #include "Sniper.h"
 
+using std::shared_ptr;
+
 namespace mtm
 {
     const units_t MOVE_RANGE = 4;
@@ -7,8 +9,6 @@ namespace mtm
     const units_t RELOAD_AMMO = 2;
 
     const units_t AMMO_PER_ATTACK = 1;
-
-    const units_t ATTACK_IMPACT_ONLY_SINGLE_CELL = 0;
 
     const int DOUBLE_IMPACT_SHOT_COUNT = 3;
 
@@ -20,6 +20,11 @@ namespace mtm
         Character(team, health, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK, SYMBOL, ammo, range, power)
     {
         this->regular_shots_count = 0;
+    }
+
+    Character* Sniper::clone() const
+    {
+        return new Sniper(*this);
     }
 
     bool Sniper::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
@@ -56,28 +61,26 @@ namespace mtm
         return true;
     }
 
-    units_t Sniper::getImpactRange() const
+    void Sniper::attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst)
     {
-        return ATTACK_IMPACT_ONLY_SINGLE_CELL;
-    }
+        shared_ptr<Character> defender = board[coordinates_dst.col][coordinates_dst.row];
 
-    units_t Sniper::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
-    {
+        this->ammo -= AMMO_PER_ATTACK;
+
         this->regular_shots_count++;
+
+        units_t impact = 0;
 
         if (this->regular_shots_count == DOUBLE_IMPACT_SHOT_COUNT)
         {
             this->regular_shots_count = 0;
-            return -this->power * DOUBLE_IMPACT_SHOT;
+            impact = -this->power * DOUBLE_IMPACT_SHOT;
         }
         else
         {
-            return -this->power;
+            impact = -this->power;
         }
-    }
 
-    Character* Sniper::clone() const
-    {
-        return new Sniper(*this);
+        defender->updateHealth(impact);
     }
 }

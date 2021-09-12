@@ -28,6 +28,8 @@ namespace mtm
 
         void copyGame(const Game& game);
 
+        void updatePlayersStatus();
+
     public:
 
         Game(int height, int widht);

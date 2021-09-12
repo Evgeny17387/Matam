@@ -1,5 +1,7 @@
 #include "Medic.h"
 
+using std::shared_ptr;
+
 namespace mtm
 {
     const units_t MOVE_RANGE = 5;
@@ -9,13 +11,16 @@ namespace mtm
     const units_t AMMO_PER_ATTACK_RIVAL = 1;
     const units_t AMMO_PER_ATTACK_ALLY = 0;
 
-    const units_t ATTACK_IMPACT_ONLY_SINGLE_CELL = 0;
-
     const char SYMBOL = 'M';
 
     Medic::Medic(Team team, units_t health, units_t ammo, units_t range, units_t power):
         Character(team, health, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK_RIVAL, SYMBOL, ammo, range, power)
     {
+    }
+
+    Character* Medic::clone() const
+    {
+        return new Medic(*this);
     }
 
     bool Medic::isEnoughAmmo(Character* character) const
@@ -54,33 +59,26 @@ namespace mtm
         return true;
     }
 
-    units_t Medic::getImpactRange() const
+    void Medic::attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst)
     {
-        return ATTACK_IMPACT_ONLY_SINGLE_CELL;
-    }
+        shared_ptr<Character> defender = board[coordinates_dst.col][coordinates_dst.row];
 
-    void Medic::chargeAttackAmmoCost(Character* defender)
-    {
         if (defender->getTeam() != this->getTeam())
         {
             this->ammo -= AMMO_PER_ATTACK_RIVAL;
         }
-    }
 
-    units_t Medic::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
-    {
-        if (defender_team == this->getTeam())
+        units_t impact = 0;
+
+        if (defender->getTeam() == this->getTeam())
         {
-            return this->power;
+            impact = this->power;
         }
         else
         {
-            return -this->power;
+            impact = -this->power;
         }
-    }
 
-    Character* Medic::clone() const
-    {
-        return new Medic(*this);
+        defender->updateHealth(impact);
     }
 }
