@@ -4,10 +4,6 @@
 #include <stdexcept>
 #include <iostream>
 
-using std::string;
-using std::ostream;
-using std::exception;
-
 namespace mtm
 {
     class ExamDetails
@@ -19,7 +15,7 @@ namespace mtm
         int day;
         double time;
         int duration;
-        string link;
+        std::string link;
 
         static void verifyDate(int month, int day);
         static void verifyTime(double time);
@@ -28,25 +24,25 @@ namespace mtm
 
     public:
 
-        ExamDetails(int course_id, int month, int day, double hour, int length, const string link = "");
+        ExamDetails(int course_id, int month, int day, double hour, int length, const std::string link = "");
 
         ~ExamDetails() = default;
         ExamDetails(const ExamDetails& examDetails) = default;
         ExamDetails& operator=(const ExamDetails& examDetails) = default;
 
-        string getLink() const;
-        void setLink(string link);
+        std::string getLink() const;
+        void setLink(std::string link);
 
         int operator-(const ExamDetails& examDetails) const;
 
         bool operator<(const ExamDetails& examDetails) const;
 
-        friend ostream& operator<<(ostream& os, const ExamDetails& examDetails);
+        friend std::ostream& operator<<(std::ostream& os, const ExamDetails& examDetails);
 
         static ExamDetails makeMatamExam();
 
-        class InvalidDateException: public exception{};
-        class InvalidTimeException: public exception{};
+        class InvalidDateException: public std::exception{};
+        class InvalidTimeException: public std::exception{};
     };
 }
 
