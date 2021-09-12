@@ -27,6 +27,9 @@ namespace mtm
 
         int size;
 
+        void copyList(const SortedList& sortedList_src);
+        void deleteList();
+
     public:
 
         SortedList();
@@ -86,7 +89,7 @@ namespace mtm
     }
 
     template <class T>
-    SortedList<T>::~SortedList()
+    void SortedList<T>::deleteList()
     {
         node* node_pointer = this->head;
 
@@ -103,20 +106,24 @@ namespace mtm
     }
 
     template <class T>
-    SortedList<T>::SortedList(const SortedList& sortedList): head(NULL), size(0)
+    SortedList<T>::~SortedList()
     {
-        // ToDo: logic might be common among operator= and copy constructor
+        deleteList();
+    }
 
-        if (NULL == sortedList.head)
+    template <class T>
+    void SortedList<T>::copyList(const SortedList& sortedList_src)
+    {
+        if (NULL == sortedList_src.head)
         {
             return;
         }
 
-        this->head = new node(sortedList.head->data);
+        this->head = new node(sortedList_src.head->data);
         this->size++;
 
         node* node_list_new = this->head;
-        node* node_list_original = sortedList.head->next;
+        node* node_list_original = sortedList_src.head->next;
 
         while (node_list_original != NULL)
         {
@@ -129,19 +136,16 @@ namespace mtm
             }
             catch (...)
             {
-                node_list_new = this->head;
-                while (node_list_new != NULL)
-                {
-                    node* node_temp = node_list_new->next;
-                    delete node_list_new;
-                    this->size--;
-                    node_list_new = node_temp;
-                }
-                this->head = NULL;
-                assert(this->size == 0);
+                deleteList();
                 throw;
             }
         }
+    }
+
+    template <class T>
+    SortedList<T>::SortedList(const SortedList& sortedList): head(NULL), size(0)
+    {
+        copyList(sortedList);
     }
 
     template <class T>
@@ -160,46 +164,11 @@ namespace mtm
             this->size--;
             node_list_new = node_temp;
         }
+        assert(this->size == 0);
 
         this->head = NULL;
-        this->size = 0;
 
-        // ToDo: logic might be common among operator= and copy constructor
-
-        if (NULL == sortedList.head)
-        {
-            return *this;
-        }
-
-        this->head = new node(sortedList.head->data);
-        this->size++;
-
-        node_list_new = this->head;
-        node* node_list_original = sortedList.head->next;
-        while (NULL != node_list_original)
-        {
-            try
-            {
-                node_list_new->next = new node(node_list_original->data);
-                this->size++;
-                node_list_new = node_list_new->next;
-                node_list_original = node_list_original->next;
-            }
-            catch (...)
-            {
-                node_list_new = this->head;
-                while (node_list_new != NULL)
-                {
-                    node* node_temp = node_list_new->next;
-                    delete node_list_new;
-                    this->size--;
-                    node_list_new = node_temp;
-                }
-                this->head = NULL;
-                assert(this->size == 0);
-                throw;
-            }
-        }
+        copyList(sortedList);
         
         return *this;
     }
@@ -328,11 +297,6 @@ namespace mtm
     template <class T>
     const T& SortedList<T>::const_iterator::operator*() const
     {
-        if ((this->index < 0) || (this->index >= this->sortedList->size))
-        {
-            throw std::out_of_range("const_iterator is out of range");
-        }
-
         node* node = sortedList->head;
         int index_temp = index;
 
