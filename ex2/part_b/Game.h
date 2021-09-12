@@ -17,6 +17,9 @@ namespace mtm
         int height;
         int width;
 
+        int power_lifters_counter;
+        int cross_fitters_counter;
+
         std::vector<std::vector<std::shared_ptr<Character>>> board;
 
         void verifyLegalCoordinates(const GridPoint& coordinates) const;

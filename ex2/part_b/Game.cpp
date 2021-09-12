@@ -17,11 +17,16 @@ namespace mtm
             throw IllegalArgument();
         }
 
+        this->power_lifters_counter = 0;
+        this->cross_fitters_counter = 0;
+
         this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
     }
 
-    Game::Game(const Game& game): height(game.height), width(game.width)
+    Game::Game(const Game& game): height(game.height), width(game.width), power_lifters_counter(game.power_lifters_counter), cross_fitters_counter(game.cross_fitters_counter)
     {
+        // ToDo: common logic with operator=
+
         this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 
         for (int row = 0; row < this->height; row++)
@@ -45,6 +50,8 @@ namespace mtm
 
         this->height = game.height;
         this->width = game.width;
+        this->power_lifters_counter = game.power_lifters_counter;
+        this->cross_fitters_counter = game.cross_fitters_counter;
 
         this->board.clear();
 
@@ -97,6 +104,15 @@ namespace mtm
         verifyCellEmpty(coordinates);
 
         this->board[coordinates.col][coordinates.row] = character;
+
+        if (character.get()->getTeam() == Team::POWERLIFTERS)
+        {
+            this->power_lifters_counter++;
+        }
+        else if (character.get()->getTeam() == Team::CROSSFITTERS)
+        {
+            this->cross_fitters_counter++;
+        }
     }
 
     void Game::move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates)
@@ -175,6 +191,15 @@ namespace mtm
 
                 if (defender->getHealth() <= 0)
                 {
+                    if (defender.get()->getTeam() == Team::POWERLIFTERS)
+                    {
+                        this->power_lifters_counter--;
+                    }
+                    else if (defender.get()->getTeam() == Team::CROSSFITTERS)
+                    {
+                        this->cross_fitters_counter--;
+                    }
+
                     // ToDo: check if should be delete with delete *address
                     defender.reset();
                     this->board[attack_coordinates.col][attack_coordinates.row] = NULL;
@@ -184,32 +209,10 @@ namespace mtm
         }
     }
 
-    // ToDo: maintain a counter, update per attack and add character
     // ToDo: don't exceeds 30 lines per function
     bool Game::isOver(Team* winningTeam) const
     {
-        int power_lifters_counter = 0;
-        int cross_fitters_counter = 0;
-
-        for (int row = 0; row < this->height; row++)
-        {
-            for (int col = 0; col < this->width; col++)
-            {
-                if (this->board[col][row] != NULL)
-                {
-                    if (this->board[col][row]->getTeam() == Team::POWERLIFTERS)
-                    {
-                        power_lifters_counter++;
-                    }
-                    else if (this->board[col][row]->getTeam() == Team::CROSSFITTERS)
-                    {
-                        cross_fitters_counter++;
-                    }
-                }
-            }
-        }
-
-        if ((power_lifters_counter != 0) && (cross_fitters_counter == 0))
+        if ((this->power_lifters_counter != 0) && (this->cross_fitters_counter == 0))
         {
             if (winningTeam != NULL)
             {
@@ -217,7 +220,7 @@ namespace mtm
             }
             return true;
         }
-        else if ((cross_fitters_counter != 0) && (power_lifters_counter == 0))
+        else if ((this->cross_fitters_counter != 0) && (this->power_lifters_counter == 0))
         {
             if (winningTeam != NULL)
             {
