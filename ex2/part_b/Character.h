@@ -9,25 +9,25 @@ namespace mtm
     {
     private:
 
+        Team team;
         units_t health;
         units_t move_range;
         units_t reload_ammo;
-        Team team;
+        units_t ammo_per_attack;
+        char symbol;
 
     protected:
 
-        // ToDo: refactor members since some of them already have get method, especially ammo_per_attack and symbol
+        // ToDo: refactor members after final version
         units_t ammo;
         units_t range;
         units_t power;
-        units_t ammo_per_attack;
-        char symbol;
 
         static int divideToClosestUpperInt(int number, int divider);
 
     public:
 
-        Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo, units_t ammo_per_attack, char symbol);
+        Character(Team team, units_t health, units_t move_range, units_t reload_ammo, units_t ammo_per_attack, char symbol, units_t ammo, units_t range, units_t power);
 
         ~Character() = default;
         Character(const Character& character) = default;

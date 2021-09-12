@@ -3,8 +3,8 @@
 
 namespace mtm
 {
-    Character::Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo, units_t ammo_per_attack, char symbol):
-        health(health), move_range(move_range), reload_ammo(reload_ammo), team(team), ammo(ammo), range(range), power(power), ammo_per_attack(ammo_per_attack), symbol(symbol)
+    Character::Character(Team team, units_t health, units_t move_range, units_t reload_ammo, units_t ammo_per_attack, char symbol, units_t ammo, units_t range, units_t power):
+        team(team), health(health), move_range(move_range), reload_ammo(reload_ammo), ammo_per_attack(ammo_per_attack), symbol(symbol), ammo(ammo), range(range), power(power)
     {
     }
 

@@ -13,7 +13,7 @@ namespace mtm
     const char SYMBOL = 'S';
 
     Soldier::Soldier(Team team, units_t health, units_t ammo, units_t range, units_t power):
-        Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK, SYMBOL)
+        Character(team, health, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK, SYMBOL, ammo, range, power)
     {
     }
 
