@@ -5,9 +5,6 @@
 #include <iostream>
 #include <cassert>
 
-// ToDo: don't do it
-using std::out_of_range;
-
 namespace mtm
 {
     template <class T>
@@ -54,35 +51,33 @@ namespace mtm
 
         const_iterator begin() const;
         const_iterator end() const;
-    };
 
-    // ToDo: maybe should be inside SortedList<T>
-    template <class T>
-    class SortedList<T>::const_iterator
-    {
-    private:
+        class const_iterator
+        {
+        private:
 
-        const SortedList<T>* sortedList;
+            const SortedList<T>* sortedList;
 
-        int index;
+            int index;
 
-        const_iterator(const SortedList<T> *sortedList, int index);
+            const_iterator(const SortedList<T> *sortedList, int index);
 
-        friend class SortedList<T>;
+            friend class SortedList<T>;
 
-    public:
+        public:
 
-        ~const_iterator() = default;
-        const_iterator(const const_iterator& const_iterator) = default;
-        const_iterator& operator=(const const_iterator& const_iterator) = default;
+            ~const_iterator() = default;
+            const_iterator(const const_iterator& const_iterator) = default;
+            const_iterator& operator=(const const_iterator& const_iterator) = default;
 
-        const T& operator*() const;
+            const T& operator*() const;
 
-        const_iterator& operator++();
-        // ToDo: there wasn't such operator in the requirements, maybe delete just before handing the assignment ?
-        const_iterator operator++(int);
+            const_iterator& operator++();
+            // ToDo: there wasn't such operator in the requirements, maybe delete just before handing the assignment ?
+            const_iterator operator++(int);
 
-        bool operator==(const const_iterator& const_iterator) const;
+            bool operator==(const const_iterator& const_iterator) const;
+        };
     };
 
     template <class T>
@@ -214,7 +209,11 @@ namespace mtm
     template <class T>
     void SortedList<T>::remove(const const_iterator& const_iterator)
     {
-        // ToDo: check if out of range
+        if ((const_iterator.index < 0) || (const_iterator.index >= this->size))
+        {
+            throw std::out_of_range("const_iterator is out of range");
+        }
+
         if (0 == const_iterator.index)
         {
             node* temp = this->head->next;
@@ -277,14 +276,13 @@ namespace mtm
     }
 
     template <class T>
-    // ToDo: is class and typename can be both indicated here meaning the same ?
-    typename SortedList<T>::const_iterator SortedList<T>::begin() const
+    class SortedList<T>::const_iterator SortedList<T>::begin() const
     {
         return const_iterator(this, 0);
     }
 
     template <class T>
-    typename SortedList<T>::const_iterator SortedList<T>::end() const
+    class SortedList<T>::const_iterator SortedList<T>::end() const
     {
         return const_iterator(this, this->size);
     }
@@ -297,12 +295,16 @@ namespace mtm
     template <class T>
     const T& SortedList<T>::const_iterator::operator*() const
     {
+        if ((this->index < 0) || (this->index >= this->sortedList->size))
+        {
+            throw std::out_of_range("const_iterator is out of range");
+        }
+
         node* node = sortedList->head;
         int index_temp = index;
 
         while (index_temp > 0)
         {
-            // ToDo: what if this is NULL ? who should check that index is valid ?
             node = node->next;
             index_temp--;
         }
@@ -311,11 +313,11 @@ namespace mtm
     }
 
     template <class T>
-    typename SortedList<T>::const_iterator& SortedList<T>::const_iterator::operator++()
+    class SortedList<T>::const_iterator& SortedList<T>::const_iterator::operator++()
     {
         if (this->index >= sortedList->size)
         {
-            throw out_of_range("const_iterator has already reached last item in the list");
+            throw std::out_of_range("const_iterator has already reached last item in the list");
         }
 
         this->index++;
@@ -324,11 +326,11 @@ namespace mtm
     }
 
     template <class T>
-    typename SortedList<T>::const_iterator SortedList<T>::const_iterator::operator++(int)
+    class SortedList<T>::const_iterator SortedList<T>::const_iterator::operator++(int)
     {
         if (this->index >= sortedList->size)
         {
-            throw out_of_range("const_iterator has already reached last item in the list");
+            throw std::out_of_range("const_iterator has already reached last item in the list");
         }
 
         SortedList<T>::const_iterator temp = *this;

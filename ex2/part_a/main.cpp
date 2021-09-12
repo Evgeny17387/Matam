@@ -10,7 +10,7 @@ using mtm::SortedList;
 using mtm::TestClass;
 using mtm::externalConstructor;
 
-template <typename T>
+template <class T>
 std::string to_string(T value)
 {
     //create an output string stream
