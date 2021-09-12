@@ -46,13 +46,11 @@ namespace mtm
         this->link = link;
     }
 
-    // ToDo: should it be friend ?
     int ExamDetails::operator-(const ExamDetails& examDetails) const
     {
         return (this->month - examDetails.month) * MONTH_DAYS + (this->day - examDetails.day);
     }
 
-    // ToDo: should it be friend ?
     bool ExamDetails::operator<(const ExamDetails& examDetails) const
     {
         int minus = *this - examDetails;

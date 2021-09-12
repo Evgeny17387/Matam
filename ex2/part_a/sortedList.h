@@ -117,13 +117,30 @@ namespace mtm
 
         node* node_list_new = this->head;
         node* node_list_original = sortedList.head->next;
+
         while (node_list_original != NULL)
         {
-            // ToDo: add case for memory exception, throw furhter after completing destroying the list
-            node_list_new->next = new node(node_list_original->data);
-            this->size++;
-            node_list_new = node_list_new->next;
-            node_list_original = node_list_original->next;
+            try
+            {
+                node_list_new->next = new node(node_list_original->data);
+                this->size++;
+                node_list_new = node_list_new->next;
+                node_list_original = node_list_original->next;
+            }
+            catch (...)
+            {
+                node_list_new = this->head;
+                while (node_list_new != NULL)
+                {
+                    node* node_temp = node_list_new->next;
+                    delete node_list_new;
+                    this->size--;
+                    node_list_new = node_temp;
+                }
+                this->head = NULL;
+                assert(this->size == 0);
+                throw;
+            }
         }
     }
 
@@ -161,11 +178,27 @@ namespace mtm
         node* node_list_original = sortedList.head->next;
         while (NULL != node_list_original)
         {
-            // ToDo: add case for memory exception
-            node_list_new->next = new node(node_list_original->data);
-            this->size++;
-            node_list_new = node_list_new->next;
-            node_list_original = node_list_original->next;
+            try
+            {
+                node_list_new->next = new node(node_list_original->data);
+                this->size++;
+                node_list_new = node_list_new->next;
+                node_list_original = node_list_original->next;
+            }
+            catch (...)
+            {
+                node_list_new = this->head;
+                while (node_list_new != NULL)
+                {
+                    node* node_temp = node_list_new->next;
+                    delete node_list_new;
+                    this->size--;
+                    node_list_new = node_temp;
+                }
+                this->head = NULL;
+                assert(this->size == 0);
+                throw;
+            }
         }
         
         return *this;
