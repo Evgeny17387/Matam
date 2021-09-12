@@ -51,6 +51,11 @@ namespace mtm
         return true;
     }
 
+    void Character::chargeAttackAmmoCost(Character* defender)
+    {
+        this->ammo -= this->ammo_per_attack;
+    }
+
     units_t Character::getHealth() const
     {
         return this->health;

@@ -42,14 +42,9 @@ namespace mtm
         return divideToClosestUpperInt(this->range, 3);
     }
 
-    void Soldier::chargeAttackAmmoCost(Character* defender)
-    {
-        this->ammo -= AMMO_PER_ATTACK;
-    }
-
     units_t Soldier::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
     {
-        if (defender_team == this->team)
+        if (defender_team == this->getTeam())
         {
             return NO_DAMAGE;
         }

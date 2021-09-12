@@ -23,8 +23,6 @@ namespace mtm
 
         units_t getImpactRange() const override;
 
-        void chargeAttackAmmoCost(Character* defender) override;
-
         units_t attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack) override;
 
         Character* clone() const override;

@@ -12,11 +12,11 @@ namespace mtm
         units_t health;
         units_t move_range;
         units_t reload_ammo;
+        Team team;
 
     protected:
 
         // ToDo: refactor members since some of them already have get method, especially ammo_per_attack and symbol
-        Team team;
         units_t ammo;
         units_t range;
         units_t power;
@@ -49,7 +49,7 @@ namespace mtm
 
         virtual units_t getImpactRange() const = 0;
 
-        virtual void chargeAttackAmmoCost(Character* defender) = 0;
+        virtual void chargeAttackAmmoCost(Character* defender);
 
         virtual units_t attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack) = 0;
 

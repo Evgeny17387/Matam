@@ -48,7 +48,7 @@ namespace mtm
             return false;
         }
 
-        if (character->getTeam() == this->team)
+        if (character->getTeam() == this->getTeam())
         {
             return false;
         }
@@ -59,11 +59,6 @@ namespace mtm
     units_t Sniper::getImpactRange() const
     {
         return ATTACK_IMPACT_ONLY_SINGLE_CELL;
-    }
-
-    void Sniper::chargeAttackAmmoCost(Character* defender)
-    {
-        this->ammo -= AMMO_PER_ATTACK;
     }
 
     units_t Sniper::attack(Team defender_team, const GridPoint& coordinates_dst, const GridPoint& coordinates_attack)
