@@ -1,6 +1,6 @@
 CC = g++
-OBJS1 = gameTest.o Game.o Exceptions.o Auxiliaries.o Character.o Soldier.o Medic.o Sniper.o
-OBJS2 = partC_tester.o Game.o Exceptions.o Auxiliaries.o Character.o Soldier.o Medic.o Sniper.o
+OBJS1 = gameTest.o Game.o Auxiliaries.o Character.o Soldier.o Medic.o Sniper.o
+OBJS2 = partC_tester.o Game.o Auxiliaries.o Character.o Soldier.o Medic.o Sniper.o
 CFLAGS = -std=c++11 -Wall -Werror -pedantic-errors
 EXEC = test
 
@@ -14,9 +14,6 @@ gameTest.o: gameTest.cpp Game.h Auxiliaries.h Character.h Exceptions.h
 	$(CC) $(CFLAGS) -c $*.cpp
 
 Game.o: Game.cpp Game.h Auxiliaries.h Character.h Exceptions.h Soldier.h Medic.h Sniper.h
-	$(CC) $(CFLAGS) -c $*.cpp
-
-Exceptions.o: Exceptions.cpp Exceptions.h
 	$(CC) $(CFLAGS) -c $*.cpp
 
 Auxiliaries.o: Auxiliaries.cpp Auxiliaries.h

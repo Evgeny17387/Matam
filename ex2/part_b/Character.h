@@ -20,8 +20,7 @@ namespace mtm
         units_t range;
         units_t power;
 
-        // ToDo: maybe turn into static
-        int divideToClosestUpperInt(int number, int divider) const;
+        static int divideToClosestUpperInt(int number, int divider);
 
     public:
 
