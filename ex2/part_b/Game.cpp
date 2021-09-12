@@ -10,7 +10,6 @@ using std::shared_ptr;
 
 namespace mtm
 {
-
     Game::Game(int height, int width): height(height), width(width)
     {
         if ((height <= 0) || (width <= 0))
@@ -19,21 +18,6 @@ namespace mtm
         }
 
         this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
-    }
-
-    // ToDo: should be default
-    Game::~Game()
-    {
-        for (int row = 0; row < this->height; row++)
-        {
-            for (int col = 0; col < this->width; col++)
-            {
-                if (this->board[col][row] != NULL)
-                {
-                    board[col][row].reset();
-                }
-            }
-        }
     }
 
     Game::Game(const Game& game): height(game.height), width(game.width)
@@ -62,7 +46,7 @@ namespace mtm
         this->height = game.height;
         this->width = game.width;
 
-        // ToDo: delete all existing characters, use vector.clear, make sure
+        this->board.clear();
 
         this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 

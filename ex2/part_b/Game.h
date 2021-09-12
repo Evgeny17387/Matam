@@ -27,7 +27,7 @@ namespace mtm
 
         Game(int height, int widht);
 
-        ~Game();
+        ~Game() = default;
         Game(const Game& game);
         Game& operator=(const Game& game);
 
