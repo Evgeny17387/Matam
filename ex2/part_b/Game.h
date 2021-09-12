@@ -26,6 +26,8 @@ namespace mtm
         void verifyCellNotEmpty(const GridPoint& coordinates) const;
         void verifyCellEmpty(const GridPoint& coordinates) const;
 
+        void copyGame(const Game& game);
+
     public:
 
         Game(int height, int widht);

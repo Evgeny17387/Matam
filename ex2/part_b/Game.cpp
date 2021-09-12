@@ -23,10 +23,8 @@ namespace mtm
         this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
     }
 
-    Game::Game(const Game& game): height(game.height), width(game.width), power_lifters_counter(game.power_lifters_counter), cross_fitters_counter(game.cross_fitters_counter)
+    void Game::copyGame(const Game& game)
     {
-        // ToDo: common logic with operator=
-
         this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
 
         for (int row = 0; row < this->height; row++)
@@ -41,6 +39,11 @@ namespace mtm
         }
     }
 
+    Game::Game(const Game& game): height(game.height), width(game.width), power_lifters_counter(game.power_lifters_counter), cross_fitters_counter(game.cross_fitters_counter)
+    {
+        copyGame(game);
+    }
+
     Game& Game::operator=(const Game& game)
     {
         if (this == &game)
@@ -48,25 +51,14 @@ namespace mtm
             return *this;
         }
 
+        this->board.clear();
+
         this->height = game.height;
         this->width = game.width;
         this->power_lifters_counter = game.power_lifters_counter;
         this->cross_fitters_counter = game.cross_fitters_counter;
 
-        this->board.clear();
-
-        this->board = vector<vector<shared_ptr<Character>>>(this->width, vector<shared_ptr<Character>>(this->height, NULL));
-
-        for (int row = 0; row < this->height; row++)
-        {
-            for (int col = 0; col < this->width; col++)
-            {
-                if (game.board[col][row] != NULL)
-                {
-                    this->board[col][row] = shared_ptr<Character>(game.board[col][row]->clone());
-                }
-            }
-        }
+        copyGame(game);
 
         return *this;
     }
