@@ -19,11 +19,7 @@ namespace mtm
         Sniper(const Sniper& sniper) = default;
         Sniper& operator=(const Sniper& sniper) = default;
 
-        char getSymbol() const override;
-
         bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
-
-        bool isEnoughAmmo(Character* character) const override;
 
         bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
 

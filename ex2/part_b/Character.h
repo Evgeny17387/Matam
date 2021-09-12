@@ -12,6 +12,8 @@ namespace mtm
         units_t health;
         units_t move_range;
         units_t reload_ammo;
+        units_t ammo_per_attack;
+        char symbol;
 
     protected:
 
@@ -24,13 +26,13 @@ namespace mtm
 
     public:
 
-        Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo);
+        Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo, units_t ammo_per_attack, char symbol);
 
         ~Character() = default;
         Character(const Character& character) = default;
         Character& operator=(const Character& character) = default;
 
-        virtual char getSymbol() const = 0;
+        char getSymbol() const;
 
         int getMoveRange() const;
 
@@ -38,11 +40,9 @@ namespace mtm
 
         Team getTeam() const;
 
-        // ToDo: don't do pure virtual, and implement only in character and sniper
-        virtual bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const = 0;
+        virtual bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const;
 
-        // ToDo: don't do pure virtual, and implement only in character and medic
-        virtual bool isEnoughAmmo(Character* character) const = 0;
+        virtual bool isEnoughAmmo(Character* character) const;
 
         virtual bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const = 0;
 

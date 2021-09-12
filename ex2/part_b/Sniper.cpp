@@ -14,15 +14,12 @@ namespace mtm
 
     const int DOUBLE_IMPACT_SHOT = 2;
 
-    Sniper::Sniper(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
+    const char SYMBOL = 'N';
+
+    Sniper::Sniper(Team team, units_t health, units_t ammo, units_t range, units_t power):
+        Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK, SYMBOL)
     {
         this->regular_shots_count = 0;
-    }
-
-    char Sniper::getSymbol() const
-    {
-        // ToDo: Should it be implemented this way ?
-        return this->team == POWERLIFTERS ? 'N' : 'n';
     }
 
     bool Sniper::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
@@ -37,16 +34,6 @@ namespace mtm
         int min_attach_range = divideToClosestUpperInt(this->range, 2);
 
         if (attack_range < min_attach_range)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    bool Sniper::isEnoughAmmo(Character* character) const
-    {
-        if (this->ammo < AMMO_PER_ATTACK)
         {
             return false;
         }

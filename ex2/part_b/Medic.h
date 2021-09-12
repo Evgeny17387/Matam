@@ -17,10 +17,6 @@ namespace mtm
         Medic(const Medic& medic) = default;
         Medic& operator=(const Medic& medic) = default;
 
-        char getSymbol() const override;
-
-        bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
-
         bool isEnoughAmmo(Character* character) const override;
 
         bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;

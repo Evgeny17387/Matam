@@ -11,26 +11,11 @@ namespace mtm
 
     const units_t ATTACK_IMPACT_ONLY_SINGLE_CELL = 0;
 
-    Medic::Medic(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
+    const char SYMBOL = 'M';
+
+    Medic::Medic(Team team, units_t health, units_t ammo, units_t range, units_t power):
+        Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK_RIVAL, SYMBOL)
     {
-    }
-
-    char Medic::getSymbol() const
-    {
-        // ToDo: Should it be implemented this way ?
-        return this->team == POWERLIFTERS ? 'M' : 'm';
-    }
-
-    bool Medic::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
-    {
-        int attack_range = GridPoint::distance(coordinates_src, coordinates_dst);
-
-        if (attack_range > this->range)
-        {
-            return false;
-        }
-
-        return true;
     }
 
     bool Medic::isEnoughAmmo(Character* character) const

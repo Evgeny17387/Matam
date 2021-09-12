@@ -19,12 +19,6 @@ namespace mtm
         Soldier(const Soldier& soldier) = default;
         Soldier& operator=(const Soldier& soldier) = default;
 
-        char getSymbol() const override;
-
-        bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
-
-        bool isEnoughAmmo(Character* character) const override;
-
         bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
 
         units_t getImpactRange() const override;

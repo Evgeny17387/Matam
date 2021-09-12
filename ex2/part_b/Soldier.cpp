@@ -10,42 +10,16 @@ namespace mtm
 
     const units_t NO_DAMAGE = 0;
 
-    Soldier::Soldier(Team team, units_t health, units_t ammo, units_t range, units_t power): Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO)
-    {
-    }
+    const char SYMBOL = 'S';
 
-    char Soldier::getSymbol() const
+    Soldier::Soldier(Team team, units_t health, units_t ammo, units_t range, units_t power):
+        Character(team, health, ammo, range, power, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK, SYMBOL)
     {
-        // ToDo: Should it be implemented this way ?
-        return this->team == POWERLIFTERS ? 'S' : 's';
     }
 
     bool Soldier::isOnTheSameLine(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
     {
         if ((coordinates_src.col != coordinates_dst.col) && (coordinates_src.row != coordinates_dst.row))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    bool Soldier::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
-    {
-        // ToDo: since all have it, maybe it can we common somhow ?
-        int attack_range = GridPoint::distance(coordinates_src, coordinates_dst);
-
-        if (attack_range > this->range)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    bool Soldier::isEnoughAmmo(Character* character) const
-    {
-        if (this->ammo < AMMO_PER_ATTACK)
         {
             return false;
         }

@@ -1,10 +1,16 @@
 #include "Character.h"
+#include <ctype.h>
 
 namespace mtm
 {
-    Character::Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo):
-        health(health), move_range(move_range), reload_ammo(reload_ammo), team(team), ammo(ammo), range(range), power(power)
+    Character::Character(Team team, units_t health, units_t ammo, units_t range, units_t power, units_t move_range, units_t reload_ammo, units_t ammo_per_attack, char symbol):
+        health(health), move_range(move_range), reload_ammo(reload_ammo), team(team), ammo(ammo), range(range), power(power), ammo_per_attack(ammo_per_attack), symbol(symbol)
     {
+    }
+
+    char Character::getSymbol() const
+    {
+        return this->team == POWERLIFTERS ? this->symbol : tolower(this->symbol);
     }
 
     int Character::getMoveRange() const
@@ -20,6 +26,29 @@ namespace mtm
     Team Character::getTeam() const
     {
         return this->team;
+    }
+
+    bool Character::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
+    {
+        int attack_range = GridPoint::distance(coordinates_src, coordinates_dst);
+
+        if (attack_range > this->range)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    bool Character::isEnoughAmmo(Character* character) const
+    {
+        if (this->ammo < this->ammo_per_attack)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     units_t Character::getHealth() const
