@@ -18,7 +18,7 @@ namespace mtm
             tolower(this->symbol);
     }
 
-    int Character::getMoveRange() const
+    units_t Character::getMoveRange() const
     {
         return this->move_range;
     }

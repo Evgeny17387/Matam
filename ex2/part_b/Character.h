@@ -39,7 +39,7 @@ namespace mtm
 
         char getSymbol() const;
 
-        int getMoveRange() const;
+        units_t getMoveRange() const;
 
         Team getTeam() const;
 
