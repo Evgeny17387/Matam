@@ -38,20 +38,16 @@ namespace mtm
         Game(const Game& game);
         Game& operator=(const Game& game);
 
-        static std::shared_ptr<Character> makeCharacter(CharacterType type,
-            Team team, units_t health, units_t ammo, units_t range,
-            units_t power);
+        static std::shared_ptr<Character> makeCharacter(CharacterType type, Team team, units_t health, units_t ammo,
+        units_t range, units_t power);
 
-        void addCharacter(const GridPoint& coordinates,
-            std::shared_ptr<Character> character);
+        void addCharacter(const GridPoint& coordinates,std::shared_ptr<Character> character);
 
-        void move(const GridPoint& src_coordinates,
-            const GridPoint& dst_coordinates);
+        void move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates);
 
         void reload(const GridPoint& coordinates);
 
-        void attack(const GridPoint& src_coordinates,
-            const GridPoint& dst_coordinates);
+        void attack(const GridPoint& src_coordinates, const GridPoint& dst_coordinates);
 
         bool isOver(Team* winningTeam=NULL) const;
 

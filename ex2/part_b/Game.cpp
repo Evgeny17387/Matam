@@ -35,16 +35,14 @@ namespace mtm
             {
                 if (game.board[col][row] != NULL)
                 {
-                    this->board[col][row] =
-                        shared_ptr<Character>(game.board[col][row]->clone());
+                    this->board[col][row] = shared_ptr<Character>(game.board[col][row]->clone());
                 }
             }
         }
     }
 
     Game::Game(const Game& game): height(game.height), width(game.width),
-        power_lifters_counter(game.power_lifters_counter),
-        cross_fitters_counter(game.cross_fitters_counter)
+        power_lifters_counter(game.power_lifters_counter), cross_fitters_counter(game.cross_fitters_counter)
     {
         copyGame(game);
     }
@@ -68,8 +66,8 @@ namespace mtm
         return *this;
     }
 
-    shared_ptr<Character> Game::makeCharacter(CharacterType type, Team team,
-        units_t health, units_t ammo, units_t range, units_t power)
+    shared_ptr<Character> Game::makeCharacter(CharacterType type, Team team, units_t health, units_t ammo,
+        units_t range, units_t power)
     {
         if ((health <= 0) || (ammo < 0) || (range < 0) || (power < 0))
         {
@@ -79,18 +77,15 @@ namespace mtm
         switch (type)
         {
         case CharacterType::SOLDIER:
-            return std::shared_ptr<Character>(new Soldier(team, health, ammo,
-                range, power));
+            return std::shared_ptr<Character>(new Soldier(team, health, ammo, range, power));
             break;
 
         case CharacterType::MEDIC:
-            return std::shared_ptr<Character>(new Medic(team, health, ammo,
-                range, power));
+            return std::shared_ptr<Character>(new Medic(team, health, ammo, range, power));
             break;
 
         case CharacterType::SNIPER:
-            return std::shared_ptr<Character>(new Sniper(team, health, ammo,
-                range, power));
+            return std::shared_ptr<Character>(new Sniper(team, health, ammo, range, power));
             break;
 
         default:
@@ -99,8 +94,7 @@ namespace mtm
         }
     }
 
-    void Game::addCharacter(const GridPoint& coordinates,
-        shared_ptr<Character> character)
+    void Game::addCharacter(const GridPoint& coordinates, shared_ptr<Character> character)
     {
         verifyLegalCoordinates(coordinates);
         verifyCellEmpty(coordinates);
@@ -117,24 +111,21 @@ namespace mtm
         }
     }
 
-    void Game::move(const GridPoint& src_coordinates,
-        const GridPoint& dst_coordinates)
+    void Game::move(const GridPoint& src_coordinates, const GridPoint& dst_coordinates)
     {
         verifyLegalCoordinates(src_coordinates);
         verifyLegalCoordinates(dst_coordinates);
         verifyCellNotEmpty(src_coordinates);
 
         if (GridPoint::distance(src_coordinates, dst_coordinates) >
-            this->board[src_coordinates.col][src_coordinates.row]->
-            getMoveRange())
+            this->board[src_coordinates.col][src_coordinates.row]-> getMoveRange())
         {
             throw MoveTooFar();
         }
 
         verifyCellEmpty(dst_coordinates);
 
-        this->board[dst_coordinates.col][dst_coordinates.row] =
-            this->board[src_coordinates.col][src_coordinates.row];
+        this->board[dst_coordinates.col][dst_coordinates.row] = this->board[src_coordinates.col][src_coordinates.row];
         this->board[src_coordinates.col][src_coordinates.row] = NULL;
     }
 
@@ -178,17 +169,14 @@ namespace mtm
         }
     }
 
-    void Game::attack(const GridPoint& src_coordinates,
-        const GridPoint& dst_coordinates)
+    void Game::attack(const GridPoint& src_coordinates, const GridPoint& dst_coordinates)
     {
         verifyLegalCoordinates(src_coordinates);
         verifyLegalCoordinates(dst_coordinates);
         verifyCellNotEmpty(src_coordinates);
 
-        shared_ptr<Character> attacker =
-            this->board[src_coordinates.col][src_coordinates.row];
-        shared_ptr<Character> defender =
-            this->board[dst_coordinates.col][dst_coordinates.row];
+        shared_ptr<Character> attacker = this->board[src_coordinates.col][src_coordinates.row];
+        shared_ptr<Character> defender = this->board[dst_coordinates.col][dst_coordinates.row];
 
         if (!attacker->isAttackInRange(src_coordinates, dst_coordinates))
         {
@@ -200,8 +188,7 @@ namespace mtm
             throw OutOfAmmo();
         }
 
-        if (!attacker->canAttack(defender.get(), src_coordinates,
-            dst_coordinates))
+        if (!attacker->canAttack(defender.get(), src_coordinates, dst_coordinates))
         {
             throw IllegalTarget();
         }
@@ -213,8 +200,7 @@ namespace mtm
 
     bool Game::isOver(Team* winningTeam) const
     {
-        if ((this->power_lifters_counter != 0) &&
-            (this->cross_fitters_counter == 0))
+        if ((this->power_lifters_counter != 0) && (this->cross_fitters_counter == 0))
         {
             if (winningTeam != NULL)
             {
@@ -222,8 +208,7 @@ namespace mtm
             }
             return true;
         }
-        else if ((this->cross_fitters_counter != 0) &&
-            (this->power_lifters_counter == 0))
+        else if ((this->cross_fitters_counter != 0) && (this->power_lifters_counter == 0))
         {
             if (winningTeam != NULL)
             {
@@ -245,8 +230,7 @@ namespace mtm
             {
                 if (game.board[col][row] != NULL)
                 {
-                    begin[row * game.width + col] =
-                        game.board[col][row]->getSymbol();
+                    begin[row * game.width + col] = game.board[col][row]->getSymbol();
                 }
                 else
                 {
@@ -255,8 +239,7 @@ namespace mtm
             }
         }
 
-        printGameBoard(os, begin, begin + game.width * game.height,
-            game.width);
+        printGameBoard(os, begin, begin + game.width * game.height, game.width);
 
         delete[] begin;
 
@@ -266,7 +249,7 @@ namespace mtm
     void Game::verifyLegalCoordinates(const GridPoint& coordinates) const
     {
         if ((coordinates.row < 0) || (coordinates.col < 0) ||
-        (coordinates.row >= this->height) || (coordinates.col >= this->width))
+            (coordinates.row >= this->height) || (coordinates.col >= this->width))
         {
             throw IllegalCell();
         }

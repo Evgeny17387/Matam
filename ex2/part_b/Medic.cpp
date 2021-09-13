@@ -13,10 +13,8 @@ namespace mtm
 
     const char SYMBOL = 'M';
 
-    Medic::Medic(Team team, units_t health, units_t ammo, units_t range,
-        units_t power):
-        Character(team, health, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK_RIVAL,
-            SYMBOL, ammo, range, power)
+    Medic::Medic(Team team, units_t health, units_t ammo, units_t range, units_t power):
+        Character(team, health, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK_RIVAL, SYMBOL, ammo, range, power)
     {
     }
 
@@ -46,8 +44,7 @@ namespace mtm
         return true;
     }
 
-    bool Medic::canAttack(Character* character,
-        const GridPoint& coordinates_src,
+    bool Medic::canAttack(Character* character, const GridPoint& coordinates_src,
         const GridPoint& coordinates_dst) const
     {
         if (character == NULL)
@@ -63,12 +60,9 @@ namespace mtm
         return true;
     }
 
-    void Medic::attack(
-        std::vector<std::vector<std::shared_ptr<Character>>>& board,
-        const GridPoint& coordinates_dst)
+    void Medic::attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst)
     {
-        shared_ptr<Character> defender =
-            board[coordinates_dst.col][coordinates_dst.row];
+        shared_ptr<Character> defender = board[coordinates_dst.col][coordinates_dst.row];
 
         if (defender->getTeam() != this->getTeam())
         {
