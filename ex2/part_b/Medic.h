@@ -11,7 +11,8 @@ namespace mtm
 
     public:
 
-        Medic(Team team, units_t health, units_t ammo, units_t range, units_t power);
+        Medic(Team team, units_t health, units_t ammo, units_t range,
+            units_t power);
 
         ~Medic() = default;
         Medic(const Medic& medic) = default;
@@ -21,9 +22,12 @@ namespace mtm
 
         bool isEnoughAmmo(Character* character) const override;
 
-        bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const override;
+        bool canAttack(Character* character, const GridPoint& coordinates_src,
+            const GridPoint& coordinates_dst) const override;
 
-        void attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst) override;
+        void attack(
+            std::vector<std::vector<std::shared_ptr<Character>>>& board,
+            const GridPoint& coordinates_dst) override;
     };
 }
 

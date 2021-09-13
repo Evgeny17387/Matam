@@ -7,10 +7,8 @@ using std::string;
 using std::endl;
 using std::ostream;
 
-// ToDo: subtracte all lines to be max 80 characters long
 namespace mtm
 {
-    // ToDo: check if these should be part of the class api
     const int MONTH_FIRT = 1;
     const int MONTH_LAST = 12;
 
@@ -30,7 +28,9 @@ namespace mtm
     const int MATAM_EXAM_DURAION = 3;
     const string MATAM_EXAM_LINK = "https://tinyurl.com/59hzps6m";
 
-    ExamDetails::ExamDetails(int course_id, int month, int day, double time, int duration, const string link): course_id(course_id), month(month), day(day), time(time), duration(duration), link(link)
+    ExamDetails::ExamDetails(int course_id, int month, int day, double time,
+        int duration, const string link): course_id(course_id), month(month),
+        day(day), time(time), duration(duration), link(link)
     {
         verifyDate(month, day);
         verifyTime(time);
@@ -48,7 +48,8 @@ namespace mtm
 
     int ExamDetails::operator-(const ExamDetails& examDetails) const
     {
-        return (this->month - examDetails.month) * MONTH_DAYS + (this->day - examDetails.day);
+        return (this->month - examDetails.month) * MONTH_DAYS +
+            (this->day - examDetails.day);
     }
 
     bool ExamDetails::operator<(const ExamDetails& examDetails) const
@@ -69,7 +70,8 @@ namespace mtm
         }
     }
 
-    void ExamDetails::splitTimeToHoursAndMinutes(double time, int& time_hours, int& time_minutes)
+    void ExamDetails::splitTimeToHoursAndMinutes(double time, int& time_hours,
+        int& time_minutes)
     {
         double hours;
         double minutes;
@@ -87,11 +89,16 @@ namespace mtm
         int hours;
         int minutes;
 
-        ExamDetails::splitTimeToHoursAndMinutes(examDetails.time, hours, minutes);
-        os << "Time: " << examDetails.day << "." << examDetails.month << " at " << hours << ":" << std::setw(2) << std::setfill('0') << minutes << endl;
+        ExamDetails::splitTimeToHoursAndMinutes(examDetails.time, hours,
+            minutes);
+        os << "Time: " << examDetails.day << "." << examDetails.month <<
+            " at " << hours << ":" << std::setw(2) << std::setfill('0') <<
+            minutes << endl;
 
-        ExamDetails::splitTimeToHoursAndMinutes(examDetails.duration, hours, minutes);
-        os << "Duration: " << hours << ':' << std::setw(2) << std::setfill('0') << minutes << endl;
+        ExamDetails::splitTimeToHoursAndMinutes(examDetails.duration, hours,
+            minutes);
+        os << "Duration: " << hours << ':' << std::setw(2) <<
+            std::setfill('0') << minutes << endl;
         
         os << "Zoom Link: " << examDetails.link << endl;
 
@@ -100,7 +107,11 @@ namespace mtm
 
     ExamDetails ExamDetails::makeMatamExam()
     {
-        return ExamDetails(MATAM_COURSE_ID, MATAM_EXAM_DATE_MONTH, MATAM_EXAM_DATE_DAY, MATAM_EXAM_TIME, MATAM_EXAM_DURAION, MATAM_EXAM_LINK);
+        return ExamDetails(MATAM_COURSE_ID,
+            MATAM_EXAM_DATE_MONTH,
+            MATAM_EXAM_DATE_DAY,
+            MATAM_EXAM_TIME,
+            MATAM_EXAM_DURAION, MATAM_EXAM_LINK);
     }
 
     void ExamDetails::verifyDate(int month, int day)
@@ -121,7 +132,9 @@ namespace mtm
         double hours;
         double minutes = modf(time, &hours);
 
-        if (!((minutes < TIME_INTERVAL_MAX_DIFFERENCE) || ((1 - minutes) < TIME_INTERVAL_MAX_DIFFERENCE) || (abs(minutes - TIME_INTERVAL) < TIME_INTERVAL_MAX_DIFFERENCE)))
+        if (!((minutes < TIME_INTERVAL_MAX_DIFFERENCE) ||
+            ((1 - minutes) < TIME_INTERVAL_MAX_DIFFERENCE) ||
+            (abs(minutes - TIME_INTERVAL) < TIME_INTERVAL_MAX_DIFFERENCE)))
         {
             throw InvalidTimeException();
         }

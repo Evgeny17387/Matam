@@ -3,14 +3,19 @@
 
 namespace mtm
 {
-    Character::Character(Team team, units_t health, units_t move_range, units_t reload_ammo, units_t ammo_per_attack, char symbol, units_t ammo, units_t range, units_t power):
-        team(team), health(health), move_range(move_range), reload_ammo(reload_ammo), ammo_per_attack(ammo_per_attack), symbol(symbol), ammo(ammo), range(range), power(power)
+    Character::Character(Team team, units_t health, units_t move_range,
+        units_t reload_ammo, units_t ammo_per_attack, char symbol,
+        units_t ammo, units_t range, units_t power):
+        team(team), health(health), move_range(move_range),
+        reload_ammo(reload_ammo), ammo_per_attack(ammo_per_attack),
+        symbol(symbol), ammo(ammo), range(range), power(power)
     {
     }
 
     char Character::getSymbol() const
     {
-        return this->team == POWERLIFTERS ? this->symbol : tolower(this->symbol);
+        return this->team == POWERLIFTERS ? this->symbol :
+            tolower(this->symbol);
     }
 
     int Character::getMoveRange() const
@@ -38,9 +43,11 @@ namespace mtm
         this->ammo += this->reload_ammo;
     }
 
-    bool Character::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
+    bool Character::isAttackInRange(const GridPoint& coordinates_src,
+        const GridPoint& coordinates_dst) const
     {
-        int attack_range = GridPoint::distance(coordinates_src, coordinates_dst);
+        int attack_range = GridPoint::distance(coordinates_src,
+            coordinates_dst);
 
         if (attack_range > this->range)
         {

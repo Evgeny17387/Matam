@@ -29,7 +29,9 @@ namespace mtm
 
     public:
 
-        Character(Team team, units_t health, units_t move_range, units_t reload_ammo, units_t ammo_per_attack, char symbol, units_t ammo, units_t range, units_t power);
+        Character(Team team, units_t health, units_t move_range,
+            units_t reload_ammo, units_t ammo_per_attack, char symbol,
+            units_t ammo, units_t range, units_t power);
 
         ~Character() = default;
         Character(const Character& character) = default;
@@ -46,14 +48,19 @@ namespace mtm
 
         void reload();
 
-        virtual bool isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const;
+        virtual bool isAttackInRange(const GridPoint& coordinates_src,
+            const GridPoint& coordinates_dst) const;
         virtual bool isEnoughAmmo(Character* character) const;
 
         virtual Character* clone() const = 0;
 
-        virtual bool canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const = 0;
+        virtual bool canAttack(Character* character,
+            const GridPoint& coordinates_src,
+            const GridPoint& coordinates_dst) const = 0;
 
-        virtual void attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst) = 0;
+        virtual void attack(
+            std::vector<std::vector<std::shared_ptr<Character>>>& board,
+            const GridPoint& coordinates_dst) = 0;
     };
 }
 

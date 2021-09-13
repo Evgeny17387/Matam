@@ -71,7 +71,8 @@ namespace mtm
 
             ~const_iterator() = default;
             const_iterator(const const_iterator& const_iterator) = default;
-            const_iterator& operator=(const const_iterator& const_iterator) = default;
+            const_iterator& operator=(const const_iterator& const_iterator) =
+                default;
 
             const T& operator*() const;
 
@@ -142,7 +143,8 @@ namespace mtm
     }
 
     template <class T>
-    SortedList<T>::SortedList(const SortedList& sortedList): head(NULL), size(0)
+    SortedList<T>::SortedList(const SortedList& sortedList): head(NULL),
+        size(0)
     {
         copyList(sortedList);
     }
@@ -186,7 +188,8 @@ namespace mtm
 
         node** head_ref = &(this->head);
 
-        if ((NULL == *head_ref) || !((*head_ref)->data < node_pointer_new->data))
+        if ((NULL == *head_ref) ||
+            !((*head_ref)->data < node_pointer_new->data))
         {
             node_pointer_new->next = *head_ref;
             *head_ref = node_pointer_new;
@@ -196,7 +199,8 @@ namespace mtm
         {
             node* current = *head_ref;
 
-            while ((current->next != NULL) && (current->next->data < node_pointer_new->data))
+            while ((current->next != NULL) &&
+                (current->next->data < node_pointer_new->data))
             {
                 current = current->next;
             }
@@ -210,7 +214,8 @@ namespace mtm
     template <class T>
     void SortedList<T>::remove(const const_iterator& const_iterator)
     {
-        if ((const_iterator.index < 0) || (const_iterator.index >= this->size))
+        if ((const_iterator.index < 0) ||
+            (const_iterator.index >= this->size))
         {
             throw std::out_of_range("const_iterator is out of range");
         }
@@ -251,7 +256,8 @@ namespace mtm
     {
         SortedList<T> sortedList;
 
-        for (class SortedList<T>::const_iterator it = this->begin(); !(it == this->end()); ++it)
+        for (class SortedList<T>::const_iterator it = this->begin();
+            !(it == this->end()); ++it)
         {
             if (condition(*it))
             {
@@ -268,7 +274,8 @@ namespace mtm
     {
         SortedList<T> sortedList;
 
-        for (class SortedList<T>::const_iterator it = this->begin(); !(it == this->end()); ++it)
+        for (class SortedList<T>::const_iterator it = this->begin();
+            !(it == this->end()); ++it)
         {
             sortedList.insert(apply(*it));
         }
@@ -289,7 +296,9 @@ namespace mtm
     }
 
     template <class T>
-    SortedList<T>::const_iterator::const_iterator(const SortedList<T> *sortedList, int index): sortedList(sortedList), index(index)
+    SortedList<T>::const_iterator::const_iterator(
+        const SortedList<T> *sortedList, int index): sortedList(sortedList),
+        index(index)
     {
     }
 
@@ -309,11 +318,13 @@ namespace mtm
     }
 
     template <class T>
-    class SortedList<T>::const_iterator& SortedList<T>::const_iterator::operator++()
+    class SortedList<T>::const_iterator&
+        SortedList<T>::const_iterator::operator++()
     {
         if (this->index >= sortedList->size)
         {
-            throw std::out_of_range("const_iterator has already reached last item in the list");
+            throw std::out_of_range(
+                "const_iterator has already reached last item in the list");
         }
 
         this->index++;
@@ -322,11 +333,13 @@ namespace mtm
     }
 
     template <class T>
-    class SortedList<T>::const_iterator SortedList<T>::const_iterator::operator++(int)
+    class SortedList<T>::const_iterator
+        SortedList<T>::const_iterator::operator++(int)
     {
         if (this->index >= sortedList->size)
         {
-            throw std::out_of_range("const_iterator has already reached last item in the list");
+            throw std::out_of_range(
+                "const_iterator has already reached last item in the list");
         }
 
         SortedList<T>::const_iterator temp = *this;
@@ -337,9 +350,11 @@ namespace mtm
     }
 
     template <class T>
-    bool SortedList<T>::const_iterator::operator==(const const_iterator& const_iterator) const
+    bool SortedList<T>::const_iterator::operator==(const const_iterator&
+        const_iterator) const
     {
-        return (this->sortedList == const_iterator.sortedList) && (this->index == const_iterator.index);
+        return (this->sortedList == const_iterator.sortedList) &&
+        (this->index == const_iterator.index);
     }
 }
 

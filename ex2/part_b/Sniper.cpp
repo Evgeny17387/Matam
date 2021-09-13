@@ -16,8 +16,9 @@ namespace mtm
 
     const char SYMBOL = 'N';
 
-    Sniper::Sniper(Team team, units_t health, units_t ammo, units_t range, units_t power):
-        Character(team, health, MOVE_RANGE, RELOAD_AMMO, AMMO_PER_ATTACK, SYMBOL, ammo, range, power)
+    Sniper::Sniper(Team team, units_t health, units_t ammo, units_t range,
+        units_t power): Character(team, health, MOVE_RANGE, RELOAD_AMMO,
+        AMMO_PER_ATTACK, SYMBOL, ammo, range, power)
     {
         this->regular_shots_count = 0;
     }
@@ -27,9 +28,11 @@ namespace mtm
         return new Sniper(*this);
     }
 
-    bool Sniper::isAttackInRange(const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
+    bool Sniper::isAttackInRange(const GridPoint& coordinates_src,
+        const GridPoint& coordinates_dst) const
     {
-        int attack_range = GridPoint::distance(coordinates_src, coordinates_dst);
+        int attack_range = GridPoint::distance(coordinates_src,
+            coordinates_dst);
 
         if (attack_range > this->range)
         {
@@ -46,7 +49,9 @@ namespace mtm
         return true;
     }
 
-    bool Sniper::canAttack(Character* character, const GridPoint& coordinates_src, const GridPoint& coordinates_dst) const
+    bool Sniper::canAttack(Character* character,
+        const GridPoint& coordinates_src,
+        const GridPoint& coordinates_dst) const
     {
         if (character == NULL)
         {
@@ -61,9 +66,12 @@ namespace mtm
         return true;
     }
 
-    void Sniper::attack(std::vector<std::vector<std::shared_ptr<Character>>>& board, const GridPoint& coordinates_dst)
+    void Sniper::attack(
+        std::vector<std::vector<std::shared_ptr<Character>>>& board,
+        const GridPoint& coordinates_dst)
     {
-        shared_ptr<Character> defender = board[coordinates_dst.col][coordinates_dst.row];
+        shared_ptr<Character> defender =
+            board[coordinates_dst.col][coordinates_dst.row];
 
         this->ammo -= AMMO_PER_ATTACK;
 
