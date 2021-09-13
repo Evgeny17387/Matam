@@ -20,13 +20,11 @@ namespace mtm
         static void verifyDate(int month, int day);
         static void verifyTime(double time);
 
-        static void splitTimeToHoursAndMinutes(double time, int& time_hours,
-            int& time_minutes);
+        static void splitTimeToHoursAndMinutes(double time, int& time_hours, int& time_minutes);
 
     public:
 
-        ExamDetails(int course_id, int month, int day, double hour,
-            int length, const std::string link = "");
+        ExamDetails(int course_id, int month, int day, double hour, int length, const std::string link = "");
 
         ~ExamDetails() = default;
         ExamDetails(const ExamDetails& examDetails) = default;
