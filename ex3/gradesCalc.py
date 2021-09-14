@@ -13,5 +13,14 @@ def final_grade(input_path: str, output_path: str) -> int:
 #   s1: The string that we want to check if it can be constructed
 #   s2: The string that we want to construct s1 from
 def check_strings(s1: str, s2: str) -> bool:
-    # TODO: implement here
-    raise NotImplementedError
+    
+    for char_code in range(ord('a'),ord('z') + 1):
+
+        char = chr(char_code)
+
+        print(char)
+
+        if s1.lower().count(char) > s2.lower().count(char):
+            return False
+
+    return True
