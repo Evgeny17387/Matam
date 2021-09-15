@@ -7,7 +7,7 @@ def main():
     input_path = 'tests/input'
     output_path = 'tests/out_actual'
     course_avg = final_grade(input_path=input_path, output_path=output_path)
-    # assert course_avg == 70
+    assert course_avg == 70
 
     # Testing the `check_strings` function
     # s1 = 'naanb'

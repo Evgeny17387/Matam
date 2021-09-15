@@ -19,6 +19,8 @@ HW_AVEREGA_MAX_VALID_GRADE = 100
 
 SEMESTER_MIN_VALID = 1
 
+HW_AVERAGE_INDEX_STUDENTS_DICTIONARY = 2
+
 
 def final_grade(input_path: str, output_path: str) -> int:
 
@@ -27,6 +29,21 @@ def final_grade(input_path: str, output_path: str) -> int:
     parse_students_data(input_path, students)
 
     write_students_grades(output_path, students)
+
+    return calculate_average_grage(students)
+
+
+def calculate_average_grage(students: dict) -> int:
+    
+    average = 0
+
+    for student in students:
+
+        average += int(students[student][HW_AVERAGE_INDEX_STUDENTS_DICTIONARY])
+
+    average /= len(students.keys())
+
+    return average
 
 
 def parse_students_data(input_path:str, students: dict) -> None:
