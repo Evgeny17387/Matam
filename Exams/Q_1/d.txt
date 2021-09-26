@@ -1,0 +1,24 @@
+
+enum MedItemRes
+{
+    MED_ITEM_NULL_ARG,
+    MED_ITEM_SUCCESS
+};
+
+int MedItemPerformOperation(MedItem medItem, MedItemRes* medItemRes)
+{
+    if (medItemRes == NULL)
+    {
+        return 0;
+    }
+
+    if (medItem == NULL)
+    {
+        *medItemRes = MED_ITEM_NULL_ARG;
+        return 0;
+    }
+
+    *medItemRes = MED_ITEM_SUCCESS;
+
+    return medItem->operate(medItem->extra);
+}

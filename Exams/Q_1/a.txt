@@ -1,0 +1,13 @@
+#include "MedItem.h"
+typedef struct med_bag_t* MedBag;
+
+
+
+MedBag createMedBag();
+void medBagDestroy(MedBag medBag);
+MedBag medBagCopy(MedBag medBag, MedBagRes* medBagRes);
+MedBagRes medBagAddCell(MedBag medBag, int cellId);
+MedBagRes medBagAddItem(MedBag medBag, int cellId, MedItem medItem);
+MedBagRes medBagRemoveItem(MedBag medBag, int cellId, const char* itemName);
+int medBagGetPrice(MedBag medBag, MedBagRes* medBagRes);
+int medBagPerformOperation((MedBag medBag, int cellId, MedBagRes* medBagRes);

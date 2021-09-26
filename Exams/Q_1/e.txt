@@ -1,0 +1,51 @@
+
+#define MIN_VALID_CELL_ID 1
+
+enum MedBagRes
+{
+    MED_BAG_NULL_ARG,
+    MED_BAG_SUCCESS,
+    MED_BAG_INVALID_ID,
+    MED_BAG_CELL_NOT_EXISTS
+};
+
+int medBagPerformOperation(MedBag medBag, int cellId, MedBagRes* medBagRes)
+{
+    if (medBagRes == NULL)
+    {
+        return 0;
+    }
+
+    if (medBag == NULL)
+    {
+        *medItemRes = MED_BAG_NULL_ARG;
+        return 0;
+    }
+
+    if (cellId < MIN_VALID_CELL_ID)
+    {
+        *medItemRes = MED_BAG_INVALID_ID;
+        return 0;
+    }
+
+    MapRes mapRes;
+    Set cell = (Set)mapGetData(medBag->cells, &cellId, &mapRes);
+    if (mapRes != MAP_SUCCESS)
+    {
+        *medItemRes = MED_BAG_CELL_NOT_EXISTS;
+        return 0;
+    }
+
+    int runTime = 0;
+
+    MedItemRes medItemRes;
+    SET_FOREACH(MedItem, medItem, cell)
+    {
+        runTime += MedItemPerformOperation(medItem, &medItemRes);
+        assert(medItemRes == MED_ITEM_SUCCESS);
+    }
+
+    *medItemRes = MED_BAG_SUCCESS;
+
+    return runTime;
+}

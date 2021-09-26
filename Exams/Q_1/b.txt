@@ -1,0 +1,18 @@
+#include "map.h"
+#include "set.h"
+
+struct med_bag_t
+{
+    Map cells;
+};
+
+int intCompare(void*, void*);
+void* intCopy(void*);
+void intDelete(void*);
+void* setCopy(void*);
+void setDelete(void*);
+
+// From MedItem.h
+// medItemDestroy(MedItem medItem);
+// MedItem medIteamCopy(MedItem medItem);
+// bool medIteamCompare(MedItem medItem1, MedItem medItem2);

@@ -1,0 +1,7 @@
+enum MedBagRes
+{
+    MED_BAG_CELL_ALREADY_EXISTS, // medBagAddCell
+    MED_BAG_CELL_NOT_EXISTS, // medBagPerformOperation
+    MED_BAG_ITEM_ALREADY_EXISTS, // medBagAddItem
+    MED_BAG_ITEM_NOT_EXISTS // medBagRemoveItem
+};
